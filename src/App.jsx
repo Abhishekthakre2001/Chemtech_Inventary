@@ -6,7 +6,7 @@ import StandardBatchReport from './Component/StandardBatchReport';
 import ReCreatedBatchReport from './Component/ReCreatedBatchReport';
 import CreateRawMaterial from './Component/AddRawmaterial';
 import RawMaterialList from './Component/RawMaterialList';
-
+import Masters from './Component/Masters';
 
 function App() {
   return (
@@ -19,6 +19,7 @@ function App() {
         <Route path="/re-created-batch-report" element={<ReCreatedBatchReport />} />
         <Route path="/create-raw-material" element={<CreateRawMaterial />} />
         <Route path="/raw-material-list" element={<RawMaterialList />} />
+         <Route path="/masters" element={<Masters />} />
         {/* Add more routes here as needed */}
       </Routes>
     </Router>

@@ -18,7 +18,7 @@ const Navbar = () => {
 
   const menuItems = [
     { name: 'Dashboard', icon: <FaHome />, path: '/' },
-    { name: 'Raw Material', icon: <FaBox />, path: '/raw-material' },
+    { name: 'Raw Material', icon: <FaBox />, path: '/raw-material-list' },
     { name: 'Standard Batch', icon: <FaFlask />, path: '/standard-batch-report' },
     { name: 'Batch Recreation', icon: <FaRecycle />, path: '/re-created-batch-report' },
     { name: 'Masters', icon: <FaCog />, path: '/masters' },
