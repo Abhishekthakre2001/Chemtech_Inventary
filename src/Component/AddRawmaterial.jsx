@@ -1,0 +1,403 @@
+import React, { useState } from "react";
+import axios from "axios";
+import Navbar from "./Navbar";
+import { FaEdit, FaTrash, FaSave, FaPlus, FaRedo } from "react-icons/fa";
+
+const AddRawmaterial = () => {
+  const [formData, setFormData] = useState({
+    purchaseCode: "",
+    rawMaterial: "",
+    rawMaterialCode: "",
+    rateLanded: "",
+    dateIn: "",
+    expiryDate: "",
+    category: "",
+    quantity: "",
+    quantityUnit: "",
+    purchasePrice: "",
+    supplier: "",
+  });
+
+  const [materials, setMaterials] = useState([]);
+  const [editIndex, setEditIndex] = useState(null);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleAddMaterial = () => {
+    // Validate required fields
+    if (!formData.purchaseCode || !formData.rawMaterial || !formData.rawMaterialCode || 
+        !formData.rateLanded || !formData.dateIn || !formData.category || 
+        !formData.quantity || !formData.quantityUnit || !formData.purchasePrice || 
+        !formData.supplier) {
+      alert("Please fill all required fields");
+      return;
+    }
+
+    if (editIndex !== null) {
+      const updated = [...materials];
+      updated[editIndex] = formData;
+      setMaterials(updated);
+      setEditIndex(null);
+    } else {
+      setMaterials([...materials, formData]);
+    }
+    setFormData({
+      purchaseCode: "",
+      rawMaterial: "",
+      rawMaterialCode: "",
+      rateLanded: "",
+      dateIn: "",
+      expiryDate: "",
+      category: "",
+      quantity: "",
+      quantityUnit: "",
+      purchasePrice: "",
+      supplier: "",
+    });
+  };
+
+  const handleEdit = (index) => {
+    setFormData(materials[index]);
+    setEditIndex(index);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleDelete = (index) => {
+    if (window.confirm("Are you sure you want to delete this material?")) {
+      setMaterials(materials.filter((_, i) => i !== index));
+    }
+  };
+
+  const handleSave = async () => {
+    if (materials.length === 0) {
+      alert("Please add at least one material before saving");
+      return;
+    }
+
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/raw_material/add_raw_material.php`,
+        { data: materials }
+      );
+      console.log(res.data);
+      alert("Data saved successfully!");
+      setMaterials([]);
+    } catch (err) {
+      console.error(err);
+      alert("Error saving data");
+    }
+  };
+
+  const handleReset = () => {
+    if (materials.length > 0 && !window.confirm("Are you sure you want to reset all data?")) {
+      return;
+    }
+    setFormData({
+      purchaseCode: "",
+      rawMaterial: "",
+      rawMaterialCode: "",
+      rateLanded: "",
+      dateIn: "",
+      expiryDate: "",
+      category: "",
+      quantity: "",
+      quantityUnit: "",
+      purchasePrice: "",
+      supplier: "",
+    });
+    setMaterials([]);
+    setEditIndex(null);
+  };
+
+  return (
+    <>
+      <Navbar />
+      <div className="p-4 max-w-7xl mx-auto">
+        <h1 className="text-2xl font-bold mb-6 text-gray-800">Purchase Raw Material</h1>
+        
+        {/* Form */}
+        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+          <h2 className="text-xl font-semibold mb-4 text-gray-700">
+            {editIndex !== null ? "Edit Material" : "Add New Material"}
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {/* Form Fields */}
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-gray-700">Purchase Code *</label>
+              <input
+                name="purchaseCode"
+                placeholder="PUR-001"
+                value={formData.purchaseCode}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-gray-700">Raw Material *</label>
+              <input
+                name="rawMaterial"
+                placeholder="Material Name"
+                value={formData.rawMaterial}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-gray-700">Raw Material Code *</label>
+              <input
+                name="rawMaterialCode"
+                placeholder="RM-001"
+                value={formData.rawMaterialCode}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-gray-700">Rate Landed *</label>
+              <input
+                type="number"
+                name="rateLanded"
+                placeholder="0.00"
+                value={formData.rateLanded}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-gray-700">Date In *</label>
+              <input
+                type="date"
+                name="dateIn"
+                value={formData.dateIn}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-gray-700">Expiry Date</label>
+              <input
+                type="date"
+                name="expiryDate"
+                value={formData.expiryDate}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-gray-700">Category *</label>
+              <input
+                name="category"
+                placeholder="Category"
+                value={formData.category}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-gray-700">Quantity *</label>
+              <input
+                type="number"
+                name="quantity"
+                placeholder="0"
+                value={formData.quantity}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-gray-700">Quantity Unit *</label>
+              <select
+                name="quantityUnit"
+                value={formData.quantityUnit}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="">Select Unit</option>
+                <option value="kg">Kilograms (kg)</option>
+                <option value="g">Grams (g)</option>
+                <option value="L">Liters (L)</option>
+                <option value="mL">Milliliters (mL)</option>
+                <option value="pieces">Pieces</option>
+              </select>
+            </div>
+
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-gray-700">Purchase Price *</label>
+              <input
+                type="number"
+                name="purchasePrice"
+                placeholder="0.00"
+                value={formData.purchasePrice}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-gray-700">Supplier *</label>
+              <input
+                name="supplier"
+                placeholder="Supplier Name"
+                value={formData.supplier}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+          </div>
+
+          {/* Add/Update Button */}
+          <div className="mt-6">
+            <button
+              onClick={handleAddMaterial}
+              className={`flex items-center gap-2 px-4 py-2 rounded-md text-white ${
+                editIndex !== null 
+                  ? "bg-yellow-600 hover:bg-yellow-700" 
+                  : "bg-blue-600 hover:bg-blue-700"
+              }`}
+            >
+              {editIndex !== null ? (
+                <>
+                  <FaEdit /> Update Material
+                </>
+              ) : (
+                <>
+                  <FaPlus /> Add Raw Material
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Materials Table */}
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <h2 className="text-xl font-semibold mb-4 text-gray-700">Purchased Materials</h2>
+          
+          {materials.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    {[
+                      "Purchase Code",
+                      "Raw Material",
+                      "Code",
+                      "Rate",
+                      "Date In",
+                      "Expiry",
+                      "Category",
+                      "Quantity",
+                      "Unit",
+                      "Price",
+                      "Supplier",
+                      "Actions"
+                    ].map((header) => (
+                      <th
+                        key={header}
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        {header}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {materials.map((mat, index) => (
+                    <tr key={index} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {mat.purchaseCode}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {mat.rawMaterial}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {mat.rawMaterialCode}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        ₹{parseFloat(mat.rateLanded).toFixed(2)}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {mat.dateIn}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {mat.expiryDate || "-"}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {mat.category}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {mat.quantity}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {mat.quantityUnit}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        ₹{parseFloat(mat.purchasePrice).toFixed(2)}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {mat.supplier}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <div className="flex space-x-2">
+                          <button
+                            onClick={() => handleEdit(index)}
+                            className="text-blue-600 hover:text-blue-900"
+                            title="Edit"
+                          >
+                            <FaEdit />
+                          </button>
+                          <button
+                            onClick={() => handleDelete(index)}
+                            className="text-red-600 hover:text-red-900"
+                            title="Delete"
+                          >
+                            <FaTrash />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="text-center py-8 text-gray-500">
+              No materials added yet. Add materials using the form above.
+            </div>
+          )}
+
+          {/* Action Buttons */}
+          {materials.length > 0 && (
+            <div className="mt-6 flex justify-end space-x-4">
+              <button
+                onClick={handleReset}
+                className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+              >
+                <FaRedo /> Reset All
+              </button>
+              <button
+                onClick={handleSave}
+                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+              >
+                <FaSave /> Save All Materials
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default AddRawmaterial;
