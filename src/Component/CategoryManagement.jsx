@@ -85,64 +85,64 @@ const CategoryManagement = () => {
     };
 
     const handleUpdate = async (e) => {
-    e.preventDefault();
+        e.preventDefault();
 
-    try {
-        const { data } = await axios.post(
-            "https://inventary.chemtechengineers.in/backend/category/edit_category.php",
-            {
-                id: currentCategory.id,
-                name: currentCategory.name,
-            },
-            {
-                headers: {
-                    "Content-Type": "application/json",
+        try {
+            const { data } = await axios.post(
+                "https://inventary.chemtechengineers.in/backend/category/edit_category.php",
+                {
+                    id: currentCategory.id,
+                    name: currentCategory.name,
                 },
-            }
-        );
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
 
-        if (data.success) {
-            alert(data.message);
-            setCurrentCategory({ name: "" });
-            setIsModalOpen(false);
-            fetchCategories(); // refresh list after update
-        } else {
-            alert(data.message);
+            if (data.success) {
+                alert(data.message);
+                setCurrentCategory({ name: "" });
+                setIsModalOpen(false);
+                fetchCategories(); // refresh list after update
+            } else {
+                alert(data.message);
+            }
+        } catch (error) {
+            console.error("Error updating category:", error);
+            alert("Something went wrong while updating the category.");
         }
-    } catch (error) {
-        console.error("Error updating category:", error);
-        alert("Something went wrong while updating the category.");
-    }
-};
+    };
 
     // Delete category
-const deleteCategory = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this category?")) {
-        return;
-    }
-
-    try {
-        const { data } = await axios.post(
-            "https://inventary.chemtechengineers.in/backend/category/delete_category.php",
-            { id }, // send category id
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            }
-        );
-
-        if (data.success) {
-            alert(data.message);
-            setCategories((prev) => prev.filter((cat) => cat.id !== id));
-        } else {
-            alert(data.message);
+    const deleteCategory = async (id) => {
+        if (!window.confirm("Are you sure you want to delete this category?")) {
+            return;
         }
-    } catch (error) {
-        console.error("Error deleting category:", error);
-        alert("Something went wrong while deleting the category.");
-    }
-};
+
+        try {
+            const { data } = await axios.post(
+                "https://inventary.chemtechengineers.in/backend/category/delete_category.php",
+                { id }, // send category id
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+
+            if (data.success) {
+                alert(data.message);
+                setCategories((prev) => prev.filter((cat) => cat.id !== id));
+            } else {
+                alert(data.message);
+            }
+        } catch (error) {
+            console.error("Error deleting category:", error);
+            alert("Something went wrong while deleting the category.");
+        }
+    };
 
 
     return (
@@ -202,7 +202,7 @@ const deleteCategory = async (id) => {
                                                 <FaEdit />
                                             </button>
                                             <button
-                                                 onClick={() => deleteCategory(category.id)}
+                                                onClick={() => deleteCategory(category.id)}
                                                 className="text-red-600 hover:text-red-900 p-1"
                                                 title="Delete"
                                             >

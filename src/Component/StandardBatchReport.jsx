@@ -1,64 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { FaPlus, FaSearch, FaPrint, FaEye, FaEdit, FaTrash } from "react-icons/fa";
 import Navbar from "./Navbar";
 import { Link } from "react-router-dom";
 
-const batchesData = [
-  {
-    id: 1,
-    batchName: "Cold Drink",
-    batchDate: "2025-08-10",
-    batchSize: "10 L",
-    rawMaterialCount: 2,
-    batchCost: 1250,
-    status: "Completed"
-  },
-  {
-    id: 2,
-    batchName: "Cold Drink",
-    batchDate: "2025-08-10",
-    batchSize: "100 L",
-    rawMaterialCount: 1,
-    batchCost: 9800,
-    status: "In Progress"
-  },
-  {
-    id: 3,
-    batchName: "Tea",
-    batchDate: "2025-08-10",
-    batchSize: "1 L",
-    rawMaterialCount: 1,
-    batchCost: 150,
-    status: "Completed"
-  },
-  {
-    id: 4,
-    batchName: "Tea",
-    batchDate: "2025-08-10",
-    batchSize: "1 L",
-    rawMaterialCount: 1,
-    batchCost: 150,
-    status: "Completed"
-  },
-  {
-    id: 5,
-    batchName: "Tea",
-    batchDate: "2025-08-10",
-    batchSize: "100 L",
-    rawMaterialCount: 1,
-    batchCost: 12500,
-    status: "Pending"
-  },
-  {
-    id: 6,
-    batchName: "Tea",
-    batchDate: "2025-08-10",
-    batchSize: "100 L",
-    rawMaterialCount: 0,
-    batchCost: 0,
-    status: "Draft"
-  },
-];
 
 const statusStyles = {
   "Completed": "bg-green-100 text-green-800",
@@ -69,176 +14,434 @@ const statusStyles = {
 
 export default function ProductBatch() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [selectedBatch, setSelectedBatch] = useState(null);
+  const [loadingBatch, setLoadingBatch] = useState(false);
+  const [errorBatch, setErrorBatch] = useState(null);
+
+  const [batchesData, setBatchesData] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("https://inventary.chemtechengineers.in/backend/batch/get_batches.php")
+      .then((res) => {
+        if (res.data.success && Array.isArray(res.data.data)) {
+          const transformed = res.data.data.map((batch) => {
+            // Calculate batchSize string with unit
+            const batchSizeWithUnit = `${parseFloat(batch.batchSize)} ${batch.batchUnit}`;
+
+            // Count materials
+            const rawMaterialCount = batch.materials ? batch.materials.length : 0;
+
+            // Calculate batchCost from materials (sum of quantity * ???)
+            // You may want to sum some cost, but since material doesn't have cost in API,
+            // we'll set 0 for now or you can modify as needed
+            const batchCost = 0;
+
+            // Set a default status or based on your logic
+            const status = "Completed"; // or derive dynamically if you have status field
+
+            return {
+              id: batch.id,
+              batchName: batch.batchName,
+              batchDate: batch.batchDate,
+              batchSize: batchSizeWithUnit,
+              rawMaterialCount,
+              batchCost,
+              status,
+            };
+          });
+
+          setBatchesData(transformed);
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to fetch batches", err);
+      });
+  }, []);
 
   const filteredBatches = batchesData.filter((batch) =>
     batch.batchName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const handlePrint = async (batchId) => {
+    try {
+      const res = await axios.get(`https://inventary.chemtechengineers.in/backend/batch/get_batch_byid.php?id=${batchId}`);
+      if (res.data.success) {
+        const batch = res.data.data;
+
+        const content = `
+        <html>
+        <head>
+          <title>Batch Report - ${batch.batchName}</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 20px; }
+            h1 { text-align: center; }
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            th, td { border: 1px solid #333; padding: 8px; text-align: left; }
+            th { background-color: #eee; }
+          </style>
+        </head>
+        <body>
+          <h1>Batch Report</h1>
+          <p><strong>Batch ID:</strong> ${batch.id}</p>
+          <p><strong>Name:</strong> ${batch.batchName}</p>
+          <p><strong>Date:</strong> ${batch.batchDate}</p>
+          <p><strong>Size:</strong> ${batch.batchSize} ${batch.batchUnit}</p>
+          <p><strong>Status:</strong> ${batch.status || 'N/A'}</p>
+
+          <h2>Materials</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Quantity</th>
+                <th>Unit</th>
+                <th>Percentage</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${batch.materials && batch.materials.length > 0
+            ? batch.materials.map(mat => `
+                      <tr>
+                        <td>${mat.name || 'N/A'}</td>
+                        <td>${mat.quantity}</td>
+                        <td>${mat.unit}</td>
+                        <td>${mat.percentage}</td>
+                      </tr>
+                    `).join('')
+            : `<tr><td colspan="4" style="text-align:center;">No materials available</td></tr>`
+          }
+            </tbody>
+          </table>
+        </body>
+        </html>
+      `;
+
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(content);
+        printWindow.document.close();
+        printWindow.focus();
+        printWindow.print();
+        printWindow.close();
+
+      } else {
+        alert('Failed to fetch batch data for printing');
+      }
+    } catch (err) {
+      console.error("Error fetching batch for print:", err);
+      alert('Error occurred while fetching batch data');
+    }
+  };
+
+  const fetchBatchById = async (batchId) => {
+    setLoadingBatch(true);
+    setErrorBatch(null);
+    try {
+      const response = await axios.get(
+        `https://inventary.chemtechengineers.in/backend/batch/get_batch_byid.php?id=${batchId}`
+      );
+      if (response.data.success) {
+        // assuming response.data.data is an object of batch details with materials array
+        setSelectedBatch(response.data.data);
+        setShowModal(true);
+      } else {
+        setErrorBatch("Failed to fetch batch details");
+        setSelectedBatch(null);
+      }
+    } catch (err) {
+      setErrorBatch("Error fetching batch details");
+      setSelectedBatch(null);
+    } finally {
+      setLoadingBatch(false);
+    }
+  };
+
+  const handleDeleteBatch = async (batchId) => {
+  if (!window.confirm('Are you sure you want to delete this batch?')) return;
+
+  try {
+    const response = await axios.delete('https://inventary.chemtechengineers.in/backend/batch/delete_batch.php', {
+      data: { id: batchId } // sending id in body
+    });
+
+    if (response.data.success) {
+      alert('Batch deleted successfully!');
+      // Refresh batch list after deletion
+      fetchBatches(); // your method to reload batch list
+    } else {
+      alert('Delete failed: ' + (response.data.message || 'Unknown error'));
+    }
+  } catch (error) {
+    alert('Error deleting batch: ' + error.message);
+  }
+};
+
+
+
   return (
     <>
-    <Navbar />
-     <div className="p-6 font-sans bg-gray-50 min-h-screen">
-      <div className="max-w-7xl mx-auto">
-        {/* Header Section */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-          <div className="mb-4 md:mb-0">
-            <h2 className="text-2xl font-bold text-gray-800">Product Batch Management</h2>
-            <p className="text-gray-600 mt-1">
-              View, manage, and track all your product batches
-            </p>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-            <div className="relative flex-grow">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <FaSearch className="text-gray-400" />
-              </div>
-              <input
-                type="text"
-                placeholder="Search batches..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
+      <Navbar />
+      <div className="p-6 font-sans bg-gray-50 min-h-screen">
+        <div className="max-w-7xl mx-auto">
+          {/* Header Section */}
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+            <div className="mb-4 md:mb-0">
+              <h2 className="text-2xl font-bold text-gray-800">Product Batch Management</h2>
+              <p className="text-gray-600 mt-1">
+                View, manage, and track all your product batches
+              </p>
             </div>
-           <Link to="/standard-batch">
-  <button className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition-colors duration-200">
-    <FaPlus /> Create New Batch
-  </button>
-</Link>
+            <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+              <div className="relative flex-grow">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <FaSearch className="text-gray-400" />
+                </div>
+                <input
+                  type="text"
+                  placeholder="Search batches..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+              <Link to="/standard-batch">
+                <button className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition-colors duration-200">
+                  <FaPlus /> Create New Batch
+                </button>
+              </Link>
+            </div>
           </div>
-        </div>
 
-        {/* Batch Table */}
-        <div className="bg-white rounded-xl shadow overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-800 text-white">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                    Batch ID
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                    Name
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                    Date
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                    Size
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                    Materials
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                    Cost
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {filteredBatches.length === 0 ? (
+          {/* Batch Table */}
+          <div className="bg-white rounded-xl shadow overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-800 text-white">
                   <tr>
-                    <td colSpan="8" className="px-6 py-4 text-center text-gray-500">
-                      No batches found matching your search criteria
-                    </td>
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                      Batch ID
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                      Name
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                      Date
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                      Size
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                      Materials
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                      Cost
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                      Status
+                    </th>
+                    <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">
+                      Actions
+                    </th>
                   </tr>
-                ) : (
-                  filteredBatches.map((batch) => (
-                    <tr key={batch.id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        #{batch.id}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 font-medium">
-                        {batch.batchName}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {batch.batchDate}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {batch.batchSize}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          batch.rawMaterialCount > 0 ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                        }`}>
-                          {batch.rawMaterialCount} materials
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        ₹{batch.batchCost.toLocaleString()}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          statusStyles[batch.status]
-                        }`}>
-                          {batch.status}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <div className="flex justify-center space-x-3">
-                          <button
-                            title="Print"
-                            className="text-gray-500 hover:text-blue-600 transition-colors"
-                          >
-                            <FaPrint className="h-4 w-4" />
-                          </button>
-                          <button
-                            title="View"
-                            className="text-gray-500 hover:text-green-600 transition-colors"
-                          >
-                            <FaEye className="h-4 w-4" />
-                          </button>
-                          <button
-                            title="Edit"
-                            className="text-gray-500 hover:text-orange-600 transition-colors"
-                          >
-                            <FaEdit className="h-4 w-4" />
-                          </button>
-                          <button
-                            title="Delete"
-                            className="text-gray-500 hover:text-red-600 transition-colors"
-                          >
-                            <FaTrash className="h-4 w-4" />
-                          </button>
-                        </div>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {filteredBatches.length === 0 ? (
+                    <tr>
+                      <td colSpan="8" className="px-6 py-4 text-center text-gray-500">
+                        No batches found matching your search criteria
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
+                  ) : (
+                    filteredBatches.map((batch) => (
+                      <tr key={batch.id} className="hover:bg-gray-50 transition-colors">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          #{batch.id}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 font-medium">
+                          {batch.batchName}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {batch.batchDate}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {batch.batchSize}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${batch.rawMaterialCount > 0 ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                            }`}>
+                            {batch.rawMaterialCount} materials
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          ₹{batch.batchCost.toLocaleString()}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${statusStyles[batch.status]
+                            }`}>
+                            {batch.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                          <div className="flex justify-center space-x-3">
+                            <button
+                              title="Print"
+                              className="text-gray-500 hover:text-blue-600 transition-colors"
+                              onClick={() => handlePrint(batch.id)}  // pass current batch here
+                            >
+                              <FaPrint className="h-4 w-4" />
+                            </button>
 
-        {/* Pagination and Summary */}
-        <div className="mt-4 flex flex-col md:flex-row justify-between items-center text-sm text-gray-600">
-          <div className="mb-2 md:mb-0">
-            Showing <span className="font-medium">1</span> to <span className="font-medium">{filteredBatches.length}</span> of{' '}
-            <span className="font-medium">{batchesData.length}</span> batches
+                            <button
+                              title="View"
+                              className="text-gray-500 hover:text-green-600 transition-colors"
+                              onClick={() => {
+                                fetchBatchById(batch.id);
+                              }}
+                            >
+                              <FaEye className="h-4 w-4" />
+                            </button>
+
+
+                            <button
+                              title="Edit"
+                              className="text-gray-500 hover:text-orange-600 transition-colors"
+                            >
+                              <FaEdit className="h-4 w-4" />
+                            </button>
+                           <button
+  title="Delete"
+  className="text-gray-500 hover:text-red-600 transition-colors"
+  onClick={() => handleDeleteBatch(batch.id)}
+>
+  <FaTrash className="h-4 w-4" />
+</button>
+
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
-          <div className="flex space-x-2">
-            <button className="px-3 py-1 border rounded-md bg-white hover:bg-gray-50">
-              Previous
-            </button>
-            <button className="px-3 py-1 border rounded-md bg-blue-600 text-white hover:bg-blue-700">
-              1
-            </button>
-            <button className="px-3 py-1 border rounded-md bg-white hover:bg-gray-50">
-              2
-            </button>
-            <button className="px-3 py-1 border rounded-md bg-white hover:bg-gray-50">
-              Next
-            </button>
+
+          {/* Pagination and Summary */}
+          <div className="mt-4 flex flex-col md:flex-row justify-between items-center text-sm text-gray-600">
+            <div className="mb-2 md:mb-0">
+              Showing <span className="font-medium">1</span> to <span className="font-medium">{filteredBatches.length}</span> of{' '}
+              <span className="font-medium">{batchesData.length}</span> batches
+            </div>
+            <div className="flex space-x-2">
+              <button className="px-3 py-1 border rounded-md bg-white hover:bg-gray-50">
+                Previous
+              </button>
+              <button className="px-3 py-1 border rounded-md bg-blue-600 text-white hover:bg-blue-700">
+                1
+              </button>
+              <button className="px-3 py-1 border rounded-md bg-white hover:bg-gray-50">
+                2
+              </button>
+              <button className="px-3 py-1 border rounded-md bg-white hover:bg-gray-50">
+                Next
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+
+      {showModal && (
+        <BatchModal
+          batch={selectedBatch}
+          onClose={() => setShowModal(false)}
+          loading={loadingBatch}
+          error={errorBatch}
+        />
+      )}
+
+
     </>
-   
+
+  );
+}
+
+function BatchModal({ batch, onClose, loading, error }) {
+  if (loading) {
+    return (
+      <div className="fixed inset-0 bg-black/70 bg-opacity-50 flex justify-center items-center z-50">
+        <div className="bg-white p-6 rounded shadow-lg">Loading...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="fixed inset-0 bg-black/70 bg-opacity-50 flex justify-center items-center z-50">
+        <div className="bg-white p-6 rounded shadow-lg">
+          <p className="text-red-600 font-semibold">{error}</p>
+          <button
+            onClick={onClose}
+            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!batch) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black/70 bg-opacity-50 flex justify-center items-center z-50">
+      <div className="bg-white rounded-lg shadow-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold">Batch Report - {batch.batchName}</h2>
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700 font-bold text-xl"
+          >
+            &times;
+          </button>
+        </div>
+
+        <p><strong>Batch ID:</strong> {batch.id}</p>
+        <p><strong>Name:</strong> {batch.batchName}</p>
+        <p><strong>Date:</strong> {batch.batchDate}</p>
+        <p><strong>Size:</strong> {batch.batchSize} {batch.batchUnit}</p>
+        <p><strong>Status:</strong> {batch.status || "N/A"}</p>
+
+        <h3 className="mt-4 mb-2 font-semibold">Materials</h3>
+        <table className="w-full border-collapse border border-gray-300">
+          <thead>
+            <tr className="bg-gray-200">
+              <th className="border border-gray-300 px-2 py-1 text-left">Name</th>
+              <th className="border border-gray-300 px-2 py-1 text-left">Quantity</th>
+              <th className="border border-gray-300 px-2 py-1 text-left">Unit</th>
+              <th className="border border-gray-300 px-2 py-1 text-left">Percentage</th>
+            </tr>
+          </thead>
+          <tbody>
+            {batch.materials && batch.materials.length > 0 ? (
+              batch.materials.map((mat) => (
+                <tr key={mat.id}>
+                  <td className="border border-gray-300 px-2 py-1">{mat.name || "N/A"}</td>
+                  <td className="border border-gray-300 px-2 py-1">{mat.quantity}</td>
+                  <td className="border border-gray-300 px-2 py-1">{mat.unit}</td>
+                  <td className="border border-gray-300 px-2 py-1">{mat.percentage}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="4" className="text-center p-4">
+                  No materials available
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 }

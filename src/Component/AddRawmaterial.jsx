@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from "./Navbar";
 import { FaEdit, FaTrash, FaSave, FaPlus, FaRedo } from "react-icons/fa";
 
 const AddRawmaterial = () => {
+  const [categories, setCategories] = useState([]);
+  const [suppliers, setSuppliers] = useState([]);
   const [formData, setFormData] = useState({
     purchaseCode: "",
     rawMaterial: "",
@@ -18,20 +20,48 @@ const AddRawmaterial = () => {
     supplier: "",
   });
 
+  useEffect(() => {
+    axios
+      .get("https://inventary.chemtechengineers.in/backend/category/list_categories.php")
+      .then((res) => {
+        if (res.data.success) {
+          setCategories(res.data.data);
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching categories:", err);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get("https://inventary.chemtechengineers.in/backend/supplier/list_suppliers.php")
+      .then((res) => {
+        if (res.data.success) {
+          setSuppliers(res.data.data);
+        }
+      })
+      .catch((err) => console.error("Error fetching suppliers:", err));
+  }, []);
+
   const [materials, setMaterials] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name || 'category']: value, // Fallback to 'category' if no name is given
+    }));
   };
+
 
   const handleAddMaterial = () => {
     // Validate required fields
-    if (!formData.purchaseCode || !formData.rawMaterial || !formData.rawMaterialCode || 
-        !formData.rateLanded || !formData.dateIn || !formData.category || 
-        !formData.quantity || !formData.quantityUnit || !formData.purchasePrice || 
-        !formData.supplier) {
+    if (!formData.purchaseCode || !formData.rawMaterial || !formData.rawMaterialCode ||
+      !formData.rateLanded || !formData.dateIn || !formData.category ||
+      !formData.quantity || !formData.quantityUnit || !formData.purchasePrice ||
+      !formData.supplier) {
       alert("Please fill all required fields");
       return;
     }
@@ -117,13 +147,13 @@ const AddRawmaterial = () => {
       <Navbar />
       <div className="p-4 max-w-7xl mx-auto">
         <h1 className="text-2xl font-bold mb-6 text-gray-800">Purchase Raw Material</h1>
-        
+
         {/* Form */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
           <h2 className="text-xl font-semibold mb-4 text-gray-700">
             {editIndex !== null ? "Edit Material" : "Add New Material"}
           </h2>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {/* Form Fields */}
             <div className="space-y-1">
@@ -194,14 +224,22 @@ const AddRawmaterial = () => {
             </div>
 
             <div className="space-y-1">
-              <label className="block text-sm font-medium text-gray-700">Category *</label>
-              <input
+              <label className="block text-sm font-medium text-gray-700">
+                Category *
+              </label>
+              <select
                 name="category"
-                placeholder="Category"
                 value={formData.category}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
+              >
+                <option value="">Select Category</option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.name}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div className="space-y-1">
@@ -246,14 +284,22 @@ const AddRawmaterial = () => {
             </div>
 
             <div className="space-y-1">
-              <label className="block text-sm font-medium text-gray-700">Supplier *</label>
-              <input
+              <label className="block text-sm font-medium text-gray-700">
+                Supplier *
+              </label>
+              <select
                 name="supplier"
-                placeholder="Supplier Name"
                 value={formData.supplier}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
+              >
+                <option value="">Select Supplier</option>
+                {suppliers.map((supplier) => (
+                  <option key={supplier.id} value={supplier.id}>
+                    {supplier.supplierName}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
@@ -261,11 +307,10 @@ const AddRawmaterial = () => {
           <div className="mt-6">
             <button
               onClick={handleAddMaterial}
-              className={`flex items-center gap-2 px-4 py-2 rounded-md text-white ${
-                editIndex !== null 
-                  ? "bg-yellow-600 hover:bg-yellow-700" 
-                  : "bg-blue-600 hover:bg-blue-700"
-              }`}
+              className={`flex items-center gap-2 px-4 py-2 rounded-md text-white ${editIndex !== null
+                ? "bg-yellow-600 hover:bg-yellow-700"
+                : "bg-blue-600 hover:bg-blue-700"
+                }`}
             >
               {editIndex !== null ? (
                 <>
@@ -283,7 +328,7 @@ const AddRawmaterial = () => {
         {/* Materials Table */}
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-xl font-semibold mb-4 text-gray-700">Purchased Materials</h2>
-          
+
           {materials.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">

@@ -22,7 +22,7 @@ const Navbar = () => {
     { name: 'Standard Batch', icon: <FaFlask />, path: '/standard-batch-report' },
     { name: 'Batch Recreation', icon: <FaRecycle />, path: '/re-created-batch-report' },
     { name: 'Masters', icon: <FaCog />, path: '/masters' },
-    { name: 'Profile', icon: <FaUser />, path: '/profile' }
+    // { name: 'Profile', icon: <FaUser />, path: '/profile' }
   ];
 
   const toggleMenu = () => {
@@ -36,7 +36,7 @@ const Navbar = () => {
           
           {/* Logo */}
           <div className="flex-shrink-0 flex items-center">
-            <span className="text-xl font-bold">BatchPro</span>
+            <span className="text-xl font-bold">Chemtech Engineers</span>
           </div>
 
           {/* Desktop Menu */}
