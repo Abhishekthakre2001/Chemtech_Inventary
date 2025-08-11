@@ -187,7 +187,7 @@ export default function BatchRecreation() {
                     </div>
                     <div className="flex items-end">
                         <button
-                            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors"
+                            className="py-2 px-4 gap-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
                             onClick={loadBatchData}
                         >
                             <FaSearch /> Load Batch
@@ -236,7 +236,7 @@ export default function BatchRecreation() {
                 {/* Materials Table */}
                 <div className="overflow-x-auto mb-6">
                     <table className="w-full border border-gray-200 rounded-lg overflow-hidden">
-                        <thead className="bg-gray-800 text-white">
+                        <thead className="bg-blue-200 text-black">
                             <tr>
                                 <th className="p-3 text-left">Material</th>
                                 <th className="p-3 text-left">Category</th>
@@ -382,7 +382,7 @@ export default function BatchRecreation() {
                         <div className="flex items-end">
                             <button
                                 onClick={handleAddMaterial}
-                                className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded w-full justify-center transition-colors"
+                               className="w-full py-2.5 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
                             >
                                 <FaPlus /> Add Material
                             </button>

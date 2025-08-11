@@ -11,6 +11,7 @@ import {
   FaTimes,
 } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import logo from "../assets/logo.webp"; // Adjust the path as necessary
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -55,18 +56,9 @@ const Navbar = () => {
         {/* Header */}
         <div className="p-5 border-b border-gray-300">
           <div className="flex items-center">
-            <div className="bg-gradient-to-br from-blue-600 to-indigo-700 p-2 rounded-xl">
-              <div className="bg-white/10 p-1 rounded-lg">
-                <FaHome className="text-white" />
-              </div>
-            </div>
+            
             <div className="ml-3">
-              <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-700">
-                Test Desktop
-              </h1>
-              <p className="text-sm text-gray-600 font-semibold">
-                Admin Panel
-              </p>
+              <img src={logo} alt="Chemtech Engineers Logo" className="h-14" />
             </div>
           </div>
         </div>

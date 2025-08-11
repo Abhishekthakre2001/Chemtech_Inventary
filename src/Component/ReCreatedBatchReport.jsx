@@ -102,7 +102,7 @@ export default function ReCreatedBatchReport() {
               />
             </div>
            <Link to="/batch-recreation">
-  <button className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition-colors duration-200">
+  <button className="py-2 px-4 gap-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center">
     <FaPlus /> Create New Batch
   </button>
 </Link>
@@ -113,7 +113,7 @@ export default function ReCreatedBatchReport() {
         <div className="bg-white rounded-xl shadow overflow-hidden">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-800 text-white">
+              <thead className="bg-blue-200 text-black">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                     Batch ID
@@ -217,26 +217,7 @@ export default function ReCreatedBatchReport() {
         </div>
 
         {/* Pagination and Summary */}
-        <div className="mt-4 flex flex-col md:flex-row justify-between items-center text-sm text-gray-600">
-          <div className="mb-2 md:mb-0">
-            Showing <span className="font-medium">1</span> to <span className="font-medium">{filteredBatches.length}</span> of{' '}
-            <span className="font-medium">{batchesData.length}</span> batches
-          </div>
-          <div className="flex space-x-2">
-            <button className="px-3 py-1 border rounded-md bg-white hover:bg-gray-50">
-              Previous
-            </button>
-            <button className="px-3 py-1 border rounded-md bg-blue-600 text-white hover:bg-blue-700">
-              1
-            </button>
-            <button className="px-3 py-1 border rounded-md bg-white hover:bg-gray-50">
-              2
-            </button>
-            <button className="px-3 py-1 border rounded-md bg-white hover:bg-gray-50">
-              Next
-            </button>
-          </div>
-        </div>
+      
       </div>
     </div>
     </>

@@ -315,7 +315,7 @@ const CategoryManagement = () => {
                     </div>
                     <button
                         onClick={openAddModal}
-                        className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg whitespace-nowrap"
+                        className="py-2 px-4 gap-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
                     >
                         <FaPlus /> Add Category
                     </button>
@@ -426,13 +426,13 @@ const CategoryManagement = () => {
                                     <button
                                         type="button"
                                         onClick={() => setIsModalOpen(false)}
-                                        className="px-4 py-2 border rounded-md hover:bg-gray-50"
+                                       className="py-2 px-4 gap-4  bg-gradient-to-r from-gray-600 to-gray-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
                                     >
                                         Cancel
                                     </button>
                                     <button
                                         type="submit"
-                                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center gap-2"
+                                        className="py-2 px-4 gap-4  bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
                                     >
                                         {currentCategory.id ? <FaSave /> : <FaPlus />}
                                         {currentCategory.id ? "Update Category" : "Add Category"}

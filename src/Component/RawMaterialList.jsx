@@ -170,7 +170,7 @@ const RawMaterialList = () => {
             />
           </div>
           <Link to="/create-raw-material">
-            <button className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition-colors duration-200">
+            <button className="w-full py-2.5 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center p-4">
               <FaPlus /> Add New
             </button>
           </Link>
@@ -180,21 +180,21 @@ const RawMaterialList = () => {
         <div className="bg-white rounded-xl shadow overflow-hidden">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-800 text-white">
+              <thead className="bg-blue-200 text-black">
                 <tr>
 
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Sr. No.</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Purchase Code</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Raw Material Code</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Rate Landed</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Date In</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Name</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Category</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Stock</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Purchase Price</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Supplier</th>
-                  <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Update</th>
-                  <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Delete</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-nowrap">Purchase Code</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-nowrap">Raw Material Code</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-nowrap">Rate Landed</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-nowrap">Date In</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-nowrap">Name</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-nowrap">Category</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-nowrap">Stock</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-nowrap">Purchase Price</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-nowrap">Supplier</th>
+                  <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider text-nowrap">Update</th>
+                  <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider text-nowrap">Delete</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">

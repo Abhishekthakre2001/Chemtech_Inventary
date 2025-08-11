@@ -227,7 +227,7 @@ const AddRawmaterial = () => {
             {editIndex !== null ? "Edit Material" : "Add New Material"}
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             {/* Form Fields */}
             <div className="space-y-1">
               <label className="block text-sm font-medium text-gray-700">Purchase Code *</label>
@@ -374,15 +374,13 @@ const AddRawmaterial = () => {
                 ))}
               </select>
             </div>
-          </div>
 
-          {/* Add/Update Button */}
-          <div className="mt-6">
+             <div className="mt-6">
             <button
               onClick={handleAddMaterial}
               className={`flex items-center gap-2 px-4 py-2 rounded-md text-white ${editIndex !== null
-                ? "bg-yellow-600 hover:bg-yellow-700"
-                : "bg-blue-600 hover:bg-blue-700"
+                ? " py-2.5 bg-gradient-to-r from-yellow-600 to-yellow-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
+                : " py-2.5 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
                 }`}
             >
               {editIndex !== null ? (
@@ -396,6 +394,10 @@ const AddRawmaterial = () => {
               )}
             </button>
           </div>
+          </div>
+
+          {/* Add/Update Button */}
+         
         </div>
 
         {/* Materials Table */}
@@ -514,7 +516,7 @@ const AddRawmaterial = () => {
               </button>
               <button
                 onClick={handleSave}
-                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+               className=" px-4 py-2 gap-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
               >
                 <FaSave /> Save All Materials
               </button>
