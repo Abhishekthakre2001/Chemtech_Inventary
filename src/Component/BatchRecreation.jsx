@@ -1,101 +1,215 @@
-import React, { useState } from "react";
-import { FaEdit, FaTrash, FaPlus, FaTimes, FaCheck, FaSearch } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import { FaEdit, FaTrash, FaPlus, FaTimes, FaCheck, FaSearch, FaSpinner } from "react-icons/fa";
+import toast from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import Navbar from "./Navbar";
 
-const batchesMock = [
-    { id: 1, name: "Batch 1", description: "Standard Production Batch" },
-    { id: 2, name: "Batch 2", description: "Special Formula Batch" },
-    { id: 3, name: "Batch 3", description: "Experimental Mix" },
-];
+const API_BASE_URL = 'https://inventary.chemtechengineers.in/backend';
 
-const materialsMock = [
-    { id: 1, name: "Material A", category: "Base" },
-    { id: 2, name: "Material B", category: "Additive" },
-    { id: 3, name: "Material C", category: "Preservative" },
-    { id: 4, name: "Material D", category: "Colorant" },
-    { id: 5, name: "Material E", category: "Fragrance" },
-];
+// Error handling utility
+const handleApiError = (error, defaultMessage = 'An error occurred') => {
+  console.error('API Error:', error);
+  const message = error.response?.data?.message || error.message || defaultMessage;
+  toast.error(message);
+  throw new Error(message);
+};
 
 export default function BatchRecreation() {
+    const [batches, setBatches] = useState([]);
+    const [materials, setMaterials] = useState([]);
     const [selectedBatchId, setSelectedBatchId] = useState("");
     const [batchName, setBatchName] = useState("");
-    const [quantity, setQuantity] = useState("");
+    const [batchDate, setBatchDate] = useState("");
+    const [batchSize, setBatchSize] = useState("");
+    const [batchUnit, setBatchUnit] = useState("L");
     const [rawMaterials, setRawMaterials] = useState([]);
     const [newMaterialId, setNewMaterialId] = useState("");
     const [newPercentage, setNewPercentage] = useState("");
     const [editingId, setEditingId] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
 
-    const loadBatchData = () => {
+    // Fetch initial data on component mount
+    useEffect(() => {
+        const fetchInitialData = async () => {
+            setIsLoading(true);
+            try {
+                // Fetch batches
+                const batchesResponse = await fetch(`${API_BASE_URL}/batch/get_batches.php`);
+                if (!batchesResponse.ok) throw new Error('Failed to fetch batches');
+                const batchesData = await batchesResponse.json();
+                
+                // Handle both array and object responses
+                if (batchesData.success) {
+                    setBatches(Array.isArray(batchesData.data) ? batchesData.data : []);
+                } else {
+                    setBatches([]);
+                }
+
+                // Fetch raw materials
+                const materialsResponse = await fetch(`${API_BASE_URL}/raw_material/get_raw_materials_dropdown.php`);
+                if (!materialsResponse.ok) {
+                    console.warn('Failed to fetch raw materials dropdown');
+                    setMaterials([]);
+                } else {
+                    const materialsData = await materialsResponse.json();
+                    if (materialsData.success && Array.isArray(materialsData.data)) {
+                        setMaterials(materialsData.data);
+                    } else {
+                        setMaterials([]);
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading initial data:', error);
+                toast.error('Failed to load initial data. Please refresh the page.');
+                setBatches([]);
+                setMaterials([]);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchInitialData();
+    }, []);
+
+    const loadBatchData = async () => {
         if (!selectedBatchId) {
-            alert("Please select a batch first");
+            toast.error("Please select a batch first");
             return;
         }
 
-        // Simulate API call
-        const batch = batchesMock.find(b => b.id === parseInt(selectedBatchId));
-        if (!batch) return;
+        setIsLoading(true);
+        try {
+            // Fetch batch details
+            const response = await fetch(`${API_BASE_URL}/batch/get_batch.php?id=${selectedBatchId}`);
+            if (!response.ok) throw new Error('Failed to fetch batch details');
+            const result = await response.json();
+            
+            if (!result.success) {
+                throw new Error(result.message || 'Failed to load batch data');
+            }
 
-        setBatchName(batch.name);
+            // Check if we got a single batch or an array of batches
+            const batchData = Array.isArray(result.data) ? result.data[0] : result.data;
+            
+            if (!batchData) {
+                throw new Error('No batch data found');
+            }
 
-        // Simulate different batch data
-        if (selectedBatchId === "1") {
-            setQuantity("100");
-            setRawMaterials([
-                { id: 1, materialId: 1, materialName: "Material A", percentage: 50, weight: 50 },
-                { id: 2, materialId: 2, materialName: "Material B", percentage: 50, weight: 50 },
-            ]);
-        } else if (selectedBatchId === "2") {
-            setQuantity("200");
-            setRawMaterials([
-                { id: 3, materialId: 3, materialName: "Material C", percentage: 100, weight: 200 },
-            ]);
-        } else {
-            setQuantity("150");
-            setRawMaterials([
-                { id: 4, materialId: 4, materialName: "Material D", percentage: 70, weight: 105 },
-                { id: 5, materialId: 5, materialName: "Material E", percentage: 30, weight: 45 },
-            ]);
+            // Format the date to YYYY-MM-DD to avoid invalid date issues
+            const formatDate = (dateString) => {
+                if (!dateString) return '';
+                const date = new Date(dateString);
+                return isNaN(date.getTime()) ? '' : date.toISOString().split('T')[0];
+            };
+
+            setBatchName(batchData.batchName || batchData.batch_name || '');
+            setBatchDate(formatDate(batchData.batchDate || batchData.batch_date));
+            setBatchSize(batchData.batchSize || batchData.batch_size || '');
+            setBatchUnit(batchData.batchUnit || batchData.batch_unit || 'L');
+
+            // Process materials if they exist in the response
+            if (batchData.materials && Array.isArray(batchData.materials)) {
+                const formattedMaterials = batchData.materials.map((item, index) => ({
+                    id: item.id || Date.now() + index,
+                    materialId: item.id || item.raw_material_id,
+                    materialName: item.name || item.raw_material_name,
+                    percentage: parseFloat(item.percentage) || 0,
+                    weight: parseFloat(item.quantity || item.quantity_used || 0),
+                    unit: item.unit || item.unit_used || 'kg',
+                    available: item.quantity || 0
+                }));
+                setRawMaterials(formattedMaterials);
+            } else {
+                setRawMaterials([]);
+            }
+        } catch (error) {
+            handleApiError(error, 'Failed to load batch data');
+            setRawMaterials([]);
+        } finally {
+            setIsLoading(false);
         }
     };
 
     const handleAddMaterial = () => {
-        if (!newMaterialId || !newPercentage) {
-            alert("Please select material and enter percentage");
+        if (!newMaterialId) {
+            toast.error("Please select a material");
             return;
         }
 
-        if (parseFloat(newPercentage) <= 0 || parseFloat(newPercentage) > 100) {
-            alert("Percentage must be between 0 and 100");
+        if (!newPercentage) {
+            toast.error("Please enter a percentage");
+            return;
+        }
+
+        const percentage = parseFloat(newPercentage);
+        if (isNaN(percentage) || percentage <= 0 || percentage > 100) {
+            toast.error("Percentage must be between 0.01 and 100");
             return;
         }
 
         const materialExists = rawMaterials.some(
             (mat) => mat.materialId === parseInt(newMaterialId)
         );
+        
         if (materialExists) {
-            alert("This material is already added");
+            toast.error("This material is already added");
             return;
         }
 
-        const material = materialsMock.find(
+        const selectedMaterial = materials.find(
             (m) => m.id === parseInt(newMaterialId)
         );
 
-        const totalWeight = (parseFloat(quantity) * parseFloat(newPercentage)) / 100;
+        if (!selectedMaterial) {
+            toast.error("Selected material not found");
+            return;
+        }
+
+        const totalPercentage = rawMaterials.reduce(
+            (sum, mat) => sum + mat.percentage, 
+            percentage
+        );
+
+        if (totalPercentage > 100) {
+            toast.error(`Total percentage cannot exceed 100% (current: ${totalPercentage.toFixed(2)}%)`);
+            return;
+        }
+
+        const weight = (parseFloat(batchSize || 0) * percentage) / 100;
 
         const newMaterial = {
             id: Date.now(),
             materialId: parseInt(newMaterialId),
-            materialName: material.name,
-            percentage: parseFloat(newPercentage),
-            weight: totalWeight,
-            category: material.category,
+            materialName: selectedMaterial.raw_material_name || selectedMaterial.name,
+            percentage: percentage,
+            weight: weight,
+            unit: selectedMaterial.quantity_unit || 'kg',
+            available: selectedMaterial.quantity || 0
         };
 
         setRawMaterials([...rawMaterials, newMaterial]);
         setNewMaterialId("");
         setNewPercentage("");
+    };
+
+    const calculateMaterialWeight = (percentage) => {
+        if (!batchSize) return 0;
+        return (parseFloat(batchSize) * parseFloat(percentage)) / 100;
+    };
+
+    const validatePercentage = (percentage) => {
+        const value = parseFloat(percentage);
+        if (isNaN(value) || value <= 0 || value > 100) {
+            toast.error("Percentage must be between 0.01 and 100");
+            return false;
+        }
+        return true;
+    };
+
+    const calculateTotalPercentage = (materials) => {
+        return materials.reduce((sum, mat) => sum + parseFloat(mat.percentage || 0), 0);
     };
 
     const handleDeleteMaterial = (id) => {
@@ -107,7 +221,7 @@ export default function BatchRecreation() {
         setRawMaterials((materials) =>
             materials.map((mat) => {
                 if (mat.id === id) {
-                    const weight = (parseFloat(quantity) * parseFloat(newPerc)) / 100;
+                    const weight = (parseFloat(batchSize || 0) * parseFloat(newPerc)) / 100;
                     return { ...mat, percentage: parseFloat(newPerc), weight };
                 }
                 return mat;
@@ -116,116 +230,225 @@ export default function BatchRecreation() {
     };
 
     const startEditing = (id) => {
-        setEditingId(id);
+        const material = rawMaterials.find(mat => mat.id === id);
+        if (material) {
+            setNewMaterialId(material.materialId.toString());
+            setNewPercentage(material.percentage.toString());
+            setEditingId(id);
+        }
     };
 
     const stopEditing = () => {
         setEditingId(null);
+        setNewMaterialId("");
+        setNewPercentage("");
     };
 
-    const handleSaveEdit = (id) => {
-        // Validation could be added here
-        stopEditing();
-    };
-
-    const handleSave = () => {
-        if (!batchName || !quantity || rawMaterials.length === 0) {
-            alert("Please fill all required fields and add at least one material");
+    const handleSaveBatch = async () => {
+        if (!batchName || !batchSize) {
+            toast.warning("Please fill in all required fields");
             return;
         }
 
-        const totalPercentage = rawMaterials.reduce((sum, mat) => sum + mat.percentage, 0);
+        if (rawMaterials.length === 0) {
+            toast.warning("Please add at least one material");
+            return;
+        }
+
+        const totalPercentage = calculateTotalPercentage(rawMaterials);
         if (Math.abs(totalPercentage - 100) > 0.01) {
-            alert(`Total percentage must equal 100% (currently ${totalPercentage.toFixed(2)}%)`);
+            toast.warning("Total percentage must be exactly 100%");
             return;
         }
 
         const batchData = {
-            batchId: selectedBatchId,
-            batchName,
-            quantity,
-            rawMaterials,
-            totalWeight: rawMaterials.reduce((sum, mat) => sum + mat.weight, 0),
-            totalPercentage,
+            original_batch_id: parseInt(selectedBatchId),
+            recreated_batch_name: batchName,
+            recreated_batch_date: new Date().toISOString().split('T')[0],
+            recreated_batch_size: parseFloat(batchSize),
+            recreated_batch_unit: batchUnit,
+            materials: rawMaterials.map(mat => ({
+                raw_material_id: mat.materialId,
+                quantity_used: mat.weight,
+                unit_used: mat.unit,
+                percentage: mat.percentage,
+                notes: ''
+            }))
         };
 
-        console.log("Batch Data to save:", batchData);
-        alert("Batch saved successfully! Check console for details.");
+        setIsSaving(true);
+        try {
+            const response = await fetch(`${API_BASE_URL}/batch_recreation/add_batch_recreation.php`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(batchData)
+            });
+
+            const result = await response.json();
+            
+            if (!response.ok || !result.success) {
+                throw new Error(result.message || 'Failed to save batch recreation');
+            }
+
+            toast.success("Batch recreated successfully!");
+            // Reset form
+            setSelectedBatchId("");
+            setBatchName("");
+            setBatchSize("");
+            setBatchUnit("L");
+            setRawMaterials([]);
+        } catch (error) {
+            handleApiError(error, 'Failed to save batch recreation');
+        } finally {
+            setIsSaving(false);
+        }
     };
 
-    const filteredMaterials = materialsMock.filter(material =>
-        material.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        material.category.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    // Calculate total percentage for validation
+    const totalPercentage = rawMaterials.reduce((sum, mat) => sum + mat.percentage, 0);
+    const isPercentageValid = Math.abs(totalPercentage - 100) < 0.01;
+
+    // Filter materials based on search term
+    const filteredMaterials = materials.filter(material => {
+        if (!material) return false;
+        const searchLower = searchTerm.toLowerCase();
+        return (
+            (material.raw_material_name || material.name || '').toLowerCase().includes(searchLower) ||
+            (material.quantity_unit || '').toLowerCase().includes(searchLower)
+        );
+    });
+
+    if (isLoading) {
+        return (
+            <div className="flex justify-center items-center min-h-screen">
+                <div className="flex flex-col items-center">
+                    <FaSpinner className="animate-spin text-blue-600 text-4xl mb-4" />
+                    <p className="text-gray-600">Loading data, please wait...</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <>
-        <Navbar />
-         <div className="max-w-full mx-auto p-6 bg-white rounded-lg shadow-xl xl:ml-[17rem] ">
-            <h1 className="text-2xl font-bold mb-6 text-gray-800 border-b pb-2">
-                Batch Recreation System
-            </h1>
+            <Toaster position="bottom-right" />
+            <Navbar />
+            <div className="max-w-full mx-auto p-6 bg-white rounded-lg shadow-xl xl:ml-[17rem]">
+                <h1 className="text-2xl font-bold mb-6 text-gray-800 border-b pb-2">
+                    Batch Recreation System
+                </h1>
 
-            {/* Batch Selection */}
-            <div className="mb-8 bg-gray-50 p-4 rounded-lg">
-                <h2 className="text-lg font-semibold mb-4 text-gray-700">Select Batch to Recreate</h2>
-                <div className="flex flex-col md:flex-row gap-4">
-                    <div className="flex-grow">
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Batch *</label>
-                        <select
+                {/* Batch Selection */}
+                <div className="mb-8 bg-gray-50 p-4 rounded-lg">
+                    <h2 className="text-lg font-semibold mb-4 text-gray-700">Select Batch to Recreate</h2>
+                    <div className="flex flex-col md:flex-row gap-4">
+                        <div className="flex-grow">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Batch *</label>
+                            <select
+                                className="border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                value={selectedBatchId}
+                                onChange={(e) => setSelectedBatchId(e.target.value)}
+                                disabled={isLoading}
+                            >
+                                <option value="">Select a batch...</option>
+                                {batches.map((b) => {
+                                    // Helper function to safely format date
+                                    const formatDate = (dateString) => {
+                                        if (!dateString) return 'No date';
+                                        try {
+                                            const date = new Date(dateString);
+                                            return isNaN(date.getTime()) ? 'Invalid date' : date.toLocaleDateString('en-IN');
+                                        } catch (e) {
+                                            return 'Invalid date';
+                                        }
+                                    };
+                                    
+                                    const displayDate = formatDate(b.batch_date || b.batchDate);
+                                    const displayName = b.batch_name || b.batchName || `Batch ${b.id}`;
+                                    
+                                    return (
+                                        <option key={b.id} value={b.id}>
+                                            {displayName} - {displayDate}
+                                        </option>
+                                    );
+                                })}
+                            </select>
+                        </div>
+                        <div className="flex items-end">
+                            <button
+                                className="py-2 px-4 gap-2 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                                onClick={loadBatchData}
+                                disabled={!selectedBatchId || isLoading}
+                            >
+                                {isLoading ? (
+                                    <>
+                                        <FaSpinner className="animate-spin mr-2" />
+                                        Loading...
+                                    </>
+                                ) : (
+                                    <>
+                                        <FaSearch className="mr-2" />
+                                        Load Batch
+                                    </>
+                                )}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Batch Details */}
+                <div className="mb-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Batch Name *</label>
+                        <input
+                            type="text"
+                            placeholder="Enter batch name"
                             className="border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                            value={selectedBatchId}
-                            onChange={(e) => setSelectedBatchId(e.target.value)}
-                        >
-                            <option value="">Select a batch...</option>
-                            {batchesMock.map((b) => (
-                                <option key={b.id} value={b.id}>
-                                    {b.name} - {b.description}
-                                </option>
-                            ))}
-                        </select>
+                            value={batchName}
+                            onChange={(e) => setBatchName(e.target.value)}
+                            disabled={isLoading}
+                        />
                     </div>
-                    <div className="flex items-end">
-                        <button
-                            className="py-2 px-4 gap-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
-                            onClick={loadBatchData}
-                        >
-                            <FaSearch /> Load Batch
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            {/* Batch Details */}
-            <div className="mb-8 grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Batch Name/ID *</label>
-                    <input
-                        type="text"
-                        placeholder="Enter batch name"
-                        className="border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        value={batchName}
-                        onChange={(e) => setBatchName(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Total Quantity (kg) *</label>
-                    <input
-                        type="number"
-                        placeholder="Enter quantity"
-                        className="border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        value={quantity}
-                        onChange={(e) => {
-                            setQuantity(e.target.value);
-                            // Update all weights when total quantity changes
-                            setRawMaterials(materials =>
-                                materials.map(mat => ({
-                                    ...mat,
-                                    weight: (parseFloat(e.target.value || 0) * mat.percentage / 100)
-                                }))
-                            )
-                        }}
-                    />
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Batch Size *</label>
+                            <div className="flex">
+                                <input
+                                    type="number"
+                                    step="0.01"
+                                    min="0.01"
+                                    placeholder="Enter size"
+                                    className="border border-gray-300 p-2 rounded-l w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    value={batchSize}
+                                    onChange={(e) => {
+                                        const newSize = e.target.value;
+                                        setBatchSize(newSize);
+                                        // Update all weights when batch size changes
+                                        setRawMaterials(materials =>
+                                            materials.map(mat => ({
+                                                ...mat,
+                                                weight: (parseFloat(newSize || 0) * mat.percentage) / 100
+                                            }))
+                                        );
+                                    }}
+                                    disabled={isLoading}
+                                />
+                                <select
+                                    className="border border-gray-300 border-l-0 rounded-r px-2 bg-gray-100 text-gray-700"
+                                    value={batchUnit}
+                                    onChange={(e) => setBatchUnit(e.target.value)}
+                                    disabled={isLoading}
+                                >
+                                    <option value="L">L</option>
+                                    <option value="ml">ml</option>
+                                    <option value="kg">kg</option>
+                                    <option value="g">g</option>
+                                </select>
+                            </div>
+                        </div>
+                    
                 </div>
             </div>
 
@@ -408,7 +631,7 @@ export default function BatchRecreation() {
                     <FaTimes /> Reset Form
                 </button>
                 <button
-                    onClick={handleSave}
+                    onClick={handleSaveBatch}
                     className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors"
                 >
                     <FaCheck /> Save Batch Recreation
