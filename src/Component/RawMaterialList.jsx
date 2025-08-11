@@ -3,10 +3,13 @@ import { FaSearch, FaPlus, FaEdit, FaTrash } from 'react-icons/fa';
 import Navbar from './Navbar';
 import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
+import { Pencil, Trash2 } from "lucide-react";
+import toast from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 
 const RawMaterialList = () => {
-   const navigate = useNavigate();
-const handleEdit = (id) => {
+  const navigate = useNavigate();
+  const handleEdit = (id) => {
     navigate(`/update-raw-material/${id}`);
   };
   const [searchTerm, setSearchTerm] = useState('');
@@ -46,7 +49,7 @@ const handleEdit = (id) => {
       const response = await fetch(
         "https://inventary.chemtechengineers.in/backend/raw_material/delete_raw_material.php",
         {
-          method: "POST", // using POST because you're sending JSON
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
@@ -57,15 +60,81 @@ const handleEdit = (id) => {
       const result = await response.json();
 
       if (result.success) {
-        alert(result.message);
-        // Remove deleted item from UI
+        toast.success(result.message || "Raw material deleted successfully!", {
+          position: "top-center",
+          style: {
+            borderRadius: "12px",
+            background: "#FF4D4F",
+            color: "#fff",
+            fontWeight: "500",
+            padding: "14px 20px",
+            border: "2px solid #ffffff",
+            boxShadow: `
+            0 4px 6px -1px rgba(255, 77, 79, 0.2),
+            0 2px 4px -1px rgba(255, 77, 79, 0.06),
+            0 0 0 3px rgba(255, 255, 255, 0.4)
+          `,
+            letterSpacing: "0.5px",
+            textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+          },
+          iconTheme: {
+            primary: "#ffffff",
+            secondary: "#FF4D4F",
+          },
+          duration: 3000,
+        });
+
         setInventory((prev) => prev.filter((item) => item.id !== id));
       } else {
-        alert(`Error: ${result.message}`);
+        toast.error(result.message || "Failed to delete raw material!", {
+          position: "top-center",
+          style: {
+            borderRadius: "12px",
+            background: "#FF4D4F",
+            color: "#fff",
+            fontWeight: "500",
+            padding: "14px 20px",
+            border: "2px solid #ffffff",
+            boxShadow: `
+            0 4px 6px -1px rgba(255, 77, 79, 0.2),
+            0 2px 4px -1px rgba(255, 77, 79, 0.06),
+            0 0 0 3px rgba(255, 255, 255, 0.4)
+          `,
+            letterSpacing: "0.5px",
+            textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+          },
+          iconTheme: {
+            primary: "#ffffff",
+            secondary: "#FF4D4F",
+          },
+          duration: 3000,
+        });
       }
     } catch (error) {
       console.error("Delete error:", error);
-      alert("Something went wrong while deleting.");
+      toast.error("Something went wrong while deleting!", {
+        position: "top-center",
+        style: {
+          borderRadius: "12px",
+          background: "#FF4D4F",
+          color: "#fff",
+          fontWeight: "500",
+          padding: "14px 20px",
+          border: "2px solid #ffffff",
+          boxShadow: `
+          0 4px 6px -1px rgba(255, 77, 79, 0.2),
+          0 2px 4px -1px rgba(255, 77, 79, 0.06),
+          0 0 0 3px rgba(255, 255, 255, 0.4)
+        `,
+          letterSpacing: "0.5px",
+          textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+        },
+        iconTheme: {
+          primary: "#ffffff",
+          secondary: "#FF4D4F",
+        },
+        duration: 3000,
+      });
     }
   };
 
@@ -78,7 +147,8 @@ const handleEdit = (id) => {
   return (
     <>
       <Navbar />
-      <div className="p-6 max-w-7xl mx-auto">
+      <Toaster />
+      <div className="p-6 max-w-7xl mx-auto xl:ml-[17rem] ">
         {/* Header */}
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-800">Raw Material Inventory</h1>
@@ -112,9 +182,10 @@ const handleEdit = (id) => {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-800 text-white">
                 <tr>
+
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Sr. No.</th>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Purchase Code</th>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Raw Material Code</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Product ID</th>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Rate Landed</th>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Date In</th>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Name</th>
@@ -122,7 +193,8 @@ const handleEdit = (id) => {
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Stock</th>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Purchase Price</th>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Supplier</th>
-                  <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Actions</th>
+                  <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Update</th>
+                  <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Delete</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -133,11 +205,11 @@ const handleEdit = (id) => {
                     </td>
                   </tr>
                 ) : (
-                  filteredInventory.map((item) => (
+                  filteredInventory.map((item, index) => (
                     <tr key={item.id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{index + 1}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{item.purchaseCode}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.rawMaterialCode}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.productId}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">₹{item.rateLanded.toFixed(2)}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.dateIn}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.name}</td>
@@ -145,18 +217,26 @@ const handleEdit = (id) => {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.stock}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">₹{item.purchasePrice.toFixed(2)}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.supplier}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <div className="flex justify-center space-x-2">
-                          <button className="text-blue-600 hover:text-blue-900"  onClick={() => handleEdit(item.id)}>
-                            <FaEdit />
-                          </button>
-                          <button
-                            onClick={() => handleDelete(item.id)}
-                            className="text-red-600 hover:text-red-900"
-                          >
-                            <FaTrash />
-                          </button>
-                        </div>
+                      {/* Edit Column */}
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
+                        <button
+                          onClick={() => handleEdit(item.id)}
+                          title="Edit"
+                          className="p-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-800 shadow-sm transition-all duration-200"
+                        >
+                          <Pencil className="w-5 h-5" />
+                        </button>
+                      </td>
+
+                      {/* Delete Column */}
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
+                        <button
+                          onClick={() => handleDelete(item.id)}
+                          title="Delete"
+                          className="p-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-800 shadow-sm transition-all duration-200"
+                        >
+                          <Trash2 className="w-5 h-5" />
+                        </button>
                       </td>
                     </tr>
                   ))

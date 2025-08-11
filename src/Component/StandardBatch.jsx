@@ -1,6 +1,9 @@
-import React, { useState, useEffect  } from "react";
+import React, { useState, useEffect } from "react";
 import { FaEdit, FaTrash, FaPlus, FaTimes, FaCheck } from "react-icons/fa";
 import Navbar from "./Navbar";
+import { Pencil, Trash2 } from "lucide-react";
+import toast from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 
 export default function StandardBatch() {
   const [rawMaterialsList, setRawMaterialsList] = useState([]);
@@ -55,37 +58,135 @@ export default function StandardBatch() {
     setMaterials(materials.filter((_, i) => i !== index));
   };
 
-const handleSubmit = async () => {
-  if (!batchName || !batchDate || !batchSize || materials.length === 0) {
-    alert("Please fill all required batch information and add at least one material");
-    return;
-  }
-
-  const batchData = {
-    batchName,
-    batchDate,
-    batchSize,
-    batchUnit,
-    materials,
-  };
-
-  try {
-    const response = await fetch('https://inventary.chemtechengineers.in/backend/batch/add_batch.php', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(batchData),
-    });
-    const data = await response.json();
-    if (data.success) {
-      alert("Batch submitted successfully!");
-      // reset form or redirect
-    } else {
-      alert("Error: " + data.message);
+  const handleSubmit = async () => {
+    // Validation
+    if (!batchName || !batchDate || !batchSize || materials.length === 0) {
+      toast.error(
+        "Please fill all required batch information and add at least one material",
+        {
+          position: "top-center",
+          style: {
+            borderRadius: "12px",
+            background: "#FF4D4F",
+            color: "#fff",
+            fontWeight: "500",
+            padding: "14px 20px",
+            border: "2px solid #ffffff",
+            boxShadow: `
+            0 4px 6px -1px rgba(255, 77, 79, 0.2),
+            0 2px 4px -1px rgba(255, 77, 79, 0.06),
+            0 0 0 3px rgba(255, 255, 255, 0.4)
+          `,
+            letterSpacing: "0.5px",
+            textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+          },
+          iconTheme: {
+            primary: "#ffffff",
+            secondary: "#FF4D4F",
+          },
+          duration: 3000,
+        }
+      );
+      return;
     }
-  } catch (error) {
-    alert("Fetch error: " + error.message);
-  }
-};
+
+    const batchData = {
+      batchName,
+      batchDate,
+      batchSize,
+      batchUnit,
+      materials,
+    };
+
+    try {
+      const response = await fetch(
+        "https://inventary.chemtechengineers.in/backend/batch/add_batch.php",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(batchData),
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast.success("Batch submitted successfully!", {
+          position: "top-center",
+          style: {
+            borderRadius: "12px",
+            background: "#4CAF50",
+            color: "#fff",
+            fontWeight: "500",
+            padding: "14px 20px",
+            border: "2px solid #ffffff",
+            boxShadow: `
+            0 4px 6px -1px rgba(76, 175, 80, 0.2),
+            0 2px 4px -1px rgba(76, 175, 80, 0.06),
+            0 0 0 3px rgba(255, 255, 255, 0.4)
+          `,
+            letterSpacing: "0.5px",
+            textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+          },
+          iconTheme: {
+            primary: "#ffffff",
+            secondary: "#4CAF50",
+          },
+          duration: 3000,
+        });
+        handleCancel();
+        // Reset form or redirect here
+      } else {
+        toast.error(data.message || "Error submitting batch", {
+          position: "top-center",
+          style: {
+            borderRadius: "12px",
+            background: "#FF4D4F",
+            color: "#fff",
+            fontWeight: "500",
+            padding: "14px 20px",
+            border: "2px solid #ffffff",
+            boxShadow: `
+            0 4px 6px -1px rgba(255, 77, 79, 0.2),
+            0 2px 4px -1px rgba(255, 77, 79, 0.06),
+            0 0 0 3px rgba(255, 255, 255, 0.4)
+          `,
+            letterSpacing: "0.5px",
+            textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+          },
+          iconTheme: {
+            primary: "#ffffff",
+            secondary: "#FF4D4F",
+          },
+          duration: 3000,
+        });
+      }
+    } catch (error) {
+      toast.error(`Fetch error: ${error.message}`, {
+        position: "top-center",
+        style: {
+          borderRadius: "12px",
+          background: "#FF4D4F",
+          color: "#fff",
+          fontWeight: "500",
+          padding: "14px 20px",
+          border: "2px solid #ffffff",
+          boxShadow: `
+          0 4px 6px -1px rgba(255, 77, 79, 0.2),
+          0 2px 4px -1px rgba(255, 77, 79, 0.06),
+          0 0 0 3px rgba(255, 255, 255, 0.4)
+        `,
+          letterSpacing: "0.5px",
+          textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+        },
+        iconTheme: {
+          primary: "#ffffff",
+          secondary: "#FF4D4F",
+        },
+        duration: 3000,
+      });
+    }
+  };
 
 
   const handleCancel = () => {
@@ -116,7 +217,8 @@ const handleSubmit = async () => {
   return (
     <>
       <Navbar />
-      <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+      <Toaster />
+      <div className="mt-10 max-w-full mx-auto p-6 bg-white rounded-lg shadow-lg xl:ml-[17rem]">
         <h2 className="text-2xl font-bold mb-6 text-gray-800 border-b pb-2">
           Create New Product Batch
         </h2>
@@ -253,7 +355,8 @@ const handleSubmit = async () => {
                 <th className="p-3 text-right">Quantity</th>
                 <th className="p-3 text-right">Percentage</th>
                 <th className="p-3 text-left">Unit</th>
-                <th className="p-3 text-center">Actions</th>
+                <th className="p-3 text-center">Update</th>
+                <th className="p-3 text-center">Delete</th>
               </tr>
             </thead>
             <tbody>
@@ -266,22 +369,28 @@ const handleSubmit = async () => {
                   <td className="p-3 border-b border-gray-200 text-right">{mat.quantity}</td>
                   <td className="p-3 border-b border-gray-200 text-right">{mat.percentage}%</td>
                   <td className="p-3 border-b border-gray-200">{mat.unit}</td>
-                  <td className="p-3 border-b border-gray-200 flex justify-center gap-3">
+
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
                     <button
                       onClick={() => handleEdit(index)}
-                      className="text-blue-500 hover:text-blue-700 p-1 rounded-full hover:bg-blue-100"
                       title="Edit"
+                      className="p-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-800 shadow-sm transition-all duration-200"
                     >
-                      <FaEdit />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(index)}
-                      className="text-red-500 hover:text-red-700 p-1 rounded-full hover:bg-red-100"
-                      title="Delete"
-                    >
-                      <FaTrash />
+                      <Pencil className="w-5 h-5" />
                     </button>
                   </td>
+
+                  {/* Delete Column */}
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
+                    <button
+                      onClick={() => handleDelete(index)}
+                      title="Delete"
+                      className="p-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-800 shadow-sm transition-all duration-200"
+                    >
+                      <Trash2 className="w-5 h-5" />
+                    </button>
+                  </td>
+
                 </tr>
               ))}
               {materials.length === 0 && (

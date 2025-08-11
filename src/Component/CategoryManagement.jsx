@@ -1,33 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
 import { FaSearch, FaPlus, FaEdit, FaTrash, FaSave, FaTimes } from 'react-icons/fa';
+import { Edit, Trash2 } from "lucide-react";
+import toast from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 
 const CategoryManagement = () => {
     // Sample initial categories
     const [categories, setCategories] = useState([]);
 
     // Fetch categories from API
-    const fetchCategories = async () => {
-        try {
-            const { data } = await axios.get(
-                "https://inventary.chemtechengineers.in/backend/category/list_categories.php"
-            );
 
-            if (data.success && Array.isArray(data.data)) {
-                setCategories(data.data);
-            } else {
-                console.error("Invalid API response:", data);
-                setCategories([]); // fallback to empty list
-            }
-        } catch (error) {
-            console.error("Error fetching categories:", error);
-            setCategories([]); // fallback to empty list
-        }
-    };
-
-    useEffect(() => {
-        fetchCategories();
-    }, []);
 
 
     // State for modal and form
@@ -60,7 +43,7 @@ const CategoryManagement = () => {
             const { data } = await axios.post(
                 "https://inventary.chemtechengineers.in/backend/category/add_category.php",
                 {
-                    name: currentCategory.name, // send only required field
+                    name: currentCategory.name,
                 },
                 {
                     headers: {
@@ -70,17 +53,69 @@ const CategoryManagement = () => {
             );
 
             if (data.success) {
-                alert(data.message);
-                // Reset form and close modal
+                toast.success("Category added successfully!", {
+                    position: "top-center",
+                    style: {
+                        borderRadius: "12px",
+                        background: "#4CAF50",
+                        color: "#fff",
+                        fontWeight: "500",
+                        padding: "14px 20px",
+                        border: "2px solid #ffffff",
+                        boxShadow: `
+                        0 4px 6px -1px rgba(76, 175, 80, 0.2),
+                        0 2px 4px -1px rgba(76, 175, 80, 0.06),
+                        0 0 0 3px rgba(255, 255, 255, 0.4)
+                    `,
+                        letterSpacing: "0.5px",
+                        textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+                    },
+                    iconTheme: {
+                        primary: "#ffffff",
+                        secondary: "#4CAF50",
+                    },
+                    duration: 3000,
+                    ariaProps: {
+                        role: "alert",
+                        "aria-live": "polite",
+                    },
+                });
+
                 setCurrentCategory({ name: "" });
                 setIsModalOpen(false);
                 // Optionally refresh category list here
             } else {
-                alert(data.message);
+                toast.error(data.message || "Failed to add category", {
+                    position: "top-center",
+                    style: {
+                        borderRadius: "12px",
+                        background: "#F44336",
+                        color: "#fff",
+                        fontWeight: "500",
+                        padding: "14px 20px",
+                    },
+                    iconTheme: {
+                        primary: "#fff",
+                        secondary: "#F44336",
+                    },
+                });
             }
         } catch (error) {
             console.error("Error adding category:", error);
-            alert("Something went wrong while adding the category.");
+            toast.error("Something went wrong while adding the category.", {
+                position: "top-center",
+                style: {
+                    borderRadius: "12px",
+                    background: "#F44336",
+                    color: "#fff",
+                    fontWeight: "500",
+                    padding: "14px 20px",
+                },
+                iconTheme: {
+                    primary: "#fff",
+                    secondary: "#F44336",
+                },
+            });
         }
     };
 
@@ -102,29 +137,74 @@ const CategoryManagement = () => {
             );
 
             if (data.success) {
-                alert(data.message);
+                toast.success("Category updated successfully!", {
+                    position: "top-center",
+                    style: {
+                        borderRadius: "12px",
+                        background: "#2196F3", // Blue for update
+                        color: "#fff",
+                        fontWeight: "500",
+                        padding: "14px 20px",
+                        border: "2px solid #ffffff",
+                        boxShadow: `
+                        0 4px 6px -1px rgba(33, 150, 243, 0.2),
+                        0 2px 4px -1px rgba(33, 150, 243, 0.06),
+                        0 0 0 3px rgba(255, 255, 255, 0.4)
+                    `,
+                        letterSpacing: "0.5px",
+                        textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+                    },
+                    iconTheme: {
+                        primary: "#ffffff",
+                        secondary: "#2196F3",
+                    },
+                    duration: 3000,
+                });
+
                 setCurrentCategory({ name: "" });
                 setIsModalOpen(false);
-                fetchCategories(); // refresh list after update
+                fetchCategories();
             } else {
-                alert(data.message);
+                toast.error(data.message || "Failed to update category", {
+                    position: "top-center",
+                    style: {
+                        borderRadius: "12px",
+                        background: "#F44336",
+                        color: "#fff",
+                        fontWeight: "500",
+                        padding: "14px 20px",
+                    },
+                    iconTheme: {
+                        primary: "#fff",
+                        secondary: "#F44336",
+                    },
+                });
             }
         } catch (error) {
             console.error("Error updating category:", error);
-            alert("Something went wrong while updating the category.");
+            toast.error("Something went wrong while updating the category.", {
+                position: "top-center",
+                style: {
+                    borderRadius: "12px",
+                    background: "#F44336",
+                    color: "#fff",
+                    fontWeight: "500",
+                    padding: "14px 20px",
+                },
+                iconTheme: {
+                    primary: "#fff",
+                    secondary: "#F44336",
+                },
+            });
         }
     };
 
     // Delete category
     const deleteCategory = async (id) => {
-        if (!window.confirm("Are you sure you want to delete this category?")) {
-            return;
-        }
-
         try {
             const { data } = await axios.post(
                 "https://inventary.chemtechengineers.in/backend/category/delete_category.php",
-                { id }, // send category id
+                { id },
                 {
                     headers: {
                         "Content-Type": "application/json",
@@ -133,22 +213,94 @@ const CategoryManagement = () => {
             );
 
             if (data.success) {
-                alert(data.message);
+                toast.success("Category deleted successfully!", {
+                    position: "top-center",
+                    style: {
+                        borderRadius: "12px",
+                        background: "#F44336", // Red for delete
+                        color: "#fff",
+                        fontWeight: "500",
+                        padding: "14px 20px",
+                        border: "2px solid #ffffff",
+                        boxShadow: `
+                        0 4px 6px -1px rgba(244, 67, 54, 0.2),
+                        0 2px 4px -1px rgba(244, 67, 54, 0.06),
+                        0 0 0 3px rgba(255, 255, 255, 0.4)
+                    `,
+                        letterSpacing: "0.5px",
+                        textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+                    },
+                    iconTheme: {
+                        primary: "#ffffff",
+                        secondary: "#F44336",
+                    },
+                    duration: 3000,
+                });
+
                 setCategories((prev) => prev.filter((cat) => cat.id !== id));
             } else {
-                alert(data.message);
+                toast.error(data.message || "Failed to delete category", {
+                    position: "top-center",
+                    style: {
+                        borderRadius: "12px",
+                        background: "#F44336",
+                        color: "#fff",
+                        fontWeight: "500",
+                        padding: "14px 20px",
+                    },
+                    iconTheme: {
+                        primary: "#fff",
+                        secondary: "#F44336",
+                    },
+                });
             }
         } catch (error) {
             console.error("Error deleting category:", error);
-            alert("Something went wrong while deleting the category.");
+            toast.error("Something went wrong while deleting the category.", {
+                position: "top-center",
+                style: {
+                    borderRadius: "12px",
+                    background: "#F44336",
+                    color: "#fff",
+                    fontWeight: "500",
+                    padding: "14px 20px",
+                },
+                iconTheme: {
+                    primary: "#fff",
+                    secondary: "#F44336",
+                },
+            });
         }
     };
 
+    const fetchCategories = async () => {
+        try {
+            const { data } = await axios.get(
+                "https://inventary.chemtechengineers.in/backend/category/list_categories.php"
+            );
+
+            if (data.success && Array.isArray(data.data)) {
+                setCategories(data.data);
+            } else {
+                console.error("Invalid API response:", data);
+                setCategories([]); // fallback to empty list
+            }
+        } catch (error) {
+            console.error("Error fetching categories:", error);
+            setCategories([]); // fallback to empty list
+        }
+    };
+
+    useEffect(() => {
+        fetchCategories();
+    }, [isModalOpen]);
+
 
     return (
-        <div className="p-6 max-w-4xl mx-auto">
+        <div className="p-6 max-w-4xl mx-auto ">
+            <Toaster />
             {/* Header and Search */}
-            <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+            <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 ">
                 <h1 className="text-2xl font-bold text-gray-800">Category Management</h1>
                 <div className="flex items-center gap-4 w-full md:w-auto">
                     <div className="relative flex-grow md:flex-grow-0 md:w-64">
@@ -177,7 +329,8 @@ const CategoryManagement = () => {
                         <tr>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SR. NO.</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CATEGORY NAME</th>
-                            <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">ACTIONS</th>
+                            <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">UPDATE</th>
+                            <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">DELETE</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
@@ -193,20 +346,26 @@ const CategoryManagement = () => {
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{index + 1}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{category.name}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <div className="flex justify-center space-x-2">
+                                        <div className="flex justify-center space-x-3">
+                                            {/* Edit Button */}
                                             <button
                                                 onClick={() => openEditModal(category)}
-                                                className="text-blue-600 hover:text-blue-900 p-1"
+                                                className="p-2 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-200 shadow-sm"
                                                 title="Edit"
                                             >
-                                                <FaEdit />
+                                                <Edit size={16} />
                                             </button>
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <div className="flex justify-center space-x-3">
+                                            {/* Delete Button */}
                                             <button
                                                 onClick={() => deleteCategory(category.id)}
-                                                className="text-red-600 hover:text-red-900 p-1"
+                                                className="p-2 rounded-full bg-red-100 text-red-600 hover:bg-red-600 hover:text-white transition-all duration-200 shadow-sm"
                                                 title="Delete"
                                             >
-                                                <FaTrash />
+                                                <Trash2 size={16} />
                                             </button>
                                         </div>
                                     </td>

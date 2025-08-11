@@ -78,7 +78,7 @@ export default function ReCreatedBatchReport() {
 
     <>
       <Navbar />
-       <div className="p-6 font-sans bg-gray-50 min-h-screen">
+       <div className="p-6 font-sans bg-gray-50 min-h-screen mt-10 xl:ml-[17rem]">
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">

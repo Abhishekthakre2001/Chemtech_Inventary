@@ -3,6 +3,7 @@ import axios from "axios";
 import { FaPlus, FaSearch, FaPrint, FaEye, FaEdit, FaTrash } from "react-icons/fa";
 import Navbar from "./Navbar";
 import { Link } from "react-router-dom";
+import { Pencil, Trash2 } from "lucide-react";
 
 
 const statusStyles = {
@@ -158,31 +159,31 @@ export default function ProductBatch() {
   };
 
   const handleDeleteBatch = async (batchId) => {
-  if (!window.confirm('Are you sure you want to delete this batch?')) return;
+    if (!window.confirm('Are you sure you want to delete this batch?')) return;
 
-  try {
-    const response = await axios.delete('https://inventary.chemtechengineers.in/backend/batch/delete_batch.php', {
-      data: { id: batchId } // sending id in body
-    });
+    try {
+      const response = await axios.delete('https://inventary.chemtechengineers.in/backend/batch/delete_batch.php', {
+        data: { id: batchId } // sending id in body
+      });
 
-    if (response.data.success) {
-      alert('Batch deleted successfully!');
-      // Refresh batch list after deletion
-      fetchBatches(); // your method to reload batch list
-    } else {
-      alert('Delete failed: ' + (response.data.message || 'Unknown error'));
+      if (response.data.success) {
+        alert('Batch deleted successfully!');
+        // Refresh batch list after deletion
+        fetchBatches(); // your method to reload batch list
+      } else {
+        alert('Delete failed: ' + (response.data.message || 'Unknown error'));
+      }
+    } catch (error) {
+      alert('Error deleting batch: ' + error.message);
     }
-  } catch (error) {
-    alert('Error deleting batch: ' + error.message);
-  }
-};
+  };
 
 
 
   return (
     <>
       <Navbar />
-      <div className="p-6 font-sans bg-gray-50 min-h-screen">
+      <div className="mt-6 p-6 font-sans bg-gray-50 min-h-screen xl:ml-[17rem]">
         <div className="max-w-7xl mx-auto">
           {/* Header Section */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
@@ -234,14 +235,23 @@ export default function ProductBatch() {
                     <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                       Materials
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                    {/* <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                       Cost
-                    </th>
+                    </th> */}
                     <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                       Status
                     </th>
                     <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">
-                      Actions
+                      Print
+                    </th>
+                    <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">
+                      View
+                    </th>
+                    <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">
+                      Update
+                    </th>
+                    <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">
+                      Delete
                     </th>
                   </tr>
                 </thead>
@@ -273,52 +283,60 @@ export default function ProductBatch() {
                             {batch.rawMaterialCount} materials
                           </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        {/* <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                           ₹{batch.batchCost.toLocaleString()}
-                        </td>
+                        </td> */}
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${statusStyles[batch.status]
                             }`}>
                             {batch.status}
                           </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                          <div className="flex justify-center space-x-3">
-                            <button
-                              title="Print"
-                              className="text-gray-500 hover:text-blue-600 transition-colors"
-                              onClick={() => handlePrint(batch.id)}  // pass current batch here
-                            >
-                              <FaPrint className="h-4 w-4" />
-                            </button>
-
-                            <button
-                              title="View"
-                              className="text-gray-500 hover:text-green-600 transition-colors"
-                              onClick={() => {
-                                fetchBatchById(batch.id);
-                              }}
-                            >
-                              <FaEye className="h-4 w-4" />
-                            </button>
-
-
-                            <button
-                              title="Edit"
-                              className="text-gray-500 hover:text-orange-600 transition-colors"
-                            >
-                              <FaEdit className="h-4 w-4" />
-                            </button>
-                           <button
-  title="Delete"
-  className="text-gray-500 hover:text-red-600 transition-colors"
-  onClick={() => handleDeleteBatch(batch.id)}
->
-  <FaTrash className="h-4 w-4" />
-</button>
-
-                          </div>
+                        {/* Print Column */}
+                        <td className="p-3 border-b border-gray-200 text-center">
+                          <button
+                            onClick={() => handlePrint(batch.id)}
+                            title="Print"
+                            className="p-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-800 shadow-sm transition-all duration-200"
+                          >
+                            <FaPrint className="h-4 w-4" />
+                          </button>
                         </td>
+
+                        {/* View Column */}
+                        <td className="p-3 border-b border-gray-200 text-center">
+                          <button
+                            onClick={() => fetchBatchById(batch.id)}
+                            title="View"
+                            className="p-2 rounded-lg bg-green-50 text-green-600 hover:bg-green-100 hover:text-green-800 shadow-sm transition-all duration-200"
+                          >
+                            <FaEye className="h-4 w-4" />
+                          </button>
+                        </td>
+
+                        {/* Edit Column */}
+                        <td className="p-3 border-b border-gray-200 text-center">
+                          <button
+                            onClick={() => handleEdit(batch.id)}
+                            title="Edit"
+                            className="p-2 rounded-lg bg-orange-50 text-orange-600 hover:bg-orange-100 hover:text-orange-800 shadow-sm transition-all duration-200"
+                          >
+                            <FaEdit className="h-4 w-4" />
+                          </button>
+                        </td>
+
+                        {/* Delete Column */}
+                        <td className="p-3 border-b border-gray-200 text-center">
+                          <button
+                            onClick={() => handleDeleteBatch(batch.id)}
+                            title="Delete"
+                            className="p-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-800 shadow-sm transition-all duration-200"
+                          >
+                            <FaTrash className="h-4 w-4" />
+                          </button>
+                        </td>
+
+
                       </tr>
                     ))
                   )}
@@ -327,27 +345,6 @@ export default function ProductBatch() {
             </div>
           </div>
 
-          {/* Pagination and Summary */}
-          <div className="mt-4 flex flex-col md:flex-row justify-between items-center text-sm text-gray-600">
-            <div className="mb-2 md:mb-0">
-              Showing <span className="font-medium">1</span> to <span className="font-medium">{filteredBatches.length}</span> of{' '}
-              <span className="font-medium">{batchesData.length}</span> batches
-            </div>
-            <div className="flex space-x-2">
-              <button className="px-3 py-1 border rounded-md bg-white hover:bg-gray-50">
-                Previous
-              </button>
-              <button className="px-3 py-1 border rounded-md bg-blue-600 text-white hover:bg-blue-700">
-                1
-              </button>
-              <button className="px-3 py-1 border rounded-md bg-white hover:bg-gray-50">
-                2
-              </button>
-              <button className="px-3 py-1 border rounded-md bg-white hover:bg-gray-50">
-                Next
-              </button>
-            </div>
-          </div>
         </div>
       </div>
 

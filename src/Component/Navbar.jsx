@@ -1,114 +1,124 @@
-import React, { useState } from 'react';
-import { 
-  FaHome, 
-  FaBox, 
-  FaFlask, 
-  FaRecycle, 
-  FaCog, 
-  FaUser, 
+import React, { useState } from "react";
+import {
+  FaHome,
+  FaBox,
+  FaFlask,
+  FaRecycle,
+  FaCog,
+  FaUser,
   FaSignOutAlt,
   FaBars,
-  FaTimes 
-} from 'react-icons/fa';
-import { Link, useLocation } from 'react-router-dom';
+  FaTimes,
+} from "react-icons/fa";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const location = useLocation(); // to detect active route
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const menuItems = [
-    { name: 'Dashboard', icon: <FaHome />, path: '/' },
-    { name: 'Raw Material', icon: <FaBox />, path: '/raw-material-list' },
-    { name: 'Standard Batch', icon: <FaFlask />, path: '/standard-batch-report' },
-    { name: 'Batch Recreation', icon: <FaRecycle />, path: '/re-created-batch-report' },
-    { name: 'Masters', icon: <FaCog />, path: '/masters' },
-    // { name: 'Profile', icon: <FaUser />, path: '/profile' }
+    { name: "Dashboard", icon: <FaHome />, path: "/" },
+    { name: "Raw Material", icon: <FaBox />, path: "/raw-material-list" },
+    { name: "Standard Batch", icon: <FaFlask />, path: "/standard-batch-report" },
+    { name: "Batch Recreation", icon: <FaRecycle />, path: "/re-created-batch-report" },
+    { name: "Masters", icon: <FaCog />, path: "/masters" },
   ];
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
+  const toggleSidebar = () => setIsOpen(!isOpen);
+  const closeSidebar = () => setIsOpen(false);
 
   return (
-    <nav className="bg-gray-800 text-white shadow-lg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          
-          {/* Logo */}
-          <div className="flex-shrink-0 flex items-center">
-            <span className="text-xl font-bold">Chemtech Engineers</span>
-          </div>
+    <div className="font-sans">
+      {/* Mobile Toggle Button */}
+      <button
+        className="fixed top-2 right-4 z-50 p-1 bg-blue-600 rounded-lg text-white shadow-lg xl:hidden"
+        onClick={toggleSidebar}
+        aria-label={isOpen ? "Close menu" : "Open menu"}
+      >
+        {isOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
+      </button>
 
-          {/* Desktop Menu */}
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-center space-x-4">
-              {menuItems.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.path}
-                  className={`px-3 py-2 rounded-md text-sm font-medium flex items-center ${
-                    location.pathname === item.path
-                      ? 'bg-gray-900 text-white'
-                      : 'text-gray-300 hover:bg-gray-700 hover:text-white'
-                  }`}
-                >
-                  <span className="mr-2">{item.icon}</span>
-                  {item.name}
-                </Link>
-              ))}
-              <Link
-                to="/logout"
-                className="ml-4 px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white flex items-center"
-              >
-                <span className="mr-2"><FaSignOutAlt /></span>
-                Logout
-              </Link>
+      {/* Overlay */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/70 bg-opacity-40 z-40 xl:hidden"
+          onClick={toggleSidebar}
+        ></div>
+      )}
+
+      {/* Sidebar */}
+      <aside
+        className={`fixed inset-y-0 left-0 flex flex-col w-full max-w-[16rem] p-0 overflow-y-auto bg-gradient-to-br from-blue-200 to-indigo-100 border-r border-gray-200 shadow-xl z-50 transition-transform duration-300
+        ${isOpen ? "translate-x-0" : "-translate-x-full"} xl:translate-x-0`}
+      >
+        {/* Header */}
+        <div className="p-5 border-b border-gray-300">
+          <div className="flex items-center">
+            <div className="bg-gradient-to-br from-blue-600 to-indigo-700 p-2 rounded-xl">
+              <div className="bg-white/10 p-1 rounded-lg">
+                <FaHome className="text-white" />
+              </div>
+            </div>
+            <div className="ml-3">
+              <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-700">
+                Test Desktop
+              </h1>
+              <p className="text-sm text-gray-600 font-semibold">
+                Admin Panel
+              </p>
             </div>
           </div>
+        </div>
 
-          {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center">
+        {/* Menu Items */}
+        <div className="flex-1 overflow-y-auto py-4">
+          <ul className="space-y-1 px-3">
+            {menuItems.map((item, index) => (
+              <li key={index}>
+                <Link
+                  to={item.path}
+                  onClick={closeSidebar}
+                  className={`flex items-center px-4 py-3 rounded-xl transition-all duration-200 group
+                  ${location.pathname === item.path
+                      ? "bg-blue-50 text-blue-600 font-semibold"
+                      : "text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+                    }`}
+                >
+                  <div className="bg-gradient-to-r from-blue-500 to-cyan-500 w-9 h-9 rounded-xl flex items-center justify-center shadow-sm text-white">
+                    {item.icon}
+                  </div>
+                  <span className="ml-3 font-medium">{item.name}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Footer */}
+        <div className="p-4 border-t border-gray-300">
+          <a className="flex items-center px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center">
+              <FaUser className="text-blue-600" size={18} />
+            </div>
+            <div className="ml-2">
+              <p className="font-medium text-gray-800 capitalize">Admin</p>
+              <p className="text-sm text-gray-600">Superuser</p>
+            </div>
+          </a>
+          <div className="mt-8 mx-3">
             <button
-              onClick={toggleMenu}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none"
+              onClick={() => {
+                navigate("/logout");
+              }}
+              className="w-full py-2.5 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
             >
-              {isOpen ? <FaTimes className="h-6 w-6" /> : <FaBars className="h-6 w-6" />}
+              <FaSignOutAlt className="mr-2" /> Logout
             </button>
           </div>
         </div>
-      </div>
-
-      {/* Mobile Menu */}
-      {isOpen && (
-        <div className="md:hidden bg-gray-800">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {menuItems.map((item) => (
-              <Link
-                key={item.name}
-                to={item.path}
-                onClick={() => setIsOpen(false)}
-                className={`w-full text-left px-3 py-2 rounded-md text-base font-medium flex items-center ${
-                  location.pathname === item.path
-                    ? 'bg-gray-900 text-white'
-                    : 'text-gray-300 hover:bg-gray-700 hover:text-white'
-                }`}
-              >
-                <span className="mr-2">{item.icon}</span>
-                {item.name}
-              </Link>
-            ))}
-            <Link
-              to="/logout"
-              onClick={() => setIsOpen(false)}
-              className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white flex items-center"
-            >
-              <span className="mr-2"><FaSignOutAlt /></span>
-              Logout
-            </Link>
-          </div>
-        </div>
-      )}
-    </nav>
+      </aside>
+    </div>
   );
 };
 

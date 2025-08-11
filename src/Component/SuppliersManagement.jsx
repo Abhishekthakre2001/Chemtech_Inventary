@@ -1,45 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
+import toast from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import { FaSearch, FaPlus, FaEdit, FaTrash, FaSave, FaTimes } from 'react-icons/fa';
+import { Pencil, Trash2 } from "lucide-react";
 
 const SuppliersManagement = () => {
     const [suppliers, setSuppliers] = useState([]);
     const [loading, setLoading] = useState(true); // ✅ declared at top
 
-    useEffect(() => {
-        const fetchSuppliers = async () => {
-            try {
-                const res = await axios.get(
-                    "https://inventary.chemtechengineers.in/backend/supplier/list_suppliers.php"
-                );
-
-                if (res.data.success && Array.isArray(res.data.data)) {
-                    const mappedSuppliers = res.data.data.map((item) => ({
-                        id: parseInt(item.id),
-                        name: item.supplierName,
-                        contactPerson: item.contactPerson,
-                        contactNumber: item.contactNumber,
-                        email: item.email,
-                        address: item.address,
-                        accountNumber: item.bankAccount,
-                        bankName: item.bankName,
-                        ifscCode: item.ifscCode,
-                        products: item.provideproduct
-                    }));
-
-                    setSuppliers(mappedSuppliers);
-                } else {
-                    console.error("Unexpected API response", res.data);
-                }
-            } catch (error) {
-                console.error("Error fetching suppliers:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchSuppliers();
-    }, []);
 
 
 
@@ -132,97 +101,357 @@ const SuppliersManagement = () => {
     };
 
     // Handle form submission
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //     // setLoading(true);
+    //     // setError("");
+    //     // setSuccess("");
+
+    //     try {
+    //         const res = await axios.post("https://inventary.chemtechengineers.in/backend/supplier/add_supplier.php", formData, {
+    //             headers: { "Content-Type": "application/json" }
+    //         });
+
+    //         if (res.data.success) {
+    //             setSuccess("Data saved successfully!");
+    //             setFormData({ name: "", email: "", message: "" });
+    //         } else {
+    //             setError(res.data.message || "Something went wrong");
+    //         }
+    //     } catch (err) {
+    //         setError(err.response?.data?.message || "Server error");
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
     const handleSubmit = async (e) => {
+        console.log("call")
         e.preventDefault();
-        // setLoading(true);
+        setLoading(true);
         // setError("");
         // setSuccess("");
 
         try {
-            const res = await axios.post("https://inventary.chemtechengineers.in/backend/supplier/add_supplier.php", formData, {
-                headers: { "Content-Type": "application/json" }
-            });
+            const res = await axios.post(
+                "https://inventary.chemtechengineers.in/backend/supplier/add_supplier.php",
+                formData,
+                { headers: { "Content-Type": "application/json" } }
+            );
 
             if (res.data.success) {
-                setSuccess("Data saved successfully!");
+                // Close the popup
+                setIsModalOpen(false);
+
+                // Show a styled success toast
+                toast.success("Supplier added successfully!", {
+                    position: "top-center",
+                    style: {
+                        borderRadius: "12px",
+                        background: "#4CAF50",
+                        color: "#fff",
+                        fontWeight: "500",
+                        padding: "14px 20px",
+                        border: "2px solid #ffffff", // White border
+                        boxShadow: `
+            0 4px 6px -1px rgba(76, 175, 80, 0.2),
+            0 2px 4px -1px rgba(76, 175, 80, 0.06),
+            0 0 0 3px rgba(255, 255, 255, 0.4) // Glow effect
+        `,
+                        letterSpacing: "0.5px",
+                        textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+                    },
+                    iconTheme: {
+                        primary: "#ffffff",
+                        secondary: "#4CAF50",
+                    },
+                    duration: 3000,
+                    className: "toast-success",
+                    ariaProps: {
+                        role: "alert",
+                        "aria-live": "polite",
+                    },
+                });
+
                 setFormData({ name: "", email: "", message: "" });
             } else {
-                setError(res.data.message || "Something went wrong");
+                toast.error(res.data.message || "Something went wrong", {
+                    position: "top-center",
+                    style: {
+                        borderRadius: "8px",
+                        background: "#ff4d4d",
+                        color: "#fff",
+                        fontWeight: "500",
+                        padding: "12px 16px",
+                    },
+                });
             }
         } catch (err) {
-            setError(err.response?.data?.message || "Server error");
+            toast.error(err.response?.data?.message || "Server error", {
+                position: "top-center",
+                style: {
+                    borderRadius: "8px",
+                    background: "#ff4d4d",
+                    color: "#fff",
+                    fontWeight: "500",
+                    padding: "12px 16px",
+                },
+            });
         } finally {
             setLoading(false);
         }
     };
 
     // Update existing supplier
-    const handleUpdate = async (e) => {
-        e.preventDefault();
-        setLoading(true);
 
-        try {
-            const payload = {
-                id: editingId,
-                supplierName: formData.name, // backend expects supplierName
-                contactPerson: formData.contactPerson,
-                contactNumber: formData.contactNumber,
-                email: formData.email,
-                address: formData.address,
-                bankAccount: formData.accountNumber, // backend expects bankAccount
-                bankName: formData.bankName,
-                ifscCode: formData.ifscCode,
-                provideproduct: formData.products // backend expects provideproduct
-            };
 
-            const res = await axios.post(
-                "https://inventary.chemtechengineers.in/backend/supplier/edit_supplier.php",
-                payload
-            );
+const handleUpdate = async (e) => {
+    e.preventDefault();
+    setLoading(true);
 
-            if (res.data.success) {
-                alert("Supplier updated successfully!");
-                //   refreshSuppliers();
-                setIsModalOpen(false);
-            } else {
-                alert(res.data.message || "Failed to update supplier");
-            }
-        } catch (error) {
-            console.error("Error updating supplier:", error);
-            alert("Something went wrong while updating supplier");
-        } finally {
-            setLoading(false);
+    try {
+        const payload = {
+            id: editingId,
+            supplierName: formData.name, // backend expects supplierName
+            contactPerson: formData.contactPerson,
+            contactNumber: formData.contactNumber,
+            email: formData.email,
+            address: formData.address,
+            bankAccount: formData.accountNumber, // backend expects bankAccount
+            bankName: formData.bankName,
+            ifscCode: formData.ifscCode,
+            provideproduct: formData.products // backend expects provideproduct
+        };
+
+        const res = await axios.post(
+            "https://inventary.chemtechengineers.in/backend/supplier/edit_supplier.php",
+            payload
+        );
+
+        if (res.data.success) {
+            // Close modal
+            setIsModalOpen(false);
+
+            // Show styled success toast for update
+            toast.success("Supplier updated successfully!", {
+                position: "top-center",
+                style: {
+                    borderRadius: "12px",
+                    background: "#2196F3", // Blue for update
+                    color: "#fff",
+                    fontWeight: "500",
+                    padding: "14px 20px",
+                    border: "2px solid #ffffff", // White border
+                    boxShadow: `
+                        0 4px 6px -1px rgba(33, 150, 243, 0.2),
+                        0 2px 4px -1px rgba(33, 150, 243, 0.06),
+                        0 0 0 3px rgba(255, 255, 255, 0.4) // Glow effect
+                    `,
+                    letterSpacing: "0.5px",
+                    textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+                },
+                iconTheme: {
+                    primary: "#ffffff",
+                    secondary: "#2196F3",
+                },
+                duration: 3000,
+                className: "toast-success",
+                ariaProps: {
+                    role: "alert",
+                    "aria-live": "polite",
+                },
+            });
+
+            // refreshSuppliers(); // Uncomment if you need to reload list
+        } else {
+            toast.error(res.data.message || "Failed to update supplier", {
+                position: "top-center",
+                style: {
+                    borderRadius: "12px",
+                    background: "#F44336",
+                    color: "#fff",
+                    fontWeight: "500",
+                    padding: "14px 20px",
+                    border: "2px solid #ffffff",
+                    boxShadow: `
+                        0 4px 6px -1px rgba(244, 67, 54, 0.2),
+                        0 2px 4px -1px rgba(244, 67, 54, 0.06),
+                        0 0 0 3px rgba(255, 255, 255, 0.4)
+                    `,
+                    letterSpacing: "0.5px",
+                    textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+                },
+                iconTheme: {
+                    primary: "#ffffff",
+                    secondary: "#F44336",
+                },
+                duration: 3000,
+            });
         }
-    };
+    } catch (error) {
+        console.error("Error updating supplier:", error);
+        toast.error("Something went wrong while updating supplier", {
+            position: "top-center",
+            style: {
+                borderRadius: "12px",
+                background: "#F44336",
+                color: "#fff",
+                fontWeight: "500",
+                padding: "14px 20px",
+                border: "2px solid #ffffff",
+                boxShadow: `
+                    0 4px 6px -1px rgba(244, 67, 54, 0.2),
+                    0 2px 4px -1px rgba(244, 67, 54, 0.06),
+                    0 0 0 3px rgba(255, 255, 255, 0.4)
+                `,
+                letterSpacing: "0.5px",
+                textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+            },
+            iconTheme: {
+                primary: "#ffffff",
+                secondary: "#F44336",
+            },
+            duration: 3000,
+        });
+    } finally {
+        setLoading(false);
+    }
+};
+
 
 
     // Delete supplier
-    const deleteSupplier = async (id) => {
-        if (!window.confirm("Are you sure you want to delete this supplier?")) {
-            return;
+  const deleteSupplier = async (id) => {
+    // if (!window.confirm("Are you sure you want to delete this supplier?")) {
+    //     return;
+    // }
+
+    try {
+        const res = await axios.post(
+            "https://inventary.chemtechengineers.in/backend/supplier/delete_supplier.php",
+            { id }
+        );
+
+        if (res.data.success) {
+            // Remove from state
+            setSuppliers(suppliers.filter((s) => s.id !== id));
+
+            // Show delete success toast
+            toast.success("Supplier deleted successfully!", {
+                position: "top-center",
+                style: {
+                    borderRadius: "12px",
+                    background: "#F44336", // Red for delete
+                    color: "#fff",
+                    fontWeight: "500",
+                    padding: "14px 20px",
+                    border: "2px solid #ffffff",
+                    boxShadow: `
+                        0 4px 6px -1px rgba(244, 67, 54, 0.2),
+                        0 2px 4px -1px rgba(244, 67, 54, 0.06),
+                        0 0 0 3px rgba(255, 255, 255, 0.4)
+                    `,
+                    letterSpacing: "0.5px",
+                    textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+                },
+                iconTheme: {
+                    primary: "#ffffff",
+                    secondary: "#F44336",
+                },
+                duration: 3000,
+            });
+        } else {
+            toast.error(res.data.message || "Failed to delete supplier", {
+                position: "top-center",
+                style: {
+                    borderRadius: "12px",
+                    background: "#F44336",
+                    color: "#fff",
+                    fontWeight: "500",
+                    padding: "14px 20px",
+                    border: "2px solid #ffffff",
+                    boxShadow: `
+                        0 4px 6px -1px rgba(244, 67, 54, 0.2),
+                        0 2px 4px -1px rgba(244, 67, 54, 0.06),
+                        0 0 0 3px rgba(255, 255, 255, 0.4)
+                    `,
+                    letterSpacing: "0.5px",
+                    textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+                },
+                iconTheme: {
+                    primary: "#ffffff",
+                    secondary: "#F44336",
+                },
+                duration: 3000,
+            });
         }
+    } catch (error) {
+        console.error("Error deleting supplier:", error);
+        toast.error("Something went wrong while deleting supplier", {
+            position: "top-center",
+            style: {
+                borderRadius: "12px",
+                background: "#F44336",
+                color: "#fff",
+                fontWeight: "500",
+                padding: "14px 20px",
+                border: "2px solid #ffffff",
+                boxShadow: `
+                    0 4px 6px -1px rgba(244, 67, 54, 0.2),
+                    0 2px 4px -1px rgba(244, 67, 54, 0.06),
+                    0 0 0 3px rgba(255, 255, 255, 0.4)
+                `,
+                letterSpacing: "0.5px",
+                textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+            },
+            iconTheme: {
+                primary: "#ffffff",
+                secondary: "#F44336",
+            },
+            duration: 3000,
+        });
+    }
+};
 
-        try {
-            const res = await axios.post(
-                "https://inventary.chemtechengineers.in/backend/supplier/delete_supplier.php",
-                { id }
-            );
 
-            if (res.data.success) {
-                alert("Supplier deleted successfully!");
-                setSuppliers(suppliers.filter((s) => s.id !== id)); // update state after success
-            } else {
-                alert(res.data.message || "Failed to delete supplier");
+    useEffect(() => {
+        const fetchSuppliers = async () => {
+            try {
+                const res = await axios.get(
+                    "https://inventary.chemtechengineers.in/backend/supplier/list_suppliers.php"
+                );
+
+                if (res.data.success && Array.isArray(res.data.data)) {
+                    const mappedSuppliers = res.data.data.map((item) => ({
+                        id: parseInt(item.id),
+                        name: item.supplierName,
+                        contactPerson: item.contactPerson,
+                        contactNumber: item.contactNumber,
+                        email: item.email,
+                        address: item.address,
+                        accountNumber: item.bankAccount,
+                        bankName: item.bankName,
+                        ifscCode: item.ifscCode,
+                        products: item.provideproduct
+                    }));
+
+                    setSuppliers(mappedSuppliers);
+                } else {
+                    console.error("Unexpected API response", res.data);
+                }
+            } catch (error) {
+                console.error("Error fetching suppliers:", error);
+            } finally {
+                setLoading(false);
             }
-        } catch (error) {
-            console.error("Error deleting supplier:", error);
-            alert("Something went wrong while deleting supplier");
-        }
-    };
+        };
+
+        fetchSuppliers();
+    }, [isModalOpen]);
 
 
     return (
-        <div className="p-6 max-w-7xl mx-auto">
+        <div className="p-6 max-w-7xl mx-auto ">
+            <Toaster />
             <div className="flex flex-col md:flex-row justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold text-gray-800">Suppliers Management</h1>
                 <div className="flex items-center gap-4 mt-4 md:mt-0">
@@ -246,9 +475,9 @@ const SuppliersManagement = () => {
             </div>
 
             {/* Suppliers Table */}
-            <div className="bg-white rounded-lg shadow overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200">
+            <div className="bg-white rounded-lg shadow overflow-hidden ">
+                <div className="overflow-x-auto ">
+                    <table className="min-w-full divide-y divide-gray-200 ">
                         <thead className="bg-gray-50">
                             <tr>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
@@ -256,7 +485,8 @@ const SuppliersManagement = () => {
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact Number</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bank</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Update</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Delete</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
@@ -274,23 +504,26 @@ const SuppliersManagement = () => {
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{supplier.contactNumber}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{supplier.email}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{supplier.bankName}</td>
+                                        {/* Edit Column */}
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                            <div className="flex space-x-2">
-                                                <button
-                                                    onClick={() => openEditModal(supplier)}
-                                                    className="text-blue-600 hover:text-blue-900"
-                                                    title="Edit"
-                                                >
-                                                    <FaEdit />
-                                                </button>
-                                                <button
-                                                    onClick={() => deleteSupplier(supplier.id)}
-                                                    className="text-red-600 hover:text-red-900"
-                                                    title="Delete"
-                                                >
-                                                    <FaTrash />
-                                                </button>
-                                            </div>
+                                            <button
+                                                onClick={() => openEditModal(supplier)}
+                                                className="flex items-center justify-center p-2 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white transition duration-200 shadow-sm"
+                                                title="Edit"
+                                            >
+                                                <Pencil size={18} />
+                                            </button>
+                                        </td>
+
+                                        {/* Delete Column */}
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <button
+                                                onClick={() => deleteSupplier(supplier.id)}
+                                                className="flex items-center justify-center p-2 rounded-full bg-red-100 text-red-600 hover:bg-red-600 hover:text-white transition duration-200 shadow-sm"
+                                                title="Delete"
+                                            >
+                                                <Trash2 size={18} />
+                                            </button>
                                         </td>
                                     </tr>
                                 ))

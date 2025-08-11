@@ -161,7 +161,7 @@ export default function BatchRecreation() {
     return (
         <>
         <Navbar />
-         <div className="max-w-5xl mx-auto p-6 bg-white rounded-lg shadow-xl">
+         <div className="max-w-full mx-auto p-6 bg-white rounded-lg shadow-xl xl:ml-[17rem] ">
             <h1 className="text-2xl font-bold mb-6 text-gray-800 border-b pb-2">
                 Batch Recreation System
             </h1>

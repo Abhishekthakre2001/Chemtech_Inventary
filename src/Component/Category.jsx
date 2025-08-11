@@ -27,7 +27,7 @@ function Category() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 xl:ml-[17rem] ">
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-lg rounded-lg p-6 w-96"

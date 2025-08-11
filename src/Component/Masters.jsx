@@ -10,7 +10,7 @@ const Masters = () => {
   return (
     <>
      <Navbar />
-      <div className="p-4">
+      <div className="p-4 xl:ml-[17rem]">
       <h1 className="text-2xl font-bold mb-6">Masters</h1>
       
       {/* Tab Navigation */}

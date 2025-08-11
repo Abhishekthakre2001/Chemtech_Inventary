@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from "./Navbar";
 import { FaEdit, FaTrash, FaSave, FaPlus, FaRedo } from "react-icons/fa";
+import { Edit, Trash2 } from "lucide-react";
+
+import toast from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 
 const AddRawmaterial = () => {
   const [categories, setCategories] = useState([]);
@@ -103,7 +107,29 @@ const AddRawmaterial = () => {
 
   const handleSave = async () => {
     if (materials.length === 0) {
-      alert("Please add at least one material before saving");
+      toast.error("Please add at least one material before saving", {
+        position: "top-center",
+        style: {
+          borderRadius: "12px",
+          background: "#f44336",
+          color: "#fff",
+          fontWeight: "500",
+          padding: "14px 20px",
+          border: "2px solid #ffffff",
+          boxShadow: `
+          0 4px 6px -1px rgba(244, 67, 54, 0.2),
+          0 2px 4px -1px rgba(244, 67, 54, 0.06),
+          0 0 0 3px rgba(255, 255, 255, 0.4)
+        `,
+          letterSpacing: "0.5px",
+          textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+        },
+        iconTheme: {
+          primary: "#ffffff",
+          secondary: "#f44336",
+        },
+        duration: 3000,
+      });
       return;
     }
 
@@ -113,11 +139,57 @@ const AddRawmaterial = () => {
         { data: materials }
       );
       console.log(res.data);
-      alert("Data saved successfully!");
+
+      toast.success("Data saved successfully!", {
+        position: "top-center",
+        style: {
+          borderRadius: "12px",
+          background: "#4CAF50",
+          color: "#fff",
+          fontWeight: "500",
+          padding: "14px 20px",
+          border: "2px solid #ffffff",
+          boxShadow: `
+          0 4px 6px -1px rgba(76, 175, 80, 0.2),
+          0 2px 4px -1px rgba(76, 175, 80, 0.06),
+          0 0 0 3px rgba(255, 255, 255, 0.4)
+        `,
+          letterSpacing: "0.5px",
+          textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+        },
+        iconTheme: {
+          primary: "#ffffff",
+          secondary: "#4CAF50",
+        },
+        duration: 3000,
+      });
+
       setMaterials([]);
     } catch (err) {
       console.error(err);
-      alert("Error saving data");
+      toast.error("Error saving data", {
+        position: "top-center",
+        style: {
+          borderRadius: "12px",
+          background: "#f44336",
+          color: "#fff",
+          fontWeight: "500",
+          padding: "14px 20px",
+          border: "2px solid #ffffff",
+          boxShadow: `
+          0 4px 6px -1px rgba(244, 67, 54, 0.2),
+          0 2px 4px -1px rgba(244, 67, 54, 0.06),
+          0 0 0 3px rgba(255, 255, 255, 0.4)
+        `,
+          letterSpacing: "0.5px",
+          textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+        },
+        iconTheme: {
+          primary: "#ffffff",
+          secondary: "#f44336",
+        },
+        duration: 3000,
+      });
     }
   };
 
@@ -145,7 +217,8 @@ const AddRawmaterial = () => {
   return (
     <>
       <Navbar />
-      <div className="p-4 max-w-7xl mx-auto">
+      <Toaster />
+      <div className="p-4 max-w-7xl mx-auto xl:ml-[17rem] ">
         <h1 className="text-2xl font-bold mb-6 text-gray-800">Purchase Raw Material</h1>
 
         {/* Form */}
@@ -346,7 +419,7 @@ const AddRawmaterial = () => {
                       "Unit",
                       "Price",
                       "Supplier",
-                      "Actions"
+                      "Update", "Delete"
                     ].map((header) => (
                       <th
                         key={header}
@@ -393,24 +466,32 @@ const AddRawmaterial = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {mat.supplier}
                       </td>
+
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <div className="flex space-x-2">
+                        <div className="flex justify-center space-x-3">
+                          {/* Edit Button */}
                           <button
                             onClick={() => handleEdit(index)}
-                            className="text-blue-600 hover:text-blue-900"
+                            className="p-2 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-200 shadow-sm"
                             title="Edit"
                           >
-                            <FaEdit />
-                          </button>
-                          <button
-                            onClick={() => handleDelete(index)}
-                            className="text-red-600 hover:text-red-900"
-                            title="Delete"
-                          >
-                            <FaTrash />
+                            <Edit size={16} />
                           </button>
                         </div>
                       </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <div className="flex justify-center space-x-3">
+                          {/* Delete Button */}
+                          <button
+                            onClick={() => handleDelete(index)}
+                            className="p-2 rounded-full bg-red-100 text-red-600 hover:bg-red-600 hover:text-white transition-all duration-200 shadow-sm"
+                            title="Delete"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </td>
+
                     </tr>
                   ))}
                 </tbody>
