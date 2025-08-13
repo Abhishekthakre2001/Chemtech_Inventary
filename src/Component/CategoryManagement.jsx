@@ -297,7 +297,7 @@ const CategoryManagement = () => {
 
 
     return (
-        <div className="p-6 max-w-4xl mx-auto ">
+        <div className="p-6 w-full mx-auto ">
             <Toaster />
             {/* Header and Search */}
             <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 ">
@@ -315,7 +315,7 @@ const CategoryManagement = () => {
                     </div>
                     <button
                         onClick={openAddModal}
-                        className="py-2 px-4 gap-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
+                        className="text-nowrap py-2 px-4 gap-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
                     >
                         <FaPlus /> Add Category
                     </button>

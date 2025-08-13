@@ -19,7 +19,7 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const menuItems = [
-    { name: "Dashboard", icon: <FaHome />, path: "/" },
+    { name: "Dashboard", icon: <FaHome />, path: "/dashboard" },
     { name: "Raw Material", icon: <FaBox />, path: "/raw-material-list" },
     { name: "Standard Batch", icon: <FaFlask />, path: "/standard-batch-report" },
     { name: "Batch Recreation", icon: <FaRecycle />, path: "/re-created-batch-report" },
@@ -28,6 +28,16 @@ const Navbar = () => {
 
   const toggleSidebar = () => setIsOpen(!isOpen);
   const closeSidebar = () => setIsOpen(false);
+
+   // Call this when logging out
+  const handleLogout = () => {
+    // Remove auth details if needed
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("user");
+
+    // Navigate to home
+    navigate("/");
+  };
 
   return (
     <div className="font-sans">
@@ -100,9 +110,7 @@ const Navbar = () => {
           </a>
           <div className="mt-8 mx-3">
             <button
-              onClick={() => {
-                navigate("/logout");
-              }}
+               onClick={handleLogout}
               className="w-full py-2.5 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
             >
               <FaSignOutAlt className="mr-2" /> Logout

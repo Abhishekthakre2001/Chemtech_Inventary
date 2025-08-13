@@ -452,26 +452,30 @@ const handleUpdate = async (e) => {
     return (
         <div className="p-6 max-w-7xl mx-auto ">
             <Toaster />
-            <div className="flex flex-col md:flex-row justify-between items-center mb-6">
+            <div className="flex flex-col lg:flex-row justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold text-gray-800">Suppliers Management</h1>
-                <div className="flex items-center gap-4 mt-4 md:mt-0">
-                    <div className="relative">
-                        <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                        <input
-                            type="text"
-                            placeholder="Search suppliers..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        />
-                    </div>
-                    <button
-                        onClick={openAddModal}
-                        className="px-4 py-2 gap-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
-                    >
-                        <FaPlus /> Add Supplier
-                    </button>
-                </div>
+               <div className="flex flex-col md:flex-row md:items-center gap-4 mt-4 md:mt-0 w-full">
+    {/* Search Box */}
+    <div className="relative w-full md:w-auto flex-1">
+        <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+        <input
+            type="text"
+            placeholder="Search suppliers..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        />
+    </div>
+
+    {/* Add Supplier Button */}
+    <button
+        onClick={openAddModal}
+        className="w-full md:w-auto text-nowrap text-sm px-4 py-2 gap-2 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
+    >
+        <FaPlus /> Add Supplier
+    </button>
+</div>
+
             </div>
 
             {/* Suppliers Table */}
