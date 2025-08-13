@@ -17,6 +17,7 @@ function App() {
         <Route path="/" element={<Dashboard />} />
         <Route path="/standard-batch" element={<StandardBatch />} />
         <Route path="/batch-recreation" element={<BatchRecreation />} />
+        <Route path="/batch-recreation/edit/:id" element={<BatchRecreation editMode={true} />} />
         <Route path="/standard-batch-report" element={<StandardBatchReport />} />
         <Route path="/re-created-batch-report" element={<ReCreatedBatchReport />} />
         <Route path="/create-raw-material" element={<CreateRawMaterial />} />
