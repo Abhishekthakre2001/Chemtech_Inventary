@@ -1,10 +1,13 @@
 // src/components/ChemtechLogin.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect ,useContext  } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from "../context/AuthContext";
 import toast, { Toaster } from 'react-hot-toast';
 import Logo from '../assets/logo.webp';
 
 const Login = () => {
+  const { login } = useContext(AuthContext);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -13,84 +16,39 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
     setIsLoading(true);
-    
+    e.preventDefault();
+
     try {
-      const response = await fetch('https://inventary.chemtechengineers.in/backend/login/login.php', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password
-        })
+      const response = await fetch("https://inventary.chemtechengineers.in/backend/login/login.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
       });
-      
+
       const result = await response.json();
-      
-      if (result.status === 'success') {
-        // Save token to localStorage
-        localStorage.setItem('authToken', result.token);
-        localStorage.setItem('user', JSON.stringify(result.user));
-        
-        // Navigate to dashboard
-        navigate('/dashboard');
+
+      if (result.status === "success") {
+        login(result.user, result.token);
+        setIsLoading(false);
+        navigate("/dashboard");
       } else {
-        // Show error toast
-        toast.error("Login failed. Please try again.", {
-          position: "top-center",
-          style: {
-            borderRadius: "12px",
-            background: "#FF4D4F",
-            color: "#fff",
-            fontWeight: "500",
-            padding: "14px 20px",
-            border: "2px solid #ffffff",
-            boxShadow: `
-              0 4px 6px -1px rgba(255, 77, 79, 0.2),
-              0 2px 4px -1px rgba(255, 77, 79, 0.06),
-              0 0 0 3px rgba(255, 255, 255, 0.4)
-            `,
-            letterSpacing: "0.5px",
-            textShadow: "0 1px 1px rgba(0,0,0,0.1)",
-          },
-          iconTheme: {
-            primary: "#ffffff",
-            secondary: "#FF4D4F",
-          },
-          duration: 3000,
-        });
+        setIsLoading(false);
+        toast.error("Login failed. Please try again.");
       }
     } catch (error) {
-      toast.error("Network error. Please try again.", {
-        position: "top-center",
-        style: {
-          borderRadius: "12px",
-          background: "#FF4D4F",
-          color: "#fff",
-          fontWeight: "500",
-          padding: "14px 20px",
-          border: "2px solid #ffffff",
-          boxShadow: `
-            0 4px 6px -1px rgba(255, 77, 79, 0.2),
-            0 2px 4px -1px rgba(255, 77, 79, 0.06),
-            0 0 0 3px rgba(255, 255, 255, 0.4)
-          `,
-          letterSpacing: "0.5px",
-          textShadow: "0 1px 1px rgba(0,0,0,0.1)",
-        },
-        iconTheme: {
-          primary: "#ffffff",
-          secondary: "#FF4D4F",
-        },
-        duration: 3000,
-      });
-    } finally {
       setIsLoading(false);
+      toast.error("Network error. Please try again.");
     }
   };
+
+
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      navigate("/dashboard"); // already logged in → skip login
+    }
+  }, [navigate]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center p-4">

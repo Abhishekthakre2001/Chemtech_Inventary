@@ -5,14 +5,14 @@ import { Toaster } from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "./Navbar";
 
-const API_BASE_URL = 'https://inventary.chemtechengineers.in/backend'; 
+const API_BASE_URL = 'https://inventary.chemtechengineers.in/backend';
 
 // Error handling utility
 const handleApiError = (error, defaultMessage = 'An error occurred') => {
-  console.error('API Error:', error);
-  const message = error.response?.data?.message || error.message || defaultMessage;
-  toast.error(message);
-  throw new Error(message);
+    console.error('API Error:', error);
+    const message = error.response?.data?.message || error.message || defaultMessage;
+    toast.error(message);
+    throw new Error(message);
 };
 
 export default function BatchRecreation({ editMode = false }) {
@@ -56,17 +56,17 @@ export default function BatchRecreation({ editMode = false }) {
                             'Origin': window.location.origin
                         }
                     });
-                    
+
                     if (!batchesResponse.ok) {
                         const errorText = await batchesResponse.text();
                         console.error('Batches API Error Status:', batchesResponse.status);
                         console.error('Batches API Error Response:', errorText);
                         throw new Error(`Failed to fetch batches: ${batchesResponse.status} ${batchesResponse.statusText}`);
                     }
-                    
+
                     const batchesData = await batchesResponse.json();
                     console.log('Batches API Response:', batchesData);
-                    
+
                     // Handle both array and object responses
                     if (batchesData.success) {
                         const batchesArray = Array.isArray(batchesData.data) ? batchesData.data : [];
@@ -93,26 +93,26 @@ export default function BatchRecreation({ editMode = false }) {
                         },
                         credentials: 'include'  // Try with credentials as it might be required
                     });
-                    
+
                     // First check if the response is JSON
                     const responseText = await materialsResponse.text();
                     let materialsData;
-                    
+
                     try {
                         materialsData = JSON.parse(responseText);
                     } catch (parseError) {
                         console.error('Failed to parse response as JSON. Response:', responseText.substring(0, 200));
                         throw new Error('Received non-JSON response from server. Please check the API endpoint.');
                     }
-                    
+
                     console.log('Raw Materials API Response:', materialsData);
-                    
+
                     if (!materialsResponse.ok) {
                         console.error('Raw Materials API Error Status:', materialsResponse.status);
                         console.error('Raw Materials API Error Response:', materialsData);
                         throw new Error(`Failed to fetch raw materials: ${materialsResponse.status} ${materialsResponse.statusText}`);
                     }
-                    
+
                     if (materialsData && materialsData.success && Array.isArray(materialsData.data)) {
                         // Transform data to ensure consistent structure
                         const transformedMaterials = materialsData.data.map(item => ({
@@ -157,10 +157,10 @@ export default function BatchRecreation({ editMode = false }) {
             // Updated endpoint to match the working batches list endpoint pattern
             const batchUrl = `${API_BASE_URL}/batch/get_batches.php?id=${selectedBatchId}`;
             const materialsUrl = `${API_BASE_URL}/batch/get_batch_raw_materials.php?batch_id=${selectedBatchId}`;
-            
+
             console.log('Batch URL:', batchUrl);
             console.log('Materials URL:', materialsUrl);
-            
+
             const [batchResponse, materialsResponse] = await Promise.all([
                 fetch(batchUrl, {
                     headers: {
@@ -199,7 +199,7 @@ export default function BatchRecreation({ editMode = false }) {
 
             const batchData = Array.isArray(batchResult.data) ? batchResult.data[0] : batchResult.data;
             if (!batchData) throw new Error('No batch data found');
-            
+
             // Process and format materials data
             let materialsData = [];
             if (materialsResponse.ok) {
@@ -270,7 +270,7 @@ export default function BatchRecreation({ editMode = false }) {
         const materialExists = rawMaterials.some(
             (mat) => mat.materialId === parseInt(newMaterialId)
         );
-        
+
         if (materialExists) {
             toast.error("This material is already added");
             return;
@@ -286,7 +286,7 @@ export default function BatchRecreation({ editMode = false }) {
         }
 
         const totalPercentage = rawMaterials.reduce(
-            (sum, mat) => sum + mat.percentage, 
+            (sum, mat) => sum + mat.percentage,
             percentage
         );
 
@@ -372,14 +372,14 @@ export default function BatchRecreation({ editMode = false }) {
         }
 
         // Update the material's edit state
-        setRawMaterials(prev => 
-            prev.map(mat => 
-                mat.id === id 
+        setRawMaterials(prev =>
+            prev.map(mat =>
+                mat.id === id
                     ? { ...mat, isEditing: false }
                     : mat
             )
         );
-        
+
         setEditingId(null);
         toast.success('Material updated successfully');
     };
@@ -404,7 +404,7 @@ export default function BatchRecreation({ editMode = false }) {
             toast.warning("Please fill in all required fields");
             return;
         }
-        
+
         if (editMode && !id) {
             toast.error("Invalid batch recreation ID");
             return;
@@ -436,7 +436,7 @@ export default function BatchRecreation({ editMode = false }) {
                 notes: ''
             }))
         };
-        
+
         // If in edit mode, add the ID to the request
         if (editMode) {
             batchData.id = parseInt(id);
@@ -446,7 +446,7 @@ export default function BatchRecreation({ editMode = false }) {
         try {
             const endpoint = editMode ? 'update_batch_recreation' : 'add_batch_recreation';
             const method = editMode ? 'PUT' : 'POST';
-            
+
             const response = await fetch(`${API_BASE_URL}/batch_recreation/${endpoint}.php`, {
                 method: method,
                 headers: {
@@ -456,16 +456,38 @@ export default function BatchRecreation({ editMode = false }) {
             });
 
             const result = await response.json();
-            
+
             if (!response.ok || !result.success) {
                 throw new Error(result.message || 'Failed to save batch recreation');
             }
+            toast.success("Supplier deleted successfully!", {
+                position: "top-center",
+                style: {
+                    borderRadius: "12px",
+                    background: "#F44336", // Red for delete
+                    color: "#fff",
+                    fontWeight: "500",
+                    padding: "14px 20px",
+                    border: "2px solid #ffffff",
+                    boxShadow: `
+                            0 4px 6px -1px rgba(244, 67, 54, 0.2),
+                            0 2px 4px -1px rgba(244, 67, 54, 0.06),
+                            0 0 0 3px rgba(255, 255, 255, 0.4)
+                        `,
+                    letterSpacing: "0.5px",
+                    textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+                },
+                iconTheme: {
+                    primary: "#ffffff",
+                    secondary: "#F44336",
+                },
+                duration: 3000,
+            });
+            // toast.success("Batch recreated successfully!");
 
-            toast.success("Batch recreated successfully!");
-            
             // Navigate to the batch recreation list
-            navigate('/re-created-batch-report');
-            
+            // navigate('/re-created-batch-report');
+
             // Reset form
             setSelectedBatchId("");
             setBatchName("");
@@ -473,6 +495,29 @@ export default function BatchRecreation({ editMode = false }) {
             setBatchUnit("L");
             setRawMaterials([]);
         } catch (error) {
+            toast.error("Something went wrong while saving batch recreation", {
+                position: "top-center",
+                style: {
+                    borderRadius: "12px",
+                    background: "#F44336",
+                    color: "#fff",
+                    fontWeight: "500",
+                    padding: "14px 20px",
+                    border: "2px solid #ffffff",
+                    boxShadow: `
+                                    0 4px 6px -1px rgba(244, 67, 54, 0.2),
+                                    0 2px 4px -1px rgba(244, 67, 54, 0.06),
+                                    0 0 0 3px rgba(255, 255, 255, 0.4)
+                                `,
+                    letterSpacing: "0.5px",
+                    textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+                },
+                iconTheme: {
+                    primary: "#ffffff",
+                    secondary: "#F44336",
+                },
+                duration: 3000,
+            });
             handleApiError(error, 'Failed to save batch recreation');
         } finally {
             setIsSaving(false);
@@ -537,10 +582,10 @@ export default function BatchRecreation({ editMode = false }) {
                                             return 'Invalid date';
                                         }
                                     };
-                                    
+
                                     const displayDate = formatDate(b.batch_date || b.batchDate);
                                     const displayName = b.batch_name || b.batchName || `Batch ${b.id}`;
-                                    
+
                                     return (
                                         <option key={b.id} value={b.id}>
                                             {displayName} - {displayDate}
@@ -593,7 +638,7 @@ export default function BatchRecreation({ editMode = false }) {
                                     step="0.01"
                                     min="0.01"
                                     placeholder="Enter size"
-                                    className="border border-gray-300 p-2 rounded-l w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    className="no-spinner border border-gray-300 p-2 rounded-l w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                     value={batchSize}
                                     onChange={(e) => {
                                         const newSize = e.target.value;
@@ -606,6 +651,13 @@ export default function BatchRecreation({ editMode = false }) {
                                             }))
                                         );
                                     }}
+                                    onKeyDown={(e) => {
+                                        // Block e, +, -, .
+                                        if (["e", "E", "+", "-", "."].includes(e.key)) {
+                                            e.preventDefault();
+                                        }
+                                    }}
+                                    onWheel={(e) => e.target.blur()}
                                     disabled={isLoading}
                                 />
                                 <select
@@ -621,201 +673,208 @@ export default function BatchRecreation({ editMode = false }) {
                                 </select>
                             </div>
                         </div>
-                    
+
+                    </div>
                 </div>
-            </div>
 
-            {/* Raw Materials Section */}
-            <div className="mb-8 bg-gray-50 p-4 rounded-lg">
-                <h2 className="text-lg font-semibold mb-4 text-gray-700">Raw Materials Composition</h2>
+                {/* Raw Materials Section */}
+                <div className="mb-8 bg-gray-50 p-4 rounded-lg">
+                    <h2 className="text-lg font-semibold mb-4 text-gray-700">Raw Materials Composition</h2>
 
-                {/* Materials Table */}
-                <div className="overflow-x-auto mb-6">
-                    <table className="w-full border border-gray-200 rounded-lg overflow-hidden">
-                        <thead className="bg-blue-200 text-black">
-                            <tr>
-                                <th className="p-3 text-left">Material</th>
-                                <th className="p-3 text-left">Category</th>
-                                <th className="p-3 text-right">Percentage (%)</th>
-                                <th className="p-3 text-right">Weight (kg)</th>
-                                <th className="p-3 text-center">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {rawMaterials.length === 0 ? (
+                    {/* Materials Table */}
+                    <div className="overflow-x-auto mb-6">
+                        <table className="w-full border border-gray-200 rounded-lg overflow-hidden">
+                            <thead className="bg-blue-200 text-black">
                                 <tr>
-                                    <td colSpan={5} className="p-4 text-center text-gray-500">
-                                        No materials added yet
-                                    </td>
+                                    <th className="p-3 text-left">Material</th>
+                                    <th className="p-3 text-left">Category</th>
+                                    <th className="p-3 text-right">Percentage (%)</th>
+                                    <th className="p-3 text-right">Weight (kg)</th>
+                                    <th className="p-3 text-center">Actions</th>
                                 </tr>
-                            ) : (
-                                rawMaterials.map((mat) => (
-                                    <tr
-                                        key={mat.id}
-                                        className={`${mat.id % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-gray-100`}
-                                    >
-                                        <td className="p-3 border-b border-gray-200">{mat.materialName}</td>
-                                        <td className="p-3 border-b border-gray-200">{mat.category}</td>
-                                        <td className="p-3 border-b border-gray-200">
-                                            {editingId === mat.id ? (
-                                                <input
-                                                    type="number"
-                                                    value={mat.percentage}
-                                                    min={0}
-                                                    max={100}
-                                                    step={0.01}
-                                                    className="border border-gray-300 p-1 rounded w-20 text-right"
-                                                    onChange={(e) => handlePercentageChange(mat.id, e.target.value)}
-                                                />
-                                            ) : (
-                                                <div className="text-right">{mat.percentage.toFixed(2)}</div>
-                                            )}
-                                        </td>
-                                        <td className="p-3 border-b border-gray-200 text-right">{mat.weight.toFixed(2)}</td>
-                                        <td className="p-3 border-b border-gray-200">
-                                            <div className="flex justify-center gap-2">
-                                                {editingId === mat.id ? (
-                                                    <>
-                                                        <button
-                                                            onClick={() => handleSaveEdit(mat.id)}
-                                                            className="text-green-600 hover:text-green-800 p-1 rounded-full hover:bg-green-100"
-                                                            title="Save"
-                                                        >
-                                                            <FaCheck />
-                                                        </button>
-                                                        <button
-                                                            onClick={stopEditing}
-                                                            className="text-gray-600 hover:text-gray-800 p-1 rounded-full hover:bg-gray-100"
-                                                            title="Cancel"
-                                                        >
-                                                            <FaTimes />
-                                                        </button>
-                                                    </>
-                                                ) : (
-                                                    <button
-                                                        onClick={() => startEditing(mat.id)}
-                                                        className="text-blue-600 hover:text-blue-800 p-1 rounded-full hover:bg-blue-100"
-                                                        title="Edit"
-                                                    >
-                                                        <FaEdit />
-                                                    </button>
-                                                )}
-                                                <button
-                                                    onClick={() => handleDeleteMaterial(mat.id)}
-                                                    className="text-red-600 hover:text-red-800 p-1 rounded-full hover:bg-red-100"
-                                                    title="Delete"
-                                                >
-                                                    <FaTrash />
-                                                </button>
-                                            </div>
+                            </thead>
+                            <tbody>
+                                {rawMaterials.length === 0 ? (
+                                    <tr>
+                                        <td colSpan={5} className="p-4 text-center text-gray-500">
+                                            No materials added yet
                                         </td>
                                     </tr>
-                                ))
-                            )}
-                        </tbody>
-                        {rawMaterials.length > 0 && (
-                            <tfoot className="bg-gray-100 font-semibold">
-                                <tr>
-                                    <td className="p-3" colSpan={2}>Total</td>
-                                    <td className="p-3 text-right">
-                                        {rawMaterials.reduce((sum, mat) => sum + mat.percentage, 0).toFixed(2)}%
-                                    </td>
-                                    <td className="p-3 text-right">
-                                        {rawMaterials.reduce((sum, mat) => sum + mat.weight, 0).toFixed(2)} kg
-                                    </td>
-                                    <td className="p-3"></td>
-                                </tr>
-                            </tfoot>
-                        )}
-                    </table>
-                </div>
-
-                {/* Add Material Form */}
-                <div className="bg-white p-4 rounded-lg border border-gray-200">
-                    <h3 className="text-md font-medium mb-3 text-gray-700">Add New Material</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-3">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Search Material</label>
-                            <div className="relative">
-                                <input
-                                    type="text"
-                                    placeholder="Search materials..."
-                                    className="border border-gray-300 p-2 rounded w-full pl-8 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                />
-                                <FaSearch className="absolute left-2 top-3 text-gray-400" />
-                            </div>
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Material *</label>
-                            <select
-                                className="border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                value={newMaterialId}
-                                onChange={(e) => setNewMaterialId(e.target.value)}
-                            >
-                                <option value="">Select material</option>
-                                {filteredMaterials.length > 0 ? (
-                                    filteredMaterials.map((m) => (
-                                        <option key={m.id} value={m.id}>
-                                            {m.name} {m.quantity ? `(${m.quantity} ${m.quantity_unit})` : ''} {m.category ? `- ${m.category}` : ''}
-                                        </option>
-                                    ))
                                 ) : (
-                                    <option value="" disabled>No materials found</option>
+                                    rawMaterials.map((mat) => (
+                                        <tr
+                                            key={mat.id}
+                                            className={`${mat.id % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-gray-100`}
+                                        >
+                                            <td className="p-3 border-b border-gray-200">{mat.materialName}</td>
+                                            <td className="p-3 border-b border-gray-200">{mat.category}</td>
+                                            <td className="p-3 border-b border-gray-200">
+                                                {editingId === mat.id ? (
+                                                    <input
+                                                        type="number"
+                                                        value={mat.percentage}
+                                                        min={0}
+                                                        max={100}
+                                                        step={0.01}
+                                                        className="border border-gray-300 p-1 rounded w-20 text-right"
+                                                        onChange={(e) => handlePercentageChange(mat.id, e.target.value)}
+                                                    />
+                                                ) : (
+                                                    <div className="text-right">{mat.percentage.toFixed(2)}</div>
+                                                )}
+                                            </td>
+                                            <td className="p-3 border-b border-gray-200 text-right">{mat.weight.toFixed(2)}</td>
+                                            <td className="p-3 border-b border-gray-200">
+                                                <div className="flex justify-center gap-2">
+                                                    {editingId === mat.id ? (
+                                                        <>
+                                                            <button
+                                                                onClick={() => handleSaveEdit(mat.id)}
+                                                                className="text-green-600 hover:text-green-800 p-1 rounded-full hover:bg-green-100"
+                                                                title="Save"
+                                                            >
+                                                                <FaCheck />
+                                                            </button>
+                                                            <button
+                                                                onClick={stopEditing}
+                                                                className="text-gray-600 hover:text-gray-800 p-1 rounded-full hover:bg-gray-100"
+                                                                title="Cancel"
+                                                            >
+                                                                <FaTimes />
+                                                            </button>
+                                                        </>
+                                                    ) : (
+                                                        <button
+                                                            onClick={() => startEditing(mat.id)}
+                                                            className="text-blue-600 hover:text-blue-800 p-1 rounded-full hover:bg-blue-100"
+                                                            title="Edit"
+                                                        >
+                                                            <FaEdit />
+                                                        </button>
+                                                    )}
+                                                    <button
+                                                        onClick={() => handleDeleteMaterial(mat.id)}
+                                                        className="text-red-600 hover:text-red-800 p-1 rounded-full hover:bg-red-100"
+                                                        title="Delete"
+                                                    >
+                                                        <FaTrash />
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))
                                 )}
-                            </select>
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Percentage (%) *</label>
-                            <input
-                                type="number"
-                                min={0}
-                                max={100}
-                                step={0.01}
-                                placeholder="0-100"
-                                className="border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                value={newPercentage}
-                                onChange={(e) => setNewPercentage(e.target.value)}
-                            />
-                        </div>
-                        <div className="flex items-end">
-                            <button
-                                onClick={handleAddMaterial}
-                               className="w-full py-2.5 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
-                            >
-                                <FaPlus /> Add Material
-                            </button>
+                            </tbody>
+                            {rawMaterials.length > 0 && (
+                                <tfoot className="bg-gray-100 font-semibold">
+                                    <tr>
+                                        <td className="p-3" colSpan={2}>Total</td>
+                                        <td className="p-3 text-right">
+                                            {rawMaterials.reduce((sum, mat) => sum + mat.percentage, 0).toFixed(2)}%
+                                        </td>
+                                        <td className="p-3 text-right">
+                                            {rawMaterials.reduce((sum, mat) => sum + mat.weight, 0).toFixed(2)} kg
+                                        </td>
+                                        <td className="p-3"></td>
+                                    </tr>
+                                </tfoot>
+                            )}
+                        </table>
+                    </div>
+
+                    {/* Add Material Form */}
+                    <div className="bg-white p-4 rounded-lg border border-gray-200">
+                        <h3 className="text-md font-medium mb-3 text-gray-700">Add New Material</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-3">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Search Material</label>
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        placeholder="Search materials..."
+                                        className="border border-gray-300 p-2 rounded w-full pl-8 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                    />
+                                    <FaSearch className="absolute left-2 top-3 text-gray-400" />
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Material *</label>
+                                <select
+                                    className="border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    value={newMaterialId}
+                                    onChange={(e) => setNewMaterialId(e.target.value)}
+                                >
+                                    <option value="">Select material</option>
+                                    {filteredMaterials.length > 0 ? (
+                                        filteredMaterials.map((m) => (
+                                            <option key={m.id} value={m.id}>
+                                                {m.name} {m.quantity ? `(${m.quantity} ${m.quantity_unit})` : ''} {m.category ? `- ${m.category}` : ''}
+                                            </option>
+                                        ))
+                                    ) : (
+                                        <option value="" disabled>No materials found</option>
+                                    )}
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Percentage (%) *</label>
+                                <input
+                                    type="number"
+                                    onKeyDown={(e) => {
+                                        // Block e, +, -, .
+                                        if (["e", "E", "+", "-", "."].includes(e.key)) {
+                                            e.preventDefault();
+                                        }
+                                    }}
+                                    onWheel={(e) => e.target.blur()}
+                                    min={0}
+                                    max={100}
+                                    step={0.01}
+                                    placeholder="0-100"
+                                    className="no-spinner border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    value={newPercentage}
+                                    onChange={(e) => setNewPercentage(e.target.value)}
+                                />
+                            </div>
+                            <div className="flex items-end">
+                                <button
+                                    onClick={handleAddMaterial}
+                                    className="w-full py-2.5 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
+                                >
+                                    <FaPlus /> Add Material
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row justify-end gap-3">
-                <button
-                    onClick={() => {
-                        setSelectedBatchId("");
-                        setBatchName("");
-                        setQuantity("");
-                        setRawMaterials([]);
-                        setNewMaterialId("");
-                        setNewPercentage("");
-                        setEditingId(null);
-                    }}
-                    className="flex items-center gap-2 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded transition-colors"
-                >
-                    <FaTimes /> Reset Form
-                </button>
-                <button
-                    onClick={handleSaveBatch}
-                    className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors"
-                >
-                    <FaCheck /> Save Batch Recreation
-                </button>
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row justify-end gap-3">
+                    <button
+                        onClick={() => {
+                            setSelectedBatchId("");
+                            setBatchName("");
+                            setQuantity("");
+                            setRawMaterials([]);
+                            setNewMaterialId("");
+                            setNewPercentage("");
+                            setEditingId(null);
+                        }}
+                        className="flex items-center gap-2 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded transition-colors"
+                    >
+                        <FaTimes /> Reset Form
+                    </button>
+                    <button
+                        onClick={handleSaveBatch}
+                        className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors"
+                    >
+                        <FaCheck /> Save Batch Recreation
+                    </button>
+                </div>
             </div>
-        </div>
         </>
-       
+
     );
 }

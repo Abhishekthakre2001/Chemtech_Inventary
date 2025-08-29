@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from "./Navbar";
-import { FaEdit, FaSave, FaPlus, FaRedo } from "react-icons/fa";
+import { FaEdit, FaSave, FaPlus, FaRedo, FaSpinner } from "react-icons/fa";
 import { Edit, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -9,6 +9,7 @@ import { Toaster } from "react-hot-toast";
 
 const AddRawmaterial = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
   const [suppliers, setSuppliers] = useState([]);
   const [formData, setFormData] = useState({
@@ -107,6 +108,7 @@ const AddRawmaterial = () => {
   };
 
   const handleSave = async () => {
+    setLoading(true);
     if (materials.length === 0) {
       toast.error("Please add at least one material before saving", {
         position: "top-center",
@@ -131,6 +133,7 @@ const AddRawmaterial = () => {
         },
         duration: 3000,
       });
+      setLoading(false);
       return;
     }
 
@@ -140,7 +143,7 @@ const AddRawmaterial = () => {
         { data: materials }
       );
       console.log(res.data);
-
+      setLoading(false);
       toast.success("Data saved successfully!", {
         position: "top-center",
         style: {
@@ -168,6 +171,7 @@ const AddRawmaterial = () => {
       setMaterials([]);
       navigate("/raw-material-list");
     } catch (err) {
+      setLoading(false);
       console.error(err);
       toast.error("Error saving data", {
         position: "top-center",
@@ -272,7 +276,13 @@ const AddRawmaterial = () => {
                 placeholder="0.00"
                 value={formData.rateLanded}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                onKeyDown={(e) => {
+                  // Block e, +, -, .
+                  if (["e", "E", "+", "-", "."].includes(e.key)) {
+                    e.preventDefault();
+                  }
+                }}
+                className="no-spinner w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
 
@@ -283,6 +293,7 @@ const AddRawmaterial = () => {
                 name="dateIn"
                 value={formData.dateIn}
                 onChange={handleChange}
+                max={new Date().toISOString().split("T")[0]}
                 className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
@@ -294,6 +305,9 @@ const AddRawmaterial = () => {
                 name="expiryDate"
                 value={formData.expiryDate}
                 onChange={handleChange}
+                min={new Date(Date.now() + 2 * 24 * 60 * 60 * 1000) // add 2 days
+                  .toISOString()
+                  .split("T")[0]}
                 className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
@@ -324,9 +338,23 @@ const AddRawmaterial = () => {
                 name="quantity"
                 placeholder="0"
                 value={formData.quantity}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                onChange={(e) => {
+                  // Ensure only digits
+                  let value = e.target.value.replace(/\D/g, "");
+                  setFormData({ ...formData, quantity: value });
+                }}
+                onKeyDown={(e) => {
+                  // Block e, +, -, .
+                  if (["e", "E", "+", "-", "."].includes(e.key)) {
+                    e.preventDefault();
+                  }
+                }}
+                onWheel={(e) => e.target.blur()} // Disable scroll wheel
+                min="0"
+                step="1"
+                className="no-spinner w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
+
             </div>
 
             <div className="space-y-1">
@@ -354,7 +382,13 @@ const AddRawmaterial = () => {
                 placeholder="0.00"
                 value={formData.purchasePrice}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                onKeyDown={(e) => {
+                  // Block e, +, -, .
+                  if (["e", "E", "+", "-", "."].includes(e.key)) {
+                    e.preventDefault();
+                  }
+                }}
+                className="no-spinner w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
 
@@ -377,29 +411,29 @@ const AddRawmaterial = () => {
               </select>
             </div>
 
-             <div className="mt-6">
-            <button
-              onClick={handleAddMaterial}
-              className={`flex items-center gap-2 px-4 py-2 rounded-md text-white ${editIndex !== null
-                ? " py-2.5 bg-gradient-to-r from-yellow-600 to-yellow-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
-                : " py-2.5 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
-                }`}
-            >
-              {editIndex !== null ? (
-                <>
-                  <FaEdit /> Update Material
-                </>
-              ) : (
-                <>
-                  <FaPlus /> Add Raw Material
-                </>
-              )}
-            </button>
-          </div>
+            <div className="mt-6">
+              <button
+                onClick={handleAddMaterial}
+                className={`flex items-center gap-2 px-4 py-2 rounded-md text-white ${editIndex !== null
+                  ? " py-2.5 bg-gradient-to-r from-yellow-600 to-yellow-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
+                  : " py-2.5 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
+                  }`}
+              >
+                {editIndex !== null ? (
+                  <>
+                    <FaEdit /> Update Material
+                  </>
+                ) : (
+                  <>
+                    <FaPlus /> Add Raw Material
+                  </>
+                )}
+              </button>
+            </div>
           </div>
 
           {/* Add/Update Button */}
-         
+
         </div>
 
         {/* Materials Table */}
@@ -518,10 +552,21 @@ const AddRawmaterial = () => {
               </button>
               <button
                 onClick={handleSave}
-               className=" px-4 py-2 gap-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
+                disabled={loading}
+                className={`px-4 py-2 gap-2 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center ${loading ? "opacity-70 cursor-not-allowed" : ""
+                  }`}
               >
-                <FaSave /> Save All Materials
+                {loading ? (
+                  <>
+                    <FaSpinner className="animate-spin mr-2" /> Saving...
+                  </>
+                ) : (
+                  <>
+                    Save All Materials <FaSave className="ml-2" />
+                  </>
+                )}
               </button>
+
             </div>
           )}
         </div>

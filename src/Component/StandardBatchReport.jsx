@@ -19,28 +19,21 @@ export default function ProductBatch() {
   const [selectedBatch, setSelectedBatch] = useState(null);
   const [loadingBatch, setLoadingBatch] = useState(false);
   const [errorBatch, setErrorBatch] = useState(null);
+  const [loading, setLoading] = useState(true); // ✅ new loading state
 
   const [batchesData, setBatchesData] = useState([]);
 
   useEffect(() => {
+    setLoading(true);
     axios
       .get("https://inventary.chemtechengineers.in/backend/batch/get_batches.php")
       .then((res) => {
         if (res.data.success && Array.isArray(res.data.data)) {
           const transformed = res.data.data.map((batch) => {
-            // Calculate batchSize string with unit
             const batchSizeWithUnit = `${parseFloat(batch.batchSize)} ${batch.batchUnit}`;
-
-            // Count materials
             const rawMaterialCount = batch.materials ? batch.materials.length : 0;
-
-            // Calculate batchCost from materials (sum of quantity * ???)
-            // You may want to sum some cost, but since material doesn't have cost in API,
-            // we'll set 0 for now or you can modify as needed
             const batchCost = 0;
-
-            // Set a default status or based on your logic
-            const status = "Completed"; // or derive dynamically if you have status field
+            const status = "Completed";
 
             return {
               id: batch.id,
@@ -58,8 +51,12 @@ export default function ProductBatch() {
       })
       .catch((err) => {
         console.error("Failed to fetch batches", err);
+      })
+      .finally(() => {
+        setLoading(false); // ✅ stop loader when done
       });
   }, []);
+
 
   const filteredBatches = batchesData.filter((batch) =>
     batch.batchName.toLowerCase().includes(searchTerm.toLowerCase())
@@ -188,9 +185,9 @@ export default function ProductBatch() {
           {/* Header Section */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
             <div className="mb-4 md:mb-0">
-              <h2 className="text-2xl font-bold text-gray-800">Product Batch Management</h2>
+              <h2 className="text-2xl font-bold text-gray-800">Standard Batch</h2>
               <p className="text-gray-600 mt-1">
-                View, manage, and track all your product batches
+                View, manage, and track all your standard product batches
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
@@ -208,7 +205,7 @@ export default function ProductBatch() {
               </div>
               <Link to="/standard-batch">
                 <button className="w-full py-2 px-4 gap-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center">
-                  <FaPlus /> Create New Batch
+                  <FaPlus /> Create standard Batch
                 </button>
               </Link>
             </div>
@@ -256,9 +253,18 @@ export default function ProductBatch() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredBatches.length === 0 ? (
+                  {loading ? (
                     <tr>
-                      <td colSpan="8" className="px-6 py-4 text-center text-gray-500">
+                      <td colSpan="10" className="px-6 py-6 text-center text-gray-600">
+                        <div className="flex justify-center items-center space-x-2">
+                         
+                          <span className="text-sm font-medium">Loading batches...</span>
+                        </div>
+                      </td>
+                    </tr>
+                  ) : filteredBatches.length === 0 ? (
+                    <tr>
+                      <td colSpan="10" className="px-6 py-4 text-center text-gray-500">
                         No batches found matching your search criteria
                       </td>
                     </tr>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaEdit, FaTrash, FaPlus, FaTimes, FaCheck } from "react-icons/fa";
+import { FaEdit, FaTrash, FaPlus, FaTimes, FaCheck, FaSpinner } from "react-icons/fa";
 import Navbar from "./Navbar";
 import { Pencil, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
@@ -12,6 +12,7 @@ export default function StandardBatch() {
   const [batchDate, setBatchDate] = useState("");
   const [batchSize, setBatchSize] = useState("");
   const [batchUnit, setBatchUnit] = useState("Liters");
+  const [loading, setLoading] = useState(false);
 
   const [rawMaterial, setRawMaterial] = useState("");
   const [quantity, setQuantity] = useState("");
@@ -59,6 +60,7 @@ export default function StandardBatch() {
   };
 
   const handleSubmit = async () => {
+    setLoading(true);
     // Validation
     if (!batchName || !batchDate || !batchSize || materials.length === 0) {
       toast.error(
@@ -87,6 +89,7 @@ export default function StandardBatch() {
           duration: 3000,
         }
       );
+      setLoading(false);
       return;
     }
 
@@ -109,7 +112,7 @@ export default function StandardBatch() {
       );
 
       const data = await response.json();
-
+      setLoading(false);
       if (data.success) {
         toast.success("Batch submitted successfully!", {
           position: "top-center",
@@ -137,6 +140,7 @@ export default function StandardBatch() {
         handleCancel();
         // Reset form or redirect here
       } else {
+        setLoading(false);
         toast.error(data.message || "Error submitting batch", {
           position: "top-center",
           style: {
@@ -162,6 +166,7 @@ export default function StandardBatch() {
         });
       }
     } catch (error) {
+      setLoading(false);
       toast.error(`Fetch error: ${error.message}`, {
         position: "top-center",
         style: {
@@ -243,6 +248,7 @@ export default function StandardBatch() {
                 type="date"
                 value={batchDate}
                 onChange={(e) => setBatchDate(e.target.value)}
+                max={new Date().toISOString().split("T")[0]}
                 className="border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
@@ -253,8 +259,15 @@ export default function StandardBatch() {
                   type="number"
                   placeholder="Enter size"
                   value={batchSize}
+                  onKeyDown={(e) => {
+                    // Block e, +, -, .
+                    if (["e", "E", "+", "-", "."].includes(e.key)) {
+                      e.preventDefault();
+                    }
+                  }}
+                  onWheel={(e) => e.target.blur()}
                   onChange={(e) => setBatchSize(e.target.value)}
-                  className="border border-gray-300 p-2 rounded-l w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="no-spinner border border-gray-300 p-2 rounded-l w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
                 <select
                   value={batchUnit}
@@ -296,8 +309,15 @@ export default function StandardBatch() {
                 type="number"
                 placeholder="Qty"
                 value={quantity}
+                onKeyDown={(e) => {
+                  // Block e, +, -, .
+                  if (["e", "E", "+", "-", "."].includes(e.key)) {
+                    e.preventDefault();
+                  }
+                }}
+                onWheel={(e) => e.target.blur()}
                 onChange={(e) => setQuantity(e.target.value)}
-                className="border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="no-spinner border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
             <div>
@@ -305,9 +325,16 @@ export default function StandardBatch() {
               <input
                 type="number"
                 placeholder="%"
+                onKeyDown={(e) => {
+                  // Block e, +, -, .
+                  if (["e", "E", "+", "-", "."].includes(e.key)) {
+                    e.preventDefault();
+                  }
+                }}
+                onWheel={(e) => e.target.blur()}
                 value={percentage}
                 onChange={(e) => setPercentage(e.target.value)}
-                className="border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="no-spinner border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
             <div>
@@ -413,10 +440,20 @@ export default function StandardBatch() {
             <FaTimes /> Cancel
           </button>
           <button
+            disabled={loading}
             onClick={handleSubmit}
-           className="py-2 px-4 gap-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
+            className="py-2 px-4 gap-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
           >
-            <FaCheck /> Submit Batch
+            {loading ? (
+              <>
+                <FaSpinner className="animate-spin mr-2" />
+                Submitting...
+              </>
+            ) : (
+              <>
+                <FaCheck /> Submit Batch
+              </>
+            )}
           </button>
         </div>
       </div>

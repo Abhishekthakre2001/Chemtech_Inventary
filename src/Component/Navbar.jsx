@@ -18,31 +18,60 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  // Add this helper function
+  const isActive = (item) => {
+    if (item.activePaths) {
+      return item.activePaths.some((path) =>
+        location.pathname.startsWith(path)
+      );
+    }
+    return location.pathname === item.path;
+  };
+
   const menuItems = [
-    { name: "Dashboard", icon: <FaHome />, path: "/dashboard" },
-    { name: "Raw Material", icon: <FaBox />, path: "/raw-material-list" },
-    { name: "Standard Batch", icon: <FaFlask />, path: "/standard-batch-report" },
-    { 
-      name: "Batch Recreation", 
-      icon: <FaRecycle />, 
+    {
+      name: "Dashboard",
+      icon: <FaHome />,
+      path: "/dashboard",
+      activePaths: ["/dashboard"]
+    },
+    {
+      name: "Raw Material",
+      icon: <FaBox />,
+      path: "/raw-material-list",
+      activePaths: ["/raw-material-list", "/create-raw-material", "/update-raw-material"]
+    },
+    {
+      name: "Standard Batch",
+      icon: <FaFlask />,
+      path: "/standard-batch-report",
+      activePaths: ["/standard-batch-report", "/standard-batch"]
+    },
+    {
+      name: "Batch Recreation",
+      icon: <FaRecycle />,
       path: "/re-created-batch-report",
       activePaths: ["/re-created-batch-report", "/batch-recreation"]
     },
-    { name: "Masters", icon: <FaCog />, path: "/masters" },
+    {
+      name: "Masters",
+      icon: <FaCog />,
+      path: "/masters",
+      activePaths: ["/masters"]
+    },
   ];
+
 
   const toggleSidebar = () => setIsOpen(!isOpen);
   const closeSidebar = () => setIsOpen(false);
 
-   // Call this when logging out
-  const handleLogout = () => {
-    // Remove auth details if needed
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("user");
+  // Call this when logging out
+const handleLogout = () => {
+  localStorage.removeItem("authToken");
+  localStorage.removeItem("user");
+  navigate("/");
+};
 
-    // Navigate to home
-    navigate("/");
-  };
 
   return (
     <div className="font-sans">
@@ -71,7 +100,7 @@ const Navbar = () => {
         {/* Header */}
         <div className="p-5 border-b border-gray-300">
           <div className="flex items-center">
-            
+
             <div className="ml-3">
               <img src={logo} alt="Chemtech Engineers Logo" className="h-14" />
             </div>
@@ -87,8 +116,8 @@ const Navbar = () => {
                   to={item.path}
                   onClick={closeSidebar}
                   className={`flex items-center px-4 py-3 rounded-xl transition-all duration-200 group
-                  ${item.activePaths && item.activePaths.includes(location.pathname) || 
-                    location.pathname === item.path ? "bg-blue-50 text-blue-600 font-semibold"
+    ${isActive(item)
+                      ? "bg-blue-50 text-blue-600 font-semibold"
                       : "text-gray-700 hover:bg-blue-50 hover:text-blue-600"
                     }`}
                 >
@@ -115,7 +144,7 @@ const Navbar = () => {
           </a>
           <div className="mt-8 mx-3">
             <button
-               onClick={handleLogout}
+              onClick={handleLogout}
               className="w-full py-2.5 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
             >
               <FaSignOutAlt className="mr-2" /> Logout

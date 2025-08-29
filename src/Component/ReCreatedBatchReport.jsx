@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { FaPlus, FaSearch, FaPrint, FaEye, FaEdit, FaTrash } from "react-icons/fa";
+import { FaPlus, FaSearch, FaPrint, FaEye, FaEdit, FaTrash, FaSpinner } from "react-icons/fa";
 import Navbar from "./Navbar";
 import { Link, useNavigate } from "react-router-dom";
 import { Pencil, Trash2 } from "lucide-react";
@@ -82,10 +82,10 @@ export default function ReCreatedBatchReport() {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
             <div className="mb-4 md:mb-0">
               <h2 className="text-2xl font-bold text-gray-800">
-                Product Batch Management
+                Batch Recreation
               </h2>
               <p className="text-gray-600 mt-1">
-                View, manage, and track all your product batches
+                View, manage, and track all your batch recreations
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
@@ -103,7 +103,7 @@ export default function ReCreatedBatchReport() {
               </div>
               
                 <button onClick={() => navigate('/batch-recreation')} className="py-2 px-4 gap-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center">
-                  <FaPlus /> Create New Batch
+                  <FaPlus />Recreated Batch
                 </button>
             </div>
           </div>
@@ -130,9 +130,9 @@ export default function ReCreatedBatchReport() {
                       <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                         Recreated Batch
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                      {/* <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                         Original Batch
-                      </th>
+                      </th> */}
                       <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                         Date
                       </th>
@@ -169,9 +169,9 @@ export default function ReCreatedBatchReport() {
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 font-medium">
                             {batch.recreated_batch_name}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {batch.original_batch_name || 'N/A'}
-                          </td>
+                          </td> */}
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {new Date(batch.recreated_batch_date).toLocaleDateString()}
                           </td>
@@ -198,14 +198,14 @@ export default function ReCreatedBatchReport() {
                               >
                                 <FaPrint className="h-4 w-4" />
                               </button>
-                              <Link to={`/batch-recreation/${batch.id}`}>
+                              {/* <Link to={`/batch-recreation/${batch.id}`}>
                                 <button
                                   title="View"
                                   className="text-gray-500 hover:text-green-600 transition-colors"
                                 >
                                   <FaEye className="h-4 w-4" />
                                 </button>
-                              </Link>
+                              </Link> */}
                               <Link to={`/batch-recreation/edit/${batch.id}`}>
                                 <button
                                   title="Edit"

@@ -25,7 +25,7 @@ const UpdateRawmaterial = () => {
     purchasePrice: "",
     supplierId: "",
   });
-
+  console.log("id", id)
   // Fetch initial data
   useEffect(() => {
     // Fetch categories
@@ -53,25 +53,26 @@ const UpdateRawmaterial = () => {
     // Fetch existing raw material data if in edit mode
     if (id) {
       axios
-        .get(`https://inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php?id=${id}`)
+        .get(`https://inventary.chemtechengineers.in/backend/raw_material/get_raw_material_byid.php?id=${id}`)
         .then((res) => {
-          if (res.data.success) {
-            const data = res.data.data;
-            setFormData({
-              id: data.id,
-              purchaseCode: data.purchase_code,
-              rawMaterialName: data.raw_material_name,
-              rawMaterialCode: data.raw_material_code,
-              rateLanded: data.rate_landed,
-              dateIn: data.date_in,
-              expiryDate: data.expiry_date || "",
-              categoryId: data.category_id,
-              quantity: data.quantity,
-              quantityUnit: data.quantity_unit,
-              purchasePrice: data.purchase_price,
-              supplierId: data.supplier_id,
-            });
-          }
+          console.log(res.data.data)
+          // if (res.data.success) {
+          //   const data = res.data.data;
+          //   setFormData({
+          //     id: data.id,
+          //     purchaseCode: data.purchase_code,
+          //     rawMaterialName: data.raw_material_name,
+          //     rawMaterialCode: data.raw_material_code,
+          //     rateLanded: data.rate_landed,
+          //     dateIn: data.date_in,
+          //     expiryDate: data.expiry_date || "",
+          //     categoryId: data.category_id,
+          //     quantity: data.quantity,
+          //     quantityUnit: data.quantity_unit,
+          //     purchasePrice: data.purchase_price,
+          //     supplierId: data.supplier_id,
+          //   });
+          // }
         })
         .catch((err) => {
           console.error("Error fetching raw material:", err);
@@ -88,111 +89,111 @@ const UpdateRawmaterial = () => {
     }));
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  console.log("formData", formData);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log("formData", formData);
 
-  // Validate required fields
-  if (
-    !formData.purchaseCode ||
-    !formData.rawMaterialName ||
-    !formData.rawMaterialCode ||
-    !formData.rateLanded ||
-    !formData.dateIn ||
-    (formData.categoryId === null || formData.categoryId === undefined || formData.categoryId === "") ||
-    !formData.quantity ||
-    !formData.quantityUnit ||
-    !formData.purchasePrice ||
-    (formData.supplierId === null || formData.supplierId === undefined || formData.supplierId === "")
-  ) {
-    toast.error("Please fill all required fields", {
-      position: "top-center",
-      style: {
-        borderRadius: "12px",
-        background: "#FF4D4F",
-        color: "#fff",
-        fontWeight: "500",
-        padding: "14px 20px",
-        border: "2px solid #ffffff",
-        boxShadow: `
-          0 4px 6px -1px rgba(255, 77, 79, 0.2),
-          0 2px 4px -1px rgba(255, 77, 79, 0.06),
-          0 0 0 3px rgba(255, 255, 255, 0.4)
-        `,
-        letterSpacing: "0.5px",
-        textShadow: "0 1px 1px rgba(0,0,0,0.1)",
-      },
-      iconTheme: {
-        primary: "#ffffff",
-        secondary: "#FF4D4F",
-      },
-      duration: 3000,
-    });
-    return;
-  }
-
-  try {
-    const response = await axios.post(
-      "https://inventary.chemtechengineers.in/backend/raw_material/edit_raw_material.php",
-      formData
-    );
-
-    if (response.data.success) {
-      toast.success("Raw material updated successfully!", {
+    // Validate required fields
+    if (
+      !formData.purchaseCode ||
+      !formData.rawMaterialName ||
+      !formData.rawMaterialCode ||
+      !formData.rateLanded ||
+      !formData.dateIn ||
+      (formData.categoryId === null || formData.categoryId === undefined || formData.categoryId === "") ||
+      !formData.quantity ||
+      !formData.quantityUnit ||
+      !formData.purchasePrice ||
+      (formData.supplierId === null || formData.supplierId === undefined || formData.supplierId === "")
+    ) {
+      toast.error("Please fill all required fields", {
         position: "top-center",
         style: {
           borderRadius: "12px",
-          background: "#4CAF50",
+          background: "#FF4D4F",
           color: "#fff",
           fontWeight: "500",
           padding: "14px 20px",
           border: "2px solid #ffffff",
           boxShadow: `
-            0 4px 6px -1px rgba(76, 175, 80, 0.2),
-            0 2px 4px -1px rgba(76, 175, 80, 0.06),
-            0 0 0 3px rgba(255, 255, 255, 0.4)
-          `,
+          0 4px 6px -1px rgba(255, 77, 79, 0.2),
+          0 2px 4px -1px rgba(255, 77, 79, 0.06),
+          0 0 0 3px rgba(255, 255, 255, 0.4)
+        `,
           letterSpacing: "0.5px",
           textShadow: "0 1px 1px rgba(0,0,0,0.1)",
         },
         iconTheme: {
           primary: "#ffffff",
-          secondary: "#4CAF50",
+          secondary: "#FF4D4F",
         },
         duration: 3000,
       });
-
-      navigate("/raw-material-list");
-    } else {
-      throw new Error(response.data.message || "Failed to update raw material");
+      return;
     }
-  } catch (err) {
-    console.error("Error updating raw material:", err);
-    toast.error(err.message || "Error updating raw material", {
-      position: "top-center",
-      style: {
-        borderRadius: "12px",
-        background: "#FF4D4F",
-        color: "#fff",
-        fontWeight: "500",
-        padding: "14px 20px",
-        border: "2px solid #ffffff",
-        boxShadow: `
+
+    try {
+      const response = await axios.post(
+        "https://inventary.chemtechengineers.in/backend/raw_material/edit_raw_material.php",
+        formData
+      );
+
+      if (response.data.success) {
+        toast.success("Raw material updated successfully!", {
+          position: "top-center",
+          style: {
+            borderRadius: "12px",
+            background: "#4CAF50",
+            color: "#fff",
+            fontWeight: "500",
+            padding: "14px 20px",
+            border: "2px solid #ffffff",
+            boxShadow: `
+            0 4px 6px -1px rgba(76, 175, 80, 0.2),
+            0 2px 4px -1px rgba(76, 175, 80, 0.06),
+            0 0 0 3px rgba(255, 255, 255, 0.4)
+          `,
+            letterSpacing: "0.5px",
+            textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+          },
+          iconTheme: {
+            primary: "#ffffff",
+            secondary: "#4CAF50",
+          },
+          duration: 3000,
+        });
+
+        navigate("/raw-material-list");
+      } else {
+        throw new Error(response.data.message || "Failed to update raw material");
+      }
+    } catch (err) {
+      console.error("Error updating raw material:", err);
+      toast.error(err.message || "Error updating raw material", {
+        position: "top-center",
+        style: {
+          borderRadius: "12px",
+          background: "#FF4D4F",
+          color: "#fff",
+          fontWeight: "500",
+          padding: "14px 20px",
+          border: "2px solid #ffffff",
+          boxShadow: `
           0 4px 6px -1px rgba(255, 77, 79, 0.2),
           0 2px 4px -1px rgba(255, 77, 79, 0.06),
           0 0 0 3px rgba(255, 255, 255, 0.4)
         `,
-        letterSpacing: "0.5px",
-        textShadow: "0 1px 1px rgba(0,0,0,0.1)",
-      },
-      iconTheme: {
-        primary: "#ffffff",
-        secondary: "#FF4D4F",
-      },
-      duration: 3000,
-    });
-  }
-};
+          letterSpacing: "0.5px",
+          textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+        },
+        iconTheme: {
+          primary: "#ffffff",
+          secondary: "#FF4D4F",
+        },
+        duration: 3000,
+      });
+    }
+  };
   const handleReset = () => {
     if (window.confirm("Are you sure you want to reset all changes?")) {
       // Reload the form data
@@ -227,7 +228,7 @@ const handleSubmit = async (e) => {
   return (
     <>
       <Navbar />
-        <Toaster />
+      <Toaster />
       <div className="p-4 max-w-7xl mx-auto mt-5 xl:ml-[17rem]">
         <h1 className="text-2xl font-bold mb-6 text-gray-800">
           {id ? "Update Raw Material" : "Add New Raw Material"}
@@ -427,7 +428,7 @@ const handleSubmit = async (e) => {
               </button>
               <button
                 type="submit"
-               className=" py-2 px-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
+                className=" py-2 px-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
               >
                 <FaSave /> {id ? "Update Material" : "Save Material"}
               </button>

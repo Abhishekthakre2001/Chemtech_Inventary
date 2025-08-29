@@ -31,6 +31,7 @@ const CategoryManagement = () => {
 
     // Open modal for editing category
     const openEditModal = (category) => {
+        console.log("category",category)
         setCurrentCategory(category);
         setIsModalOpen(true);
     };
@@ -296,6 +297,8 @@ const CategoryManagement = () => {
     }, [isModalOpen]);
 
 
+    console.log("currentCategory",currentCategory)
+
     return (
         <div className="p-6 w-full mx-auto ">
             <Toaster />
@@ -426,7 +429,7 @@ const CategoryManagement = () => {
                                     <button
                                         type="button"
                                         onClick={() => setIsModalOpen(false)}
-                                       className="py-2 px-4 gap-4  bg-gradient-to-r from-gray-600 to-gray-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
+                                        className="py-2 px-4 gap-4  bg-gradient-to-r from-gray-600 to-gray-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
                                     >
                                         Cancel
                                     </button>

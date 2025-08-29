@@ -14,8 +14,11 @@ const RawMaterialList = () => {
   };
   const [searchTerm, setSearchTerm] = useState('');
   const [inventory, setInventory] = useState([]);
+  const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
+    setLoading(true); // start loading before fetch
     fetch("https://inventary.chemtechengineers.in/backend/raw_material/list_raw_material.php")
       .then((res) => res.json())
       .then((data) => {
@@ -24,20 +27,23 @@ const RawMaterialList = () => {
             id: item.id || index + 1,
             purchaseCode: item.purchase_code || "",
             rawMaterialCode: item.raw_material_code || "",
-            productId: item.productId || "",             // this may or may not be present, keep as is
+            productId: item.productId || "",
             rateLanded: parseFloat(item.rate_landed) || 0,
             dateIn: item.date_in || "",
             name: item.raw_material_name || "",
-            category: item.category_id || "",            // or categoryName if you have it
+            category: item.category_id || "",
             stock: `${item.quantity} ${item.quantity_unit}`.trim(),
             purchasePrice: parseFloat(item.purchase_price) || 0,
-            supplier: item.supplier_id || ""             // or supplierName if you want
+            supplier: item.supplier_id || "",
           }));
           setInventory(mappedData);
         }
       })
       .catch((err) => {
         console.error("Error fetching inventory:", err);
+      })
+      .finally(() => {
+        setLoading(false); // stop loading after fetch (success or error)
       });
   }, []);
 
@@ -140,10 +146,9 @@ const RawMaterialList = () => {
 
   const filteredInventory = inventory.filter(item =>
     Object.values(item).some(
-      value => value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+      value => value?.toString().toLowerCase().includes(searchTerm.toLowerCase())
     )
   );
-
   return (
     <>
       <Navbar />
@@ -151,7 +156,7 @@ const RawMaterialList = () => {
       <div className="p-6 max-w-7xl mx-auto xl:ml-[17rem] ">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">Raw Material Inventory</h1>
+          <h1 className="text-2xl font-bold text-gray-800">Raw Material</h1>
           <p className="text-gray-600">View and manage your product data</p>
         </div>
 
@@ -198,7 +203,13 @@ const RawMaterialList = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {filteredInventory.length === 0 ? (
+                {loading ? (
+                  <tr>
+                    <td colSpan="11" className="px-6 py-4 text-center text-gray-500">
+                      Loading...
+                    </td>
+                  </tr>
+                ) : filteredInventory.length === 0 ? (
                   <tr>
                     <td colSpan="11" className="px-6 py-4 text-center text-gray-500">
                       No inventory items found
@@ -217,7 +228,6 @@ const RawMaterialList = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.stock}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">₹{item.purchasePrice.toFixed(2)}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.supplier}</td>
-                      {/* Edit Column */}
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
                         <button
                           onClick={() => handleEdit(item.id)}
@@ -227,8 +237,6 @@ const RawMaterialList = () => {
                           <Pencil className="w-5 h-5" />
                         </button>
                       </td>
-
-                      {/* Delete Column */}
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
                         <button
                           onClick={() => handleDelete(item.id)}
@@ -242,6 +250,7 @@ const RawMaterialList = () => {
                   ))
                 )}
               </tbody>
+
             </table>
           </div>
         </div>

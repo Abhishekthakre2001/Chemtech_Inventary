@@ -101,10 +101,13 @@ const SuppliersManagement = () => {
         setIsModalOpen(true);
     };
 
-    // Handle form submission
+
     // const handleSubmit = async (e) => {
     //     e.preventDefault();
-    //     // setLoading(true);
+    //     if (isSubmitting) return;
+
+    //     setIsSubmitting(true);
+    //     setLoading(true);
     //     // setError("");
     //     // setSuccess("");
 
@@ -114,31 +117,133 @@ const SuppliersManagement = () => {
     //         });
 
     //         if (res.data.success) {
-    //             setSuccess("Data saved successfully!");
+    //             // Close the popup
+    //             setIsModalOpen(false);
+
+    //             // Show a styled success toast
+    //             toast.success(editingId ? 'Supplier updated successfully!' : 'Supplier added successfully!', {
+    //                 position: "top-center",
+    //                 style: {
+    //                     borderRadius: "12px",
+    //                     background: "#4CAF50",
+    //                     color: "#fff",
+    //                     fontWeight: "500",
+    //                     padding: "14px 20px",
+    //                     border: "2px solid #ffffff", // White border
+    //                     boxShadow: `
+    //         0 4px 6px -1px rgba(76, 175, 80, 0.2),
+    //         0 2px 4px -1px rgba(76, 175, 80, 0.06),
+    //         0 0 0 3px rgba(255, 255, 255, 0.4) // Glow effect
+    //     `,
+    //                     letterSpacing: "0.5px",
+    //                     textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+    //                 },
+    //                 iconTheme: {
+    //                     primary: "#ffffff",
+    //                     secondary: "#4CAF50",
+    //                 },
+    //                 duration: 3000,
+    //                 className: "toast-success",
+    //                 ariaProps: {
+    //                     role: "alert",
+    //                     "aria-live": "polite",
+    //                 },
+    //             });
+
     //             setFormData({ name: "", email: "", message: "" });
     //         } else {
-    //             setError(res.data.message || "Something went wrong");
+    //             toast.error(res.data.message || "Something went wrong", {
+    //                 position: "top-center",
+    //                 style: {
+    //                     borderRadius: "8px",
+    //                     background: "#ff4d4d",
+    //                     color: "#fff",
+    //                     fontWeight: "500",
+    //                     padding: "12px 16px",
+    //                 },
+    //             });
     //         }
+    //     } catch (err) {
+    //         toast.error(err.response?.data?.message || "Server error", {
+    //             position: "top-center",
+    //             style: {
+    //                 borderRadius: "8px",
+    //                 background: "#ff4d4d",
+    //                 color: "#fff",
+    //                 fontWeight: "500",
+    //                 padding: "12px 16px",
+    //             },
+    //         });
+    //     } finally {
+    //         setLoading(false);
+    //         setIsSubmitting(false);
+    //     }
+    // };
+
+    // Update existing supplier
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (isSubmitting) return;
 
+        // Basic validations before API call
+        if (!/^[0-9]+$/.test(formData.accountNumber)) {
+            toast.error("Account Number must be a positive integer", { position: "top-center",  style: {
+                        borderRadius: "8px",
+                        background: "#ff4d4d",
+                        color: "#fff",
+                        fontWeight: "500",
+                        padding: "12px 16px",
+                    }, });
+            return;
+        }
+
+        if (!formData.contactPerson || !/^[a-zA-Z\s]+$/.test(formData.contactPerson)) {
+            toast.error("Contact Person must contain letters only", { position: "top-center", style: {
+                        borderRadius: "8px",
+                        background: "#ff4d4d",
+                        color: "#fff",
+                        fontWeight: "500",
+                        padding: "12px 16px",
+                    }, });
+            return;
+        }
+
+        if (formData.bankName && !/^[a-zA-Z\s]+$/.test(formData.bankName)) {
+            toast.error("Bank Name must contain letters only", { position: "top-center", style: {
+                        borderRadius: "8px",
+                        background: "#ff4d4d",
+                        color: "#fff",
+                        fontWeight: "500",
+                        padding: "12px 16px",
+                    }, });
+            return;
+        }
+
+        if (!/^[0-9]{10}$/.test(formData.contactNumber)) {
+            toast.error("Contact Number must be a 10-digit positive number", { position: "top-center", style: {
+                        borderRadius: "8px",
+                        background: "#ff4d4d",
+                        color: "#fff",
+                        fontWeight: "500",
+                        padding: "12px 16px",
+                    }, });
+            return;
+        }
+
         setIsSubmitting(true);
         setLoading(true);
-        // setError("");
-        // setSuccess("");
 
         try {
-            const res = await axios.post("https://inventary.chemtechengineers.in/backend/supplier/add_supplier.php", formData, {
-                headers: { "Content-Type": "application/json" }
-            });
+            const res = await axios.post(
+                "https://inventary.chemtechengineers.in/backend/supplier/add_supplier.php",
+                formData,
+                { headers: { "Content-Type": "application/json" } }
+            );
 
             if (res.data.success) {
-                // Close the popup
                 setIsModalOpen(false);
 
-                // Show a styled success toast
-                toast.success(editingId ? 'Supplier updated successfully!' : 'Supplier added successfully!', {
+                toast.success(editingId ? "Supplier updated successfully!" : "Supplier added successfully!", {
                     position: "top-center",
                     style: {
                         borderRadius: "12px",
@@ -146,12 +251,12 @@ const SuppliersManagement = () => {
                         color: "#fff",
                         fontWeight: "500",
                         padding: "14px 20px",
-                        border: "2px solid #ffffff", // White border
+                        border: "2px solid #ffffff",
                         boxShadow: `
             0 4px 6px -1px rgba(76, 175, 80, 0.2),
             0 2px 4px -1px rgba(76, 175, 80, 0.06),
-            0 0 0 3px rgba(255, 255, 255, 0.4) // Glow effect
-        `,
+            0 0 0 3px rgba(255, 255, 255, 0.4)
+          `,
                         letterSpacing: "0.5px",
                         textShadow: "0 1px 1px rgba(0,0,0,0.1)",
                     },
@@ -160,14 +265,17 @@ const SuppliersManagement = () => {
                         secondary: "#4CAF50",
                     },
                     duration: 3000,
-                    className: "toast-success",
-                    ariaProps: {
-                        role: "alert",
-                        "aria-live": "polite",
-                    },
                 });
 
-                setFormData({ name: "", email: "", message: "" });
+                setFormData({
+                    name: "",
+                    email: "",
+                    message: "",
+                    accountNumber: "",
+                    contactPerson: "",
+                    bankName: "",
+                    contactNumber: "",
+                });
             } else {
                 toast.error(res.data.message || "Something went wrong", {
                     position: "top-center",
@@ -196,8 +304,6 @@ const SuppliersManagement = () => {
             setIsSubmitting(false);
         }
     };
-
-    // Update existing supplier
 
 
     const handleUpdate = async (e) => {
@@ -449,7 +555,7 @@ const SuppliersManagement = () => {
         <div className="p-6 max-w-7xl mx-auto ">
             <Toaster />
             <div className="flex flex-col lg:flex-row justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold text-gray-800">Suppliers Management</h1>
+                <h1 className="text-2xl font-bold text-gray-800 text-nowrap mr-4">Suppliers Management</h1>
                 <div className="flex flex-col md:flex-row md:items-center gap-4 mt-4 md:mt-0 w-full">
                     {/* Search Box */}
                     <div className="relative w-full md:w-auto flex-1">
