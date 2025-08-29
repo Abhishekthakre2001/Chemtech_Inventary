@@ -5,7 +5,7 @@ import { Toaster } from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "./Navbar";
 
-const API_BASE_URL = '/api'; 
+const API_BASE_URL = 'https://inventary.chemtechengineers.in/backend'; 
 
 // Error handling utility
 const handleApiError = (error, defaultMessage = 'An error occurred') => {
