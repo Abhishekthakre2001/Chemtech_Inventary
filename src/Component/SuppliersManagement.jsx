@@ -7,6 +7,7 @@ import { Pencil, Trash2 } from "lucide-react";
 
 const SuppliersManagement = () => {
     const [suppliers, setSuppliers] = useState([]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [loading, setLoading] = useState(true); // ✅ declared at top
 
 
@@ -118,32 +119,26 @@ const SuppliersManagement = () => {
     //         } else {
     //             setError(res.data.message || "Something went wrong");
     //         }
-    //     } catch (err) {
-    //         setError(err.response?.data?.message || "Server error");
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // };
     const handleSubmit = async (e) => {
-        console.log("call")
         e.preventDefault();
+        if (isSubmitting) return;
+
+        setIsSubmitting(true);
         setLoading(true);
         // setError("");
         // setSuccess("");
 
         try {
-            const res = await axios.post(
-                "https://inventary.chemtechengineers.in/backend/supplier/add_supplier.php",
-                formData,
-                { headers: { "Content-Type": "application/json" } }
-            );
+            const res = await axios.post("https://inventary.chemtechengineers.in/backend/supplier/add_supplier.php", formData, {
+                headers: { "Content-Type": "application/json" }
+            });
 
             if (res.data.success) {
                 // Close the popup
                 setIsModalOpen(false);
 
                 // Show a styled success toast
-                toast.success("Supplier added successfully!", {
+                toast.success(editingId ? 'Supplier updated successfully!' : 'Supplier added successfully!', {
                     position: "top-center",
                     style: {
                         borderRadius: "12px",
@@ -198,72 +193,102 @@ const SuppliersManagement = () => {
             });
         } finally {
             setLoading(false);
+            setIsSubmitting(false);
         }
     };
 
     // Update existing supplier
 
 
-const handleUpdate = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+    const handleUpdate = async (e) => {
+        e.preventDefault();
+        if (isSubmitting) return;
 
-    try {
-        const payload = {
-            id: editingId,
-            supplierName: formData.name, // backend expects supplierName
-            contactPerson: formData.contactPerson,
-            contactNumber: formData.contactNumber,
-            email: formData.email,
-            address: formData.address,
-            bankAccount: formData.accountNumber, // backend expects bankAccount
-            bankName: formData.bankName,
-            ifscCode: formData.ifscCode,
-            provideproduct: formData.products // backend expects provideproduct
-        };
+        setIsSubmitting(true);
+        setLoading(true);
 
-        const res = await axios.post(
-            "https://inventary.chemtechengineers.in/backend/supplier/edit_supplier.php",
-            payload
-        );
+        try {
+            const payload = {
+                id: editingId,
+                supplierName: formData.name, // backend expects supplierName
+                contactPerson: formData.contactPerson,
+                contactNumber: formData.contactNumber,
+                email: formData.email,
+                address: formData.address,
+                bankAccount: formData.accountNumber, // backend expects bankAccount
+                bankName: formData.bankName,
+                ifscCode: formData.ifscCode,
+                provideproduct: formData.products // backend expects provideproduct
+            };
 
-        if (res.data.success) {
-            // Close modal
-            setIsModalOpen(false);
+            const res = await axios.post(
+                "https://inventary.chemtechengineers.in/backend/supplier/edit_supplier.php",
+                payload
+            );
 
-            // Show styled success toast for update
-            toast.success("Supplier updated successfully!", {
-                position: "top-center",
-                style: {
-                    borderRadius: "12px",
-                    background: "#2196F3", // Blue for update
-                    color: "#fff",
-                    fontWeight: "500",
-                    padding: "14px 20px",
-                    border: "2px solid #ffffff", // White border
-                    boxShadow: `
+            if (res.data.success) {
+                // Close modal
+                setIsModalOpen(false);
+
+                // Show styled success toast for update
+                toast.success("Supplier updated successfully!", {
+                    position: "top-center",
+                    style: {
+                        borderRadius: "12px",
+                        background: "#2196F3", // Blue for update
+                        color: "#fff",
+                        fontWeight: "500",
+                        padding: "14px 20px",
+                        border: "2px solid #ffffff", // White border
+                        boxShadow: `
                         0 4px 6px -1px rgba(33, 150, 243, 0.2),
                         0 2px 4px -1px rgba(33, 150, 243, 0.06),
                         0 0 0 3px rgba(255, 255, 255, 0.4) // Glow effect
                     `,
-                    letterSpacing: "0.5px",
-                    textShadow: "0 1px 1px rgba(0,0,0,0.1)",
-                },
-                iconTheme: {
-                    primary: "#ffffff",
-                    secondary: "#2196F3",
-                },
-                duration: 3000,
-                className: "toast-success",
-                ariaProps: {
-                    role: "alert",
-                    "aria-live": "polite",
-                },
-            });
+                        letterSpacing: "0.5px",
+                        textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+                    },
+                    iconTheme: {
+                        primary: "#ffffff",
+                        secondary: "#2196F3",
+                    },
+                    duration: 3000,
+                    className: "toast-success",
+                    ariaProps: {
+                        role: "alert",
+                        "aria-live": "polite",
+                    },
+                });
 
-            // refreshSuppliers(); // Uncomment if you need to reload list
-        } else {
-            toast.error(res.data.message || "Failed to update supplier", {
+                // refreshSuppliers(); // Uncomment if you need to reload list
+            } else {
+                toast.error(res.data.message || "Failed to update supplier", {
+                    position: "top-center",
+                    style: {
+                        borderRadius: "12px",
+                        background: "#F44336",
+                        color: "#fff",
+                        fontWeight: "500",
+                        padding: "14px 20px",
+                        border: "2px solid #ffffff",
+                        boxShadow: `
+                            0 4px 6px -1px rgba(244, 67, 54, 0.2),
+                            0 2px 4px -1px rgba(244, 67, 54, 0.06),
+                            0 0 0 3px rgba(255, 255, 255, 0.4)
+                        `,
+                        letterSpacing: "0.5px",
+                        textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+                    },
+                    iconTheme: {
+                        primary: "#ffffff",
+                        secondary: "#F44336",
+                    },
+                    duration: 3000,
+                });
+            }
+        } catch (error) {
+            console.error("Error updating supplier:", error);
+            toast.error("Something went wrong while updating supplier", {
                 position: "top-center",
                 style: {
                     borderRadius: "12px",
@@ -286,81 +311,80 @@ const handleUpdate = async (e) => {
                 },
                 duration: 3000,
             });
+        } finally {
+            setLoading(false);
+            setIsSubmitting(false);
         }
-    } catch (error) {
-        console.error("Error updating supplier:", error);
-        toast.error("Something went wrong while updating supplier", {
-            position: "top-center",
-            style: {
-                borderRadius: "12px",
-                background: "#F44336",
-                color: "#fff",
-                fontWeight: "500",
-                padding: "14px 20px",
-                border: "2px solid #ffffff",
-                boxShadow: `
-                    0 4px 6px -1px rgba(244, 67, 54, 0.2),
-                    0 2px 4px -1px rgba(244, 67, 54, 0.06),
-                    0 0 0 3px rgba(255, 255, 255, 0.4)
-                `,
-                letterSpacing: "0.5px",
-                textShadow: "0 1px 1px rgba(0,0,0,0.1)",
-            },
-            iconTheme: {
-                primary: "#ffffff",
-                secondary: "#F44336",
-            },
-            duration: 3000,
-        });
-    } finally {
-        setLoading(false);
-    }
-};
-
-
+    };
 
     // Delete supplier
-  const deleteSupplier = async (id) => {
-    // if (!window.confirm("Are you sure you want to delete this supplier?")) {
-    //     return;
-    // }
+    const deleteSupplier = async (id) => {
+        // if (!window.confirm("Are you sure you want to delete this supplier?")) {
+        //     return;
+        // }
 
-    try {
-        const res = await axios.post(
-            "https://inventary.chemtechengineers.in/backend/supplier/delete_supplier.php",
-            { id }
-        );
+        try {
+            const res = await axios.post(
+                "https://inventary.chemtechengineers.in/backend/supplier/delete_supplier.php",
+                { id }
+            );
 
-        if (res.data.success) {
-            // Remove from state
-            setSuppliers(suppliers.filter((s) => s.id !== id));
+            if (res.data.success) {
+                // Remove from state
+                setSuppliers(suppliers.filter((s) => s.id !== id));
 
-            // Show delete success toast
-            toast.success("Supplier deleted successfully!", {
-                position: "top-center",
-                style: {
-                    borderRadius: "12px",
-                    background: "#F44336", // Red for delete
-                    color: "#fff",
-                    fontWeight: "500",
-                    padding: "14px 20px",
-                    border: "2px solid #ffffff",
-                    boxShadow: `
-                        0 4px 6px -1px rgba(244, 67, 54, 0.2),
-                        0 2px 4px -1px rgba(244, 67, 54, 0.06),
-                        0 0 0 3px rgba(255, 255, 255, 0.4)
-                    `,
-                    letterSpacing: "0.5px",
-                    textShadow: "0 1px 1px rgba(0,0,0,0.1)",
-                },
-                iconTheme: {
-                    primary: "#ffffff",
-                    secondary: "#F44336",
-                },
-                duration: 3000,
-            });
-        } else {
-            toast.error(res.data.message || "Failed to delete supplier", {
+                // Show delete success toast
+                toast.success("Supplier deleted successfully!", {
+                    position: "top-center",
+                    style: {
+                        borderRadius: "12px",
+                        background: "#F44336", // Red for delete
+                        color: "#fff",
+                        fontWeight: "500",
+                        padding: "14px 20px",
+                        border: "2px solid #ffffff",
+                        boxShadow: `
+                            0 4px 6px -1px rgba(244, 67, 54, 0.2),
+                            0 2px 4px -1px rgba(244, 67, 54, 0.06),
+                            0 0 0 3px rgba(255, 255, 255, 0.4)
+                        `,
+                        letterSpacing: "0.5px",
+                        textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+                    },
+                    iconTheme: {
+                        primary: "#ffffff",
+                        secondary: "#F44336",
+                    },
+                    duration: 3000,
+                });
+            } else {
+                toast.error(res.data.message || "Failed to delete supplier", {
+                    position: "top-center",
+                    style: {
+                        borderRadius: "12px",
+                        background: "#F44336",
+                        color: "#fff",
+                        fontWeight: "500",
+                        padding: "14px 20px",
+                        border: "2px solid #ffffff",
+                        boxShadow: `
+                            0 4px 6px -1px rgba(244, 67, 54, 0.2),
+                            0 2px 4px -1px rgba(244, 67, 54, 0.06),
+                            0 0 0 3px rgba(255, 255, 255, 0.4)
+                        `,
+                        letterSpacing: "0.5px",
+                        textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+                    },
+                    iconTheme: {
+                        primary: "#ffffff",
+                        secondary: "#F44336",
+                    },
+                    duration: 3000,
+                });
+            }
+        } catch (error) {
+            console.error("Error deleting supplier:", error);
+            toast.error("Something went wrong while deleting supplier", {
                 position: "top-center",
                 style: {
                     borderRadius: "12px",
@@ -384,34 +408,7 @@ const handleUpdate = async (e) => {
                 duration: 3000,
             });
         }
-    } catch (error) {
-        console.error("Error deleting supplier:", error);
-        toast.error("Something went wrong while deleting supplier", {
-            position: "top-center",
-            style: {
-                borderRadius: "12px",
-                background: "#F44336",
-                color: "#fff",
-                fontWeight: "500",
-                padding: "14px 20px",
-                border: "2px solid #ffffff",
-                boxShadow: `
-                    0 4px 6px -1px rgba(244, 67, 54, 0.2),
-                    0 2px 4px -1px rgba(244, 67, 54, 0.06),
-                    0 0 0 3px rgba(255, 255, 255, 0.4)
-                `,
-                letterSpacing: "0.5px",
-                textShadow: "0 1px 1px rgba(0,0,0,0.1)",
-            },
-            iconTheme: {
-                primary: "#ffffff",
-                secondary: "#F44336",
-            },
-            duration: 3000,
-        });
-    }
-};
-
+    };
 
     useEffect(() => {
         const fetchSuppliers = async () => {
@@ -448,33 +445,32 @@ const handleUpdate = async (e) => {
         fetchSuppliers();
     }, [isModalOpen]);
 
-
     return (
         <div className="p-6 max-w-7xl mx-auto ">
             <Toaster />
             <div className="flex flex-col lg:flex-row justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold text-gray-800">Suppliers Management</h1>
-               <div className="flex flex-col md:flex-row md:items-center gap-4 mt-4 md:mt-0 w-full">
-    {/* Search Box */}
-    <div className="relative w-full md:w-auto flex-1">
-        <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-        <input
-            type="text"
-            placeholder="Search suppliers..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-        />
-    </div>
+                <div className="flex flex-col md:flex-row md:items-center gap-4 mt-4 md:mt-0 w-full">
+                    {/* Search Box */}
+                    <div className="relative w-full md:w-auto flex-1">
+                        <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                        <input
+                            type="text"
+                            placeholder="Search suppliers..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        />
+                    </div>
 
-    {/* Add Supplier Button */}
-    <button
-        onClick={openAddModal}
-        className="w-full md:w-auto text-nowrap text-sm px-4 py-2 gap-2 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
-    >
-        <FaPlus /> Add Supplier
-    </button>
-</div>
+                    {/* Add Supplier Button */}
+                    <button
+                        onClick={openAddModal}
+                        className="w-full md:w-auto text-nowrap text-sm px-4 py-2 gap-2 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
+                    >
+                        <FaPlus /> Add Supplier
+                    </button>
+                </div>
 
             </div>
 
@@ -612,7 +608,7 @@ const handleUpdate = async (e) => {
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                Address
+                                                Address *
                                             </label>
                                             <input
                                                 type="text"
@@ -696,9 +692,20 @@ const handleUpdate = async (e) => {
                                     </button>
                                     <button
                                         type="submit"
-                                        className="py-2 px-4 gap-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
+                                        disabled={isSubmitting}
+                                        className="py-2 px-4 gap-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center disabled:opacity-75 disabled:cursor-not-allowed"
                                     >
-                                        {editingId ? 'Update Supplier' : 'Save Supplier'}
+                                        {isSubmitting ? (
+                                            <>
+                                                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                </svg>
+                                                {editingId ? 'Updating...' : 'Saving...'}
+                                            </>
+                                        ) : (
+                                            editingId ? 'Update Supplier' : 'Save Supplier'
+                                        )}
                                     </button>
                                 </div>
                             </form>

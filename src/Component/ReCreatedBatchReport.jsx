@@ -1,20 +1,21 @@
-import React, { useState, useEffect } from "react";
-import {
-  FaPlus,
-  FaSearch,
-  FaPrint,
-  FaEye,
-  FaEdit,
-  FaTrash,
-  FaSpinner,
-} from "react-icons/fa";
-import Navbar from "./Navbar";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { FaPlus, FaSearch, FaPrint, FaEye, FaEdit, FaTrash } from "react-icons/fa";
+import Navbar from "./Navbar";
+import { Link, useNavigate } from "react-router-dom";
+import { Pencil, Trash2 } from "lucide-react";
 
 const API_URL = import.meta.env.VITE_API_URL || "https://inventary.chemtechengineers.in/backend/";
 
+const statusStyles = {
+  "Completed": "bg-green-100 text-green-800",
+  "In Progress": "bg-blue-100 text-blue-800",
+  "Pending": "bg-yellow-100 text-yellow-800",
+  "Draft": "bg-gray-100 text-gray-800"
+};
+
 export default function ReCreatedBatchReport() {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [batches, setBatches] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -100,11 +101,10 @@ export default function ReCreatedBatchReport() {
                   className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
-              <Link to="/batch-recreation">
-                <button className="py-2 px-4 gap-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center">
+              
+                <button onClick={() => navigate('/batch-recreation')} className="py-2 px-4 gap-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center">
                   <FaPlus /> Create New Batch
                 </button>
-              </Link>
             </div>
           </div>
 
