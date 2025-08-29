@@ -22,7 +22,12 @@ const Navbar = () => {
     { name: "Dashboard", icon: <FaHome />, path: "/dashboard" },
     { name: "Raw Material", icon: <FaBox />, path: "/raw-material-list" },
     { name: "Standard Batch", icon: <FaFlask />, path: "/standard-batch-report" },
-    { name: "Batch Recreation", icon: <FaRecycle />, path: "/re-created-batch-report" },
+    { 
+      name: "Batch Recreation", 
+      icon: <FaRecycle />, 
+      path: "/re-created-batch-report",
+      activePaths: ["/re-created-batch-report", "/batch-recreation"]
+    },
     { name: "Masters", icon: <FaCog />, path: "/masters" },
   ];
 
@@ -82,8 +87,8 @@ const Navbar = () => {
                   to={item.path}
                   onClick={closeSidebar}
                   className={`flex items-center px-4 py-3 rounded-xl transition-all duration-200 group
-                  ${location.pathname === item.path
-                      ? "bg-blue-50 text-blue-600 font-semibold"
+                  ${item.activePaths && item.activePaths.includes(location.pathname) || 
+                    location.pathname === item.path ? "bg-blue-50 text-blue-600 font-semibold"
                       : "text-gray-700 hover:bg-blue-50 hover:text-blue-600"
                     }`}
                 >

@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from "./Navbar";
-import { FaEdit, FaTrash, FaSave, FaPlus, FaRedo } from "react-icons/fa";
+import { FaEdit, FaSave, FaPlus, FaRedo } from "react-icons/fa";
 import { Edit, Trash2 } from "lucide-react";
-
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { Toaster } from "react-hot-toast";
 
 const AddRawmaterial = () => {
+  const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [suppliers, setSuppliers] = useState([]);
   const [formData, setFormData] = useState({
@@ -165,6 +166,7 @@ const AddRawmaterial = () => {
       });
 
       setMaterials([]);
+      navigate("/raw-material-list");
     } catch (err) {
       console.error(err);
       toast.error("Error saving data", {

@@ -493,16 +493,16 @@ export default function BatchRecreation({ editMode = false }) {
         );
     });
 
-    if (isLoading) {
-        return (
-            <div className="flex justify-center items-center min-h-screen">
-                <div className="flex flex-col items-center">
-                    <FaSpinner className="animate-spin text-blue-600 text-4xl mb-4" />
-                    <p className="text-gray-600">Loading data, please wait...</p>
-                </div>
-            </div>
-        );
-    }
+    // if (isLoading) {
+    //     return (
+    //         <div className="flex justify-center items-center min-h-screen">
+    //             <div className="flex flex-col items-center">
+    //                 <FaSpinner className="animate-spin text-blue-600 text-4xl mb-4" />
+    //                 <p className="text-gray-600">Loading data, please wait...</p>
+    //             </div>
+    //         </div>
+    //     );
+    // }
 
     return (
         <>
