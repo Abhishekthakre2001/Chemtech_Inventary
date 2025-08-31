@@ -11,7 +11,21 @@ const API_BASE_URL = 'https://inventary.chemtechengineers.in/backend';
 const handleApiError = (error, defaultMessage = 'An error occurred') => {
     console.error('API Error:', error);
     const message = error.response?.data?.message || error.message || defaultMessage;
-    toast.error(message);
+    // toast.error(message);
+    toast.error(message, {
+        position: "top-center",
+        style: {
+            borderRadius: "12px",
+            background: "#F44336",
+            color: "#fff",
+            fontWeight: "500",
+            padding: "14px 20px",
+        },
+        iconTheme: {
+            primary: "#fff",
+            secondary: "#F44336",
+        },
+    });
     throw new Error(message);
 };
 
@@ -112,13 +126,14 @@ export default function BatchRecreation({ editMode = false }) {
                         console.error('Raw Materials API Error Response:', materialsData);
                         throw new Error(`Failed to fetch raw materials: ${materialsResponse.status} ${materialsResponse.statusText}`);
                     }
+                    console.log("materialsData", materialsData)
 
                     if (materialsData && materialsData.success && Array.isArray(materialsData.data)) {
                         // Transform data to ensure consistent structure
                         const transformedMaterials = materialsData.data.map(item => ({
                             id: item.id || item.raw_material_id,
                             name: item.name || item.raw_material_name || `Material ${item.id}`,
-                            category: item.category || 'Uncategorized',
+                            // category: item.category || 'Uncategorized',
                             quantity: parseFloat(item.quantity) || 0,
                             quantity_unit: item.quantity_unit || 'kg'
                         }));
@@ -130,12 +145,39 @@ export default function BatchRecreation({ editMode = false }) {
                     }
                 } catch (materialsError) {
                     console.error('Error in raw materials fetch:', materialsError);
-                    toast.error('Failed to load raw materials. Please check console for details.');
+                    // toast.error('Failed to load raw materials. Please check console for details.');
+                    toast.error("Failed to load raw materials. Please check console for details.", {
+                        position: "top-center",
+                        style: {
+                            borderRadius: "12px",
+                            background: "#F44336",
+                            color: "#fff",
+                            fontWeight: "500",
+                            padding: "14px 20px",
+                        },
+                        iconTheme: {
+                            primary: "#fff",
+                            secondary: "#F44336",
+                        },
+                    });
                     setMaterials([]);
                 }
             } catch (error) {
                 console.error('Error loading initial data:', error);
-                toast.error('Failed to load initial data. Please refresh the page.');
+                toast.error('Failed to load initial data. Please refresh the page.', {
+                    position: "top-center",
+                    style: {
+                        borderRadius: "12px",
+                        background: "#F44336",
+                        color: "#fff",
+                        fontWeight: "500",
+                        padding: "14px 20px",
+                    },
+                    iconTheme: {
+                        primary: "#fff",
+                        secondary: "#F44336",
+                    },
+                });
                 setBatches([]);
                 setMaterials([]);
             } finally {
@@ -148,7 +190,21 @@ export default function BatchRecreation({ editMode = false }) {
 
     const loadBatchData = async () => {
         if (!selectedBatchId) {
-            toast.error("Please select a batch first");
+            // toast.error("Please select a batch first");
+            toast.error("Please select a batch first", {
+                position: "top-center",
+                style: {
+                    borderRadius: "12px",
+                    background: "#F44336",
+                    color: "#fff",
+                    fontWeight: "500",
+                    padding: "14px 20px",
+                },
+                iconTheme: {
+                    primary: "#fff",
+                    secondary: "#F44336",
+                },
+            });
             return;
         }
         setIsLoading(true);
@@ -252,18 +308,60 @@ export default function BatchRecreation({ editMode = false }) {
 
     const handleAddMaterial = () => {
         if (!newMaterialId) {
-            toast.error("Please select a material");
+            // toast.error("Please select a material");
+            toast.error("Please select a material", {
+                position: "top-center",
+                style: {
+                    borderRadius: "12px",
+                    background: "#F44336",
+                    color: "#fff",
+                    fontWeight: "500",
+                    padding: "14px 20px",
+                },
+                iconTheme: {
+                    primary: "#fff",
+                    secondary: "#F44336",
+                },
+            });
             return;
         }
 
         if (!newPercentage) {
-            toast.error("Please enter a percentage");
+            // toast.error("Please enter a percentage");
+            toast.error("Please enter a percentage", {
+                position: "top-center",
+                style: {
+                    borderRadius: "12px",
+                    background: "#F44336",
+                    color: "#fff",
+                    fontWeight: "500",
+                    padding: "14px 20px",
+                },
+                iconTheme: {
+                    primary: "#fff",
+                    secondary: "#F44336",
+                },
+            });
             return;
         }
 
         const percentage = parseFloat(newPercentage);
         if (isNaN(percentage) || percentage <= 0 || percentage > 100) {
-            toast.error("Percentage must be between 0.01 and 100");
+            // toast.error("Percentage must be between 0.01 and 100");
+            toast.error("Percentage must be between 0.01 and 100", {
+                position: "top-center",
+                style: {
+                    borderRadius: "12px",
+                    background: "#F44336",
+                    color: "#fff",
+                    fontWeight: "500",
+                    padding: "14px 20px",
+                },
+                iconTheme: {
+                    primary: "#fff",
+                    secondary: "#F44336",
+                },
+            });
             return;
         }
 
@@ -272,7 +370,21 @@ export default function BatchRecreation({ editMode = false }) {
         );
 
         if (materialExists) {
-            toast.error("This material is already added");
+            // toast.error("This material is already added");
+            toast.error("This material is already added", {
+                position: "top-center",
+                style: {
+                    borderRadius: "12px",
+                    background: "#F44336",
+                    color: "#fff",
+                    fontWeight: "500",
+                    padding: "14px 20px",
+                },
+                iconTheme: {
+                    primary: "#fff",
+                    secondary: "#F44336",
+                },
+            });
             return;
         }
 
@@ -281,7 +393,21 @@ export default function BatchRecreation({ editMode = false }) {
         );
 
         if (!selectedMaterial) {
-            toast.error("Selected material not found");
+            // toast.error("Selected material not found");
+            toast.error("Selected material not found", {
+                position: "top-center",
+                style: {
+                    borderRadius: "12px",
+                    background: "#F44336",
+                    color: "#fff",
+                    fontWeight: "500",
+                    padding: "14px 20px",
+                },
+                iconTheme: {
+                    primary: "#fff",
+                    secondary: "#F44336",
+                },
+            });
             return;
         }
 
@@ -291,7 +417,21 @@ export default function BatchRecreation({ editMode = false }) {
         );
 
         if (totalPercentage > 100) {
-            toast.error(`Total percentage cannot exceed 100% (current: ${totalPercentage.toFixed(2)}%)`);
+            // toast.error(`Total percentage cannot exceed 100% (current: ${totalPercentage.toFixed(2)}%)`);
+            toast.error(`Total percentage cannot exceed 100% (current: ${totalPercentage.toFixed(2)}%)`, {
+                position: "top-center",
+                style: {
+                    borderRadius: "12px",
+                    background: "#F44336",
+                    color: "#fff",
+                    fontWeight: "500",
+                    padding: "14px 20px",
+                },
+                iconTheme: {
+                    primary: "#fff",
+                    secondary: "#F44336",
+                },
+            });
             return;
         }
 
@@ -320,7 +460,21 @@ export default function BatchRecreation({ editMode = false }) {
     const validatePercentage = (percentage) => {
         const value = parseFloat(percentage);
         if (isNaN(value) || value <= 0 || value > 100) {
-            toast.error("Percentage must be between 0.01 and 100");
+            // toast.error("Percentage must be between 0.01 and 100");
+            toast.error("Percentage must be between 0.01 and 100", {
+                position: "top-center",
+                style: {
+                    borderRadius: "12px",
+                    background: "#F44336",
+                    color: "#fff",
+                    fontWeight: "500",
+                    padding: "14px 20px",
+                },
+                iconTheme: {
+                    primary: "#fff",
+                    secondary: "#F44336",
+                },
+            });
             return false;
         }
         return true;
@@ -329,7 +483,34 @@ export default function BatchRecreation({ editMode = false }) {
     const handleDeleteMaterial = (id) => {
         setRawMaterials(prev => prev.filter(mat => mat.id !== id));
         if (editingId === id) setEditingId(null);
-        toast.success('Material removed');
+        // toast.success('Material removed');
+        toast.success("Material removed", {
+            position: "top-center",
+            style: {
+                borderRadius: "12px",
+                background: "#4CAF50",
+                color: "#fff",
+                fontWeight: "500",
+                padding: "14px 20px",
+                border: "2px solid #ffffff",
+                boxShadow: `
+                        0 4px 6px -1px rgba(76, 175, 80, 0.2),
+                        0 2px 4px -1px rgba(76, 175, 80, 0.06),
+                        0 0 0 3px rgba(255, 255, 255, 0.4)
+                    `,
+                letterSpacing: "0.5px",
+                textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+            },
+            iconTheme: {
+                primary: "#ffffff",
+                secondary: "#4CAF50",
+            },
+            duration: 3000,
+            ariaProps: {
+                role: "alert",
+                "aria-live": "polite",
+            },
+        });
     };
 
     const handlePercentageChange = (id, newPerc) => {
@@ -356,7 +537,21 @@ export default function BatchRecreation({ editMode = false }) {
         // Validate percentage
         const percentage = parseFloat(materialToUpdate.percentage || 0);
         if (isNaN(percentage) || percentage <= 0) {
-            toast.error('Please enter a valid percentage');
+            // toast.error('Please enter a valid percentage');
+            toast.error('Please enter a valid percentage', {
+                position: "top-center",
+                style: {
+                    borderRadius: "12px",
+                    background: "#F44336",
+                    color: "#fff",
+                    fontWeight: "500",
+                    padding: "14px 20px",
+                },
+                iconTheme: {
+                    primary: "#fff",
+                    secondary: "#F44336",
+                },
+            });
             return;
         }
 
@@ -367,7 +562,21 @@ export default function BatchRecreation({ editMode = false }) {
         }, 0);
 
         if (totalPercentage > 100) {
-            toast.error('Total percentage cannot exceed 100%');
+            // toast.error('Total percentage cannot exceed 100%');
+            toast.error('Total percentage cannot exceed 100%', {
+                position: "top-center",
+                style: {
+                    borderRadius: "12px",
+                    background: "#F44336",
+                    color: "#fff",
+                    fontWeight: "500",
+                    padding: "14px 20px",
+                },
+                iconTheme: {
+                    primary: "#fff",
+                    secondary: "#F44336",
+                },
+            });
             return;
         }
 
@@ -381,7 +590,34 @@ export default function BatchRecreation({ editMode = false }) {
         );
 
         setEditingId(null);
-        toast.success('Material updated successfully');
+        // toast.success('Material updated successfully');
+        toast.success("Material updated successfully", {
+            position: "top-center",
+            style: {
+                borderRadius: "12px",
+                background: "#4CAF50",
+                color: "#fff",
+                fontWeight: "500",
+                padding: "14px 20px",
+                border: "2px solid #ffffff",
+                boxShadow: `
+                        0 4px 6px -1px rgba(76, 175, 80, 0.2),
+                        0 2px 4px -1px rgba(76, 175, 80, 0.06),
+                        0 0 0 3px rgba(255, 255, 255, 0.4)
+                    `,
+                letterSpacing: "0.5px",
+                textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+            },
+            iconTheme: {
+                primary: "#ffffff",
+                secondary: "#4CAF50",
+            },
+            duration: 3000,
+            ariaProps: {
+                role: "alert",
+                "aria-live": "polite",
+            },
+        });
     };
 
     const startEditing = (id) => {
@@ -401,23 +637,79 @@ export default function BatchRecreation({ editMode = false }) {
 
     const handleSaveBatch = async () => {
         if (!batchName || !batchSize) {
-            toast.warning("Please fill in all required fields");
+            // toast.warning("Please fill in all required fields");
+            toast.error("Please fill in all required fields", {
+                position: "top-center",
+                style: {
+                    borderRadius: "12px",
+                    background: "#F44336",
+                    color: "#fff",
+                    fontWeight: "500",
+                    padding: "14px 20px",
+                },
+                iconTheme: {
+                    primary: "#fff",
+                    secondary: "#F44336",
+                },
+            });
             return;
         }
 
         if (editMode && !id) {
-            toast.error("Invalid batch recreation ID");
+            // toast.error("Invalid batch recreation ID");
+            toast.error("Invalid batch recreation ID", {
+                position: "top-center",
+                style: {
+                    borderRadius: "12px",
+                    background: "#F44336",
+                    color: "#fff",
+                    fontWeight: "500",
+                    padding: "14px 20px",
+                },
+                iconTheme: {
+                    primary: "#fff",
+                    secondary: "#F44336",
+                },
+            });
             return;
         }
 
         if (rawMaterials.length === 0) {
-            toast.warning("Please add at least one material");
+            // toast.warning("Please add at least one material");
+            toast.error("Please add at least one material", {
+                position: "top-center",
+                style: {
+                    borderRadius: "12px",
+                    background: "#F44336",
+                    color: "#fff",
+                    fontWeight: "500",
+                    padding: "14px 20px",
+                },
+                iconTheme: {
+                    primary: "#fff",
+                    secondary: "#F44336",
+                },
+            });
             return;
         }
 
         const totalPercentage = calculateTotalPercentage(rawMaterials);
         if (Math.abs(totalPercentage - 100) > 0.01) {
-            toast.warning("Total percentage must be exactly 100%");
+            // toast.warning("Total percentage must be exactly 100%");
+            toast.error("Total percentage must be exactly 100%", {
+                position: "top-center",
+                style: {
+                    borderRadius: "12px",
+                    background: "#F44336",
+                    color: "#fff",
+                    fontWeight: "500",
+                    padding: "14px 20px",
+                },
+                iconTheme: {
+                    primary: "#fff",
+                    secondary: "#F44336",
+                },
+            });
             return;
         }
 
@@ -460,28 +752,55 @@ export default function BatchRecreation({ editMode = false }) {
             if (!response.ok || !result.success) {
                 throw new Error(result.message || 'Failed to save batch recreation');
             }
+            // toast.success("Supplier deleted successfully!", {
+            //     position: "top-center",
+            //     style: {
+            //         borderRadius: "12px",
+            //         background: "#F44336", // Red for delete
+            //         color: "#fff",
+            //         fontWeight: "500",
+            //         padding: "14px 20px",
+            //         border: "2px solid #ffffff",
+            //         boxShadow: `
+            //                 0 4px 6px -1px rgba(244, 67, 54, 0.2),
+            //                 0 2px 4px -1px rgba(244, 67, 54, 0.06),
+            //                 0 0 0 3px rgba(255, 255, 255, 0.4)
+            //             `,
+            //         letterSpacing: "0.5px",
+            //         textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+            //     },
+            //     iconTheme: {
+            //         primary: "#ffffff",
+            //         secondary: "#F44336",
+            //     },
+            //     duration: 3000,
+            // });
             toast.success("Supplier deleted successfully!", {
                 position: "top-center",
                 style: {
                     borderRadius: "12px",
-                    background: "#F44336", // Red for delete
+                    background: "#4CAF50",
                     color: "#fff",
                     fontWeight: "500",
                     padding: "14px 20px",
                     border: "2px solid #ffffff",
                     boxShadow: `
-                            0 4px 6px -1px rgba(244, 67, 54, 0.2),
-                            0 2px 4px -1px rgba(244, 67, 54, 0.06),
-                            0 0 0 3px rgba(255, 255, 255, 0.4)
-                        `,
+                        0 4px 6px -1px rgba(76, 175, 80, 0.2),
+                        0 2px 4px -1px rgba(76, 175, 80, 0.06),
+                        0 0 0 3px rgba(255, 255, 255, 0.4)
+                    `,
                     letterSpacing: "0.5px",
                     textShadow: "0 1px 1px rgba(0,0,0,0.1)",
                 },
                 iconTheme: {
                     primary: "#ffffff",
-                    secondary: "#F44336",
+                    secondary: "#4CAF50",
                 },
                 duration: 3000,
+                ariaProps: {
+                    role: "alert",
+                    "aria-live": "polite",
+                },
             });
             // toast.success("Batch recreated successfully!");
 
@@ -537,6 +856,8 @@ export default function BatchRecreation({ editMode = false }) {
             (material.quantity_unit || '').toLowerCase().includes(searchLower)
         );
     });
+
+    console.log("filteredMaterials", filteredMaterials);
 
     // if (isLoading) {
     //     return (
@@ -661,10 +982,11 @@ export default function BatchRecreation({ editMode = false }) {
                                     disabled={isLoading}
                                 />
                                 <select
-                                    className="border border-gray-300 border-l-0 rounded-r px-2 bg-gray-100 text-gray-700"
+                                    disabled
+                                    className="cursor-not-allowed border border-gray-300 border-l-0 rounded-r px-2 bg-gray-100 text-gray-700"
                                     value={batchUnit}
                                     onChange={(e) => setBatchUnit(e.target.value)}
-                                    disabled={isLoading}
+
                                 >
                                     <option value="L">L</option>
                                     <option value="ml">ml</option>
@@ -810,7 +1132,7 @@ export default function BatchRecreation({ editMode = false }) {
                                     {filteredMaterials.length > 0 ? (
                                         filteredMaterials.map((m) => (
                                             <option key={m.id} value={m.id}>
-                                                {m.name} {m.quantity ? `(${m.quantity} ${m.quantity_unit})` : ''} {m.category ? `- ${m.category}` : ''}
+                                                {m.name} {m.quantity ? `(${m.quantity} ${m.quantity_unit})` : ''}
                                             </option>
                                         ))
                                     ) : (

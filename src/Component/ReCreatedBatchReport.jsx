@@ -181,12 +181,12 @@ export default function ReCreatedBatchReport() {
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             <span
                               className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                batch.materials_count > 0
+                                batch.raw_material_count > 0
                                   ? "bg-green-100 text-green-800"
                                   : "bg-gray-100 text-gray-800"
                               }`}
                             >
-                              {batch.materials_count || 0} materials
+                              {batch.raw_material_count || 0} raw materials
                             </span>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
