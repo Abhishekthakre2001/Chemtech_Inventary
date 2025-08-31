@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { Pencil, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 
 const statusStyles = {
@@ -16,6 +17,7 @@ const statusStyles = {
 };
 
 export default function ProductBatch() {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedBatch, setSelectedBatch] = useState(null);
@@ -356,7 +358,7 @@ export default function ProductBatch() {
                         {/* Edit Column */}
                         <td className="p-3 border-b border-gray-200 text-center">
                           <button
-                            onClick={() => handleEdit(batch.id)}
+                            onClick={() => navigate(`/standard-batch-update/${batch.id}`)}
                             title="Edit"
                             className="p-2 rounded-lg bg-orange-50 text-orange-600 hover:bg-orange-100 hover:text-orange-800 shadow-sm transition-all duration-200"
                           >
