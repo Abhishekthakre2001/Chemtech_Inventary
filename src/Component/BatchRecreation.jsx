@@ -5,7 +5,7 @@ import { Toaster } from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "./Navbar";
 
-const API_BASE_URL = 'https://inventary.chemtechengineers.in/backend';
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 // Error handling utility
 const handleApiError = (error, defaultMessage = 'An error occurred') => {
@@ -56,12 +56,12 @@ export default function BatchRecreation({ editMode = false }) {
             }
             setIsLoading(true);
             try {
-                console.log('Fetching batches from:', `${API_BASE_URL}/batch/get_batches.php`);
+                console.log('Fetching batches from:', `${API_BASE_URL}batch/get_batches.php`);
                 // Fetch batches
                 let batchesResponse;
                 try {
                     console.log('Attempting to fetch batches without credentials...');
-                    batchesResponse = await fetch(`${API_BASE_URL}/batch/get_batches.php`, {
+                    batchesResponse = await fetch(`${API_BASE_URL}batch/get_batches.php`, {
                         method: 'GET',
                         mode: 'cors',
                         headers: {
@@ -96,16 +96,17 @@ export default function BatchRecreation({ editMode = false }) {
                 }
 
                 // Fetch raw materials with credentials and proper headers
-                console.log('Fetching raw materials from:', `${API_BASE_URL}/raw_material/get_raw_materials_dropdown.php`);
+                console.log('Fetching raw materials from:', `${API_BASE_URL}raw_material/get_raw_materials_dropdown.php`);
                 try {
                     console.log('Attempting to fetch raw materials...');
-                    const materialsResponse = await fetch(`${API_BASE_URL}/raw_material/get_raw_materials_dropdown.php`, {
+                    const materialsResponse = await fetch(`${API_BASE_URL}raw_material/get_raw_materials_dropdown.php`, {
                         method: 'GET',
+                        mode: 'cors',
                         headers: {
                             'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                        credentials: 'include'  // Try with credentials as it might be required
+                            'Content-Type': 'application/json',
+                            'Origin': window.location.origin
+                        }
                     });
 
                     // First check if the response is JSON
@@ -188,6 +189,71 @@ export default function BatchRecreation({ editMode = false }) {
         fetchInitialData();
     }, []);
 
+    // Fetch an existing batch recreation by id (edit mode)
+    const fetchBatchRecreation = async (recreationId) => {
+        setIsLoading(true);
+        try {
+            console.log('Fetching batch recreation by ID:', recreationId);
+            const url = `${API_BASE_URL}batch_recreation/get_batch_recreation_by_id.php?id=${recreationId}`;
+            const response = await fetch(url, {
+                method: 'GET',
+                mode: 'cors',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Origin': window.location.origin
+                }
+            });
+
+            const text = await response.text();
+            let result;
+            try {
+                result = JSON.parse(text);
+            } catch (e) {
+                console.error('Failed to parse batch recreation response:', text.substring(0, 200));
+                throw new Error('Received invalid JSON from batch recreation API');
+            }
+
+            if (!response.ok || !result.success || !result.data) {
+                throw new Error(result?.message || 'Failed to load batch recreation');
+            }
+
+            const data = result.data;
+
+            const formatDate = (dateString) => {
+                if (!dateString) return '';
+                if (String(dateString).match(/^\d{4}-\d{2}-\d{2}$/)) {
+                    return dateString;
+                }
+                const date = new Date(dateString);
+                return isNaN(date.getTime()) ? '' : date.toISOString().split('T')[0];
+            };
+
+            setSelectedBatchId(String(data.original_batch_id || ''));
+            setBatchName(data.recreated_batch_name || '');
+            setBatchDate(formatDate(data.recreated_batch_date));
+            setBatchSize(data.recreated_batch_size || '');
+            setBatchUnit(data.recreated_batch_unit || 'L');
+
+            const processedMaterials = Array.isArray(data.materials) ? data.materials.map((m, index) => ({
+                id: m.raw_material_id || (Date.now() + index),
+                materialId: m.raw_material_id,
+                materialName: m.name || `Material ${index + 1}`,
+                percentage: parseFloat(m.percentage) || 0,
+                weight: parseFloat(m.quantity_used || 0),
+                unit: m.unit_used || 'kg',
+                available: 0
+            })) : [];
+
+            setRawMaterials(processedMaterials);
+        } catch (error) {
+            handleApiError(error, 'Failed to load batch recreation');
+            setRawMaterials([]);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const loadBatchData = async () => {
         if (!selectedBatchId) {
             // toast.error("Please select a batch first");
@@ -210,27 +276,31 @@ export default function BatchRecreation({ editMode = false }) {
         setIsLoading(true);
         try {
             console.log('Fetching batch data for ID:', selectedBatchId);
-            // Updated endpoint to match the working batches list endpoint pattern
-            const batchUrl = `${API_BASE_URL}/batch/get_batches.php?id=${selectedBatchId}`;
-            const materialsUrl = `${API_BASE_URL}/batch/get_batch_raw_materials.php?batch_id=${selectedBatchId}`;
+            // Use the single-batch endpoint to fetch details for the selected batch
+            const batchUrl = `${API_BASE_URL}batch/get_batch_byid.php?id=${selectedBatchId}`;
+            const materialsUrl = `${API_BASE_URL}batch_recreation/get_batch_raw_materials.php?batch_id=${selectedBatchId}`;
 
             console.log('Batch URL:', batchUrl);
             console.log('Materials URL:', materialsUrl);
 
             const [batchResponse, materialsResponse] = await Promise.all([
                 fetch(batchUrl, {
+                    method: 'GET',
+                    mode: 'cors',
                     headers: {
                         'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    credentials: 'include'
+                        'Content-Type': 'application/json',
+                        'Origin': window.location.origin
+                    }
                 }),
                 fetch(materialsUrl, {
+                    method: 'GET',
+                    mode: 'cors',
                     headers: {
                         'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    credentials: 'include'
+                        'Content-Type': 'application/json',
+                        'Origin': window.location.origin
+                    }
                 })
             ]);
 
@@ -239,6 +309,7 @@ export default function BatchRecreation({ editMode = false }) {
             let batchResult;
             try {
                 batchResult = JSON.parse(batchText);
+                console.log('Batch API Response:', batchResult);
             } catch (e) {
                 console.error('Failed to parse batch response:', batchText.substring(0, 200));
                 throw new Error('Received invalid JSON from batch API');
@@ -253,8 +324,17 @@ export default function BatchRecreation({ editMode = false }) {
                 throw new Error(batchResult.message || 'Failed to load batch data');
             }
 
-            const batchData = Array.isArray(batchResult.data) ? batchResult.data[0] : batchResult.data;
+            // Handle both single object and array responses
+            let batchData;
+            if (batchResult.data) {
+                batchData = Array.isArray(batchResult.data) ? batchResult.data[0] : batchResult.data;
+            } else {
+                // If data isn't nested in a data property, use the root object
+                batchData = batchResult;
+            }
+            
             if (!batchData) throw new Error('No batch data found');
+            console.log('Processed Batch Data:', batchData);
 
             // Process and format materials data
             let materialsData = [];
@@ -274,30 +354,51 @@ export default function BatchRecreation({ editMode = false }) {
             // Format the date to YYYY-MM-DD to avoid invalid date issues
             const formatDate = (dateString) => {
                 if (!dateString) return '';
+                // Handle MySQL date format (YYYY-MM-DD)
+                if (dateString.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                    return dateString;
+                }
                 const date = new Date(dateString);
                 return isNaN(date.getTime()) ? '' : date.toISOString().split('T')[0];
             };
 
-            setBatchName(batchData.batchName || batchData.batch_name || '');
-            setBatchDate(formatDate(batchData.batchDate || batchData.batch_date));
-            setBatchSize(batchData.batchSize || batchData.batch_size || '');
-            setBatchUnit(batchData.batchUnit || batchData.batch_unit || 'L');
+            // Set batch fields with fallbacks for different API response structures
+            setBatchName(batchData.batchName || batchData.batch_name || batchData.name || '');
+            setBatchDate(formatDate(batchData.batchDate || batchData.batch_date || batchData.date));
+            setBatchSize(batchData.batchSize || batchData.batch_size || batchData.size || '');
+            setBatchUnit(batchData.batchUnit || batchData.batch_unit || batchData.unit || 'L');
 
-            // Process materials if they exist in the response
-            if (batchData.materials && Array.isArray(batchData.materials)) {
-                const formattedMaterials = batchData.materials.map((item, index) => ({
-                    id: item.id || Date.now() + index,
-                    materialId: item.id || item.raw_material_id,
-                    materialName: item.name || item.raw_material_name,
+            // Process materials from batch_recreation endpoint, filteredMaterials, or batchData.materials
+            let processedMaterials = [];
+            
+            // Check for filteredMaterials in the response
+            const materialsSource = materialsData.filteredMaterials || materialsData;
+            
+            if (Array.isArray(materialsSource) && materialsSource.length > 0) {
+                processedMaterials = materialsSource.map((item, index) => ({
+                    id: item.id || item.raw_material_id || (Date.now() + index),
+                    materialId: item.raw_material_id || item.id,
+                    materialName: item.name || item.raw_material_name || `Material ${index + 1}`,
                     percentage: parseFloat(item.percentage) || 0,
-                    weight: parseFloat(item.quantity || item.quantity_used || 0),
-                    unit: item.unit || item.unit_used || 'kg',
-                    available: item.quantity || 0
+                    weight: parseFloat((item.quantity_used || item.quantity || 0)),
+                    unit: item.unit_used || item.unit || item.quantity_unit || 'kg',
+                    available: parseFloat(item.available_quantity || item.quantity || 0)
                 }));
-                setRawMaterials(formattedMaterials);
-            } else {
-                setRawMaterials([]);
+            } else if (batchData.materials && Array.isArray(batchData.materials)) {
+                // Fallback to batchData.materials if available
+                processedMaterials = batchData.materials.map((item, index) => ({
+                    id: item.id || (Date.now() + index),
+                    materialId: item.raw_material_id || item.id,
+                    materialName: item.name || item.raw_material_name || `Material ${index + 1}`,
+                    percentage: parseFloat(item.percentage) || 0,
+                    weight: parseFloat(item.quantity_used || item.quantity || 0),
+                    unit: item.unit_used || item.unit || item.quantity_unit || 'kg',
+                    available: parseFloat(item.available_quantity || item.quantity || 0)
+                }));
             }
+            
+            console.log('Processed Materials:', processedMaterials);
+            setRawMaterials(processedMaterials);
         } catch (error) {
             handleApiError(error, 'Failed to load batch data');
             setRawMaterials([]);
@@ -737,12 +838,16 @@ export default function BatchRecreation({ editMode = false }) {
         setIsSaving(true);
         try {
             const endpoint = editMode ? 'update_batch_recreation' : 'add_batch_recreation';
-            const method = editMode ? 'PUT' : 'POST';
+            // Use POST for both create and update to avoid servers that block PUT
+            const method = 'POST';
 
-            const response = await fetch(`${API_BASE_URL}/batch_recreation/${endpoint}.php`, {
-                method: method,
+            const response = await fetch(`${API_BASE_URL}batch_recreation/${endpoint}.php`, {
+                method,
+                mode: 'cors',
                 headers: {
+                    'Accept': 'application/json',
                     'Content-Type': 'application/json',
+                    'Origin': window.location.origin
                 },
                 body: JSON.stringify(batchData)
             });
@@ -775,7 +880,7 @@ export default function BatchRecreation({ editMode = false }) {
             //     },
             //     duration: 3000,
             // });
-            toast.success("Supplier deleted successfully!", {
+            toast.success("Batch recreation saved successfully!", {
                 position: "top-center",
                 style: {
                     borderRadius: "12px",

@@ -28,6 +28,25 @@ export default function ReCreatedBatchReport() {
     // You can open a print dialog or navigate to a print view
   };
 
+  const fetchBatches = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`${API_URL}batch_recreation/get_batch_recreations.php`);
+      console.log('Batch recreations response:', response.data); // Debug log
+      if (response.data && response.data.success === true) {
+        setBatches(response.data.data || []);
+      } else {
+        setBatches([]);
+      }
+    } catch (err) {
+      console.error('Error fetching batch recreations:', err);
+      setError('Failed to load batch recreations. Please try again later.');
+      setBatches([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Handle delete functionality
   const handleDelete = async (batchId) => {
     if (window.confirm('Are you sure you want to delete this batch recreation?')) {
@@ -37,34 +56,17 @@ export default function ReCreatedBatchReport() {
         // Refresh the list after deletion
         setBatches(batches.filter(batch => batch.id !== batchId));
       } catch (err) {
-        console.error('Error deleting batch recreation:', err);
-        setError('Failed to delete batch recreation. Please try again.');
+        // console.error('Error deleting batch recreation:', err);
+        // setError('Failed to delete batch recreation. Please try again.');
+        fetchBatches();
+        setLoading(false);
       } finally {
         setLoading(false);
       }
     }
   };
-
+  
   useEffect(() => {
-    const fetchBatches = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get(`${API_URL}batch_recreation/get_batch_recreations.php`);
-        console.log('Batch recreations response:', response.data); // Debug log
-        if (response.data && response.data.success === true) {
-          setBatches(response.data.data || []);
-        } else {
-          setBatches([]);
-        }
-      } catch (err) {
-        console.error('Error fetching batch recreations:', err);
-        setError('Failed to load batch recreations. Please try again later.');
-        setBatches([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchBatches();
   }, []);
 
