@@ -28,6 +28,17 @@ export default function StandardBatch() {
       return;
     }
 
+    if (percentage < 1 || percentage > 100) {
+      alert("Percentage must be between 1 and 100");
+      return;
+    }
+
+    if (quantity < 1) {
+      alert("Quantity must be at least 1");
+      return;
+    }
+
+
     const newMaterial = { rawMaterial, quantity, percentage, unit };
 
     if (editIndex !== null) {
@@ -60,12 +71,44 @@ export default function StandardBatch() {
   };
 
   const handleSubmit = async () => {
+    console.log("materials", materials);
     setLoading(true);
-    // Validation
+
+    // 1️⃣ Batch-level validation
     if (!batchName || !batchDate || !batchSize || materials.length === 0) {
-      toast.error(
-        "Please fill all required batch information and add at least one material",
-        {
+      toast.error("Please fill all required batch information and add at least one material", {
+        position: "top-center",
+        style: {
+          borderRadius: "12px",
+          background: "#FF4D4F",
+          color: "#fff",
+          fontWeight: "500",
+          padding: "14px 20px",
+          border: "2px solid #ffffff",
+          boxShadow: `
+        0 4px 6px -1px rgba(255, 77, 79, 0.2),
+        0 2px 4px -1px rgba(255, 77, 79, 0.06),
+        0 0 0 3px rgba(255, 255, 255, 0.4)
+      `,
+          letterSpacing: "0.5px",
+          textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+        },
+        iconTheme: {
+          primary: "#ffffff",
+          secondary: "#FF4D4F",
+        },
+        duration: 3000,
+      });
+      setLoading(false);
+      return;
+    }
+
+    // 2️⃣ Materials validation
+    for (let i = 0; i < materials.length; i++) {
+      const { rawMaterial, quantity, percentage, unit } = materials[i];
+
+      if (!rawMaterial || !quantity || !percentage || !unit) {
+        toast.error(`Material ${i + 1}: Please fill all fields`, {
           position: "top-center",
           style: {
             borderRadius: "12px",
@@ -75,10 +118,10 @@ export default function StandardBatch() {
             padding: "14px 20px",
             border: "2px solid #ffffff",
             boxShadow: `
-            0 4px 6px -1px rgba(255, 77, 79, 0.2),
-            0 2px 4px -1px rgba(255, 77, 79, 0.06),
-            0 0 0 3px rgba(255, 255, 255, 0.4)
-          `,
+        0 4px 6px -1px rgba(255, 77, 79, 0.2),
+        0 2px 4px -1px rgba(255, 77, 79, 0.06),
+        0 0 0 3px rgba(255, 255, 255, 0.4)
+      `,
             letterSpacing: "0.5px",
             textShadow: "0 1px 1px rgba(0,0,0,0.1)",
           },
@@ -87,8 +130,98 @@ export default function StandardBatch() {
             secondary: "#FF4D4F",
           },
           duration: 3000,
-        }
-      );
+        });
+        setLoading(false);
+        return;
+      }
+
+      if (percentage < 1 || percentage > 100) {
+        toast.error(`Material ${i + 1}: Percentage must be between 1 and 100`, {
+          position: "top-center",
+          style: {
+            borderRadius: "12px",
+            background: "#FF4D4F",
+            color: "#fff",
+            fontWeight: "500",
+            padding: "14px 20px",
+            border: "2px solid #ffffff",
+            boxShadow: `
+        0 4px 6px -1px rgba(255, 77, 79, 0.2),
+        0 2px 4px -1px rgba(255, 77, 79, 0.06),
+        0 0 0 3px rgba(255, 255, 255, 0.4)
+      `,
+            letterSpacing: "0.5px",
+            textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+          },
+          iconTheme: {
+            primary: "#ffffff",
+            secondary: "#FF4D4F",
+          },
+          duration: 3000,
+        });
+        setLoading(false);
+        return;
+      }
+
+      if (quantity < 1) {
+        toast.error(`Material ${i + 1}: Quantity must be at least 1`, {
+          position: "top-center",
+          style: {
+            borderRadius: "12px",
+            background: "#FF4D4F",
+            color: "#fff",
+            fontWeight: "500",
+            padding: "14px 20px",
+            border: "2px solid #ffffff",
+            boxShadow: `
+        0 4px 6px -1px rgba(255, 77, 79, 0.2),
+        0 2px 4px -1px rgba(255, 77, 79, 0.06),
+        0 0 0 3px rgba(255, 255, 255, 0.4)
+      `,
+            letterSpacing: "0.5px",
+            textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+          },
+          iconTheme: {
+            primary: "#ffffff",
+            secondary: "#FF4D4F",
+          },
+          duration: 3000,
+        });
+        setLoading(false);
+        return;
+      }
+    }
+
+    // 3️⃣ Sum of percentages validation
+    const totalPercentage = materials.reduce(
+      (sum, item) => sum + Number(item.percentage),
+      0
+    );
+
+    if (totalPercentage !== 100) {
+      toast.error(`Total percentage must be exactly 100 (currently ${totalPercentage})`, {
+        position: "top-center",
+        style: {
+          borderRadius: "12px",
+          background: "#FF4D4F",
+          color: "#fff",
+          fontWeight: "500",
+          padding: "14px 20px",
+          border: "2px solid #ffffff",
+          boxShadow: `
+        0 4px 6px -1px rgba(255, 77, 79, 0.2),
+        0 2px 4px -1px rgba(255, 77, 79, 0.06),
+        0 0 0 3px rgba(255, 255, 255, 0.4)
+      `,
+          letterSpacing: "0.5px",
+          textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+        },
+        iconTheme: {
+          primary: "#ffffff",
+          secondary: "#FF4D4F",
+        },
+        duration: 3000,
+      });
       setLoading(false);
       return;
     }
@@ -219,6 +352,25 @@ export default function StandardBatch() {
   }, []);
 
 
+  console.log("unit", unit);
+  // Handle raw material change
+  const handleRawMaterialChange = (e) => {
+    const selectedName = e.target.value;
+    setRawMaterial(selectedName);
+
+    // Find the selected raw material object
+    const selectedItem = rawMaterialsList.find(
+      (item) => item.raw_material_name === selectedName
+    );
+
+    if (selectedItem) {
+      setUnit(selectedItem.quantity_unit); // auto-set unit
+    } else {
+      setUnit(""); // reset if none
+    }
+  };
+
+
   return (
     <>
       <Navbar />
@@ -291,7 +443,7 @@ export default function StandardBatch() {
               <label className="block text-sm font-medium text-gray-700 mb-1">Material *</label>
               <select
                 value={rawMaterial}
-                onChange={e => setRawMaterial(e.target.value)}
+                onChange={handleRawMaterialChange}
                 className="border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="">Select Material</option>
@@ -339,7 +491,7 @@ export default function StandardBatch() {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Unit *</label>
-              <select
+              {/* <select
                 value={unit}
                 onChange={(e) => setUnit(e.target.value)}
                 className="border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -349,7 +501,13 @@ export default function StandardBatch() {
                 <option>Kilograms</option>
                 <option>Grams</option>
                 <option>Milliliters</option>
-              </select>
+              </select> */}
+              <input
+                type="text"
+                value={unit}
+                onChange={(e) => setUnit(e.target.value)}
+                className="no-spinner border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
             </div>
             <div className="flex items-end">
               <button

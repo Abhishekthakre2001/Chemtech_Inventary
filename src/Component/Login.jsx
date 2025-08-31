@@ -167,11 +167,13 @@ const Login = () => {
                   )}
                 </div>
               </div>
+              {/*
               <div className="flex justify-end mt-2">
                 <a href="#" className="text-sm text-blue-600 hover:text-blue-800">Forgot password?</a>
               </div>
+                */}
             </div>
-            
+            {/*
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <input
@@ -186,6 +188,7 @@ const Login = () => {
                 </label>
               </div>
             </div>
+             */}
             
             <button
               type="submit"

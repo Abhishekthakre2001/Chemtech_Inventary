@@ -159,7 +159,7 @@ export default function ProductBatch() {
     if (!window.confirm('Are you sure you want to delete this batch?')) return;
 
     try {
-      const response = await axios.delete('https://inventary.chemtechengineers.in/backend/batch/delete_batch.php', {
+      const response = await axios.post('https://inventary.chemtechengineers.in/backend/batch/delete_batch.php', {
         data: { id: batchId } // sending id in body
       });
 
@@ -235,9 +235,9 @@ export default function ProductBatch() {
                     {/* <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                       Cost
                     </th> */}
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                    {/* <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                       Status
-                    </th>
+                    </th> */}
                     <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">
                       Print
                     </th>
@@ -292,12 +292,12 @@ export default function ProductBatch() {
                         {/* <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                           ₹{batch.batchCost.toLocaleString()}
                         </td> */}
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        {/* <td className="px-6 py-4 whitespace-nowrap">
                           <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${statusStyles[batch.status]
                             }`}>
                             {batch.status}
                           </span>
-                        </td>
+                        </td> */}
                         {/* Print Column */}
                         <td className="p-3 border-b border-gray-200 text-center">
                           <button

@@ -324,7 +324,7 @@ const AddRawmaterial = () => {
               >
                 <option value="">Select Category</option>
                 {categories.map((cat) => (
-                  <option key={cat.id} value={cat.name}>
+                  <option key={cat.name} value={cat.name}>
                     {cat.name}
                   </option>
                 ))}
@@ -404,7 +404,7 @@ const AddRawmaterial = () => {
               >
                 <option value="">Select Supplier</option>
                 {suppliers.map((supplier) => (
-                  <option key={supplier.id} value={supplier.id}>
+                  <option key={supplier.id} value={supplier.supplierName}>
                     {supplier.supplierName}
                   </option>
                 ))}

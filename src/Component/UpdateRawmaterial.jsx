@@ -55,24 +55,24 @@ const UpdateRawmaterial = () => {
       axios
         .get(`https://inventary.chemtechengineers.in/backend/raw_material/get_raw_material_byid.php?id=${id}`)
         .then((res) => {
-          console.log(res.data.data)
-          // if (res.data.success) {
-          //   const data = res.data.data;
-          //   setFormData({
-          //     id: data.id,
-          //     purchaseCode: data.purchase_code,
-          //     rawMaterialName: data.raw_material_name,
-          //     rawMaterialCode: data.raw_material_code,
-          //     rateLanded: data.rate_landed,
-          //     dateIn: data.date_in,
-          //     expiryDate: data.expiry_date || "",
-          //     categoryId: data.category_id,
-          //     quantity: data.quantity,
-          //     quantityUnit: data.quantity_unit,
-          //     purchasePrice: data.purchase_price,
-          //     supplierId: data.supplier_id,
-          //   });
-          // }
+          console.log("res data", res.data.data)
+          if (res.data.success) {
+            const data = res.data.data;
+            setFormData({
+              id: data.id,
+              purchaseCode: data.purchase_code,
+              rawMaterialName: data.raw_material_name,
+              rawMaterialCode: data.raw_material_code,
+              rateLanded: data.rate_landed,
+              dateIn: data.date_in,
+              expiryDate: data.expiry_date || "",
+              categoryId: data.category_id,
+              quantity: data.quantity,
+              quantityUnit: data.quantity_unit,
+              purchasePrice: data.purchase_price,
+              supplierId: data.supplier_id,
+            });
+          }
         })
         .catch((err) => {
           console.error("Error fetching raw material:", err);
@@ -80,6 +80,8 @@ const UpdateRawmaterial = () => {
         });
     }
   }, [id]);
+
+  console.log("formData", formData)
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -337,7 +339,7 @@ const UpdateRawmaterial = () => {
                 >
                   <option value="">Select Category</option>
                   {categories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>
+                    <option key={cat.id} value={cat.name}>
                       {cat.name}
                     </option>
                   ))}
@@ -409,7 +411,7 @@ const UpdateRawmaterial = () => {
                 >
                   <option value="">Select Supplier</option>
                   {suppliers.map((supplier) => (
-                    <option key={supplier.id} value={supplier.id}>
+                    <option key={supplier.id} value={supplier.supplierName}>
                       {supplier.supplierName}
                     </option>
                   ))}

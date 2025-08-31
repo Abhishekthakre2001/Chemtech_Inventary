@@ -16,6 +16,18 @@ const Dashboard = () => {
   });
 
   const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // 🔎 Filter the list
+  const filteredList = stats.lowStockList.filter((item) => {
+    const query = searchQuery.toLowerCase();
+    return (
+      item.purchase_code?.toLowerCase().includes(query) ||
+      item.raw_material_name?.toLowerCase().includes(query) ||
+      item.date_in?.toLowerCase().includes(query) ||
+      String(item.quantity).toLowerCase().includes(query)
+    );
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,6 +77,8 @@ const Dashboard = () => {
               <input
                 type="text"
                 placeholder="Search inventory..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               />
             </div>
@@ -102,7 +116,7 @@ const Dashboard = () => {
                   <FaShoppingCart size={24} />
                 </div>
                 <div>
-                  <p className="text-sm opacity-90">Available Stack</p>
+                  <p className="text-sm opacity-90">Available Stock</p>
                   <p className="text-2xl font-bold mt-4">{isLoading ? '...' : stats.totalProducts - stats.lowStockItems}</p>
                 </div>
               </div>
@@ -115,40 +129,43 @@ const Dashboard = () => {
               <h2 className="text-lg font-semibold text-gray-800">Low Stock Raw Materials</h2>
               <Link to="/raw-material-list" className="text-sm text-indigo-600 hover:underline font-medium">View All</Link>
             </div>
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-blue-200 text-black">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase">Sr. No.</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase">Purchase Code</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase">Raw Material Name</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase">Quantity</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase">Date In</th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {isLoading ? (
-                    <tr>
-                      <td colSpan="5" className="px-6 py-4 text-center text-gray-500">Loading...</td>
-                    </tr>
-                  ) : stats.lowStockList.length > 0 ? (
-                    stats.lowStockList.map((item, index) => (
-                      <tr key={item.id}>
-                        <td className="px-6 py-4">{index + 1}</td>
-                        <td className="px-6 py-4">{item.purchase_code}</td>
-                        <td className="px-6 py-4">{item.raw_material_name}</td>
-                        <td className="px-6 py-4">{item.quantity} {item.quantity_unit}</td>
-                        <td className="px-6 py-4">{item.date_in}</td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="5" className="px-6 py-4 text-center text-gray-500">No low stock items found</td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+          {/* Table */}
+      <div className="overflow-x-auto mt-3">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-blue-200 text-black">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase">Sr. No.</th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase">Purchase Code</th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase">Raw Material Name</th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase">Quantity</th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase">Date In</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {isLoading ? (
+              <tr>
+                <td colSpan="5" className="px-6 py-4 text-center text-gray-500">Loading...</td>
+              </tr>
+            ) : filteredList.length > 0 ? (
+              filteredList.map((item, index) => (
+                <tr key={item.id}>
+                  <td className="px-6 py-4">{index + 1}</td>
+                  <td className="px-6 py-4">{item.purchase_code}</td>
+                  <td className="px-6 py-4">{item.raw_material_name}</td>
+                  <td className="px-6 py-4">
+                    {item.quantity} {item.quantity_unit}
+                  </td>
+                  <td className="px-6 py-4">{item.date_in}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" className="px-6 py-4 text-center text-gray-500">No low stock items found</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
           </div>
 
           {/* Footer */}
