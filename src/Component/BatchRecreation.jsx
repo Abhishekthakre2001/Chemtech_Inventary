@@ -5,6 +5,7 @@ import { Toaster } from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "./Navbar";
 
+
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 // Error handling utility
@@ -857,29 +858,8 @@ export default function BatchRecreation({ editMode = false }) {
             if (!response.ok || !result.success) {
                 throw new Error(result.message || 'Failed to save batch recreation');
             }
-            // toast.success("Supplier deleted successfully!", {
-            //     position: "top-center",
-            //     style: {
-            //         borderRadius: "12px",
-            //         background: "#F44336", // Red for delete
-            //         color: "#fff",
-            //         fontWeight: "500",
-            //         padding: "14px 20px",
-            //         border: "2px solid #ffffff",
-            //         boxShadow: `
-            //                 0 4px 6px -1px rgba(244, 67, 54, 0.2),
-            //                 0 2px 4px -1px rgba(244, 67, 54, 0.06),
-            //                 0 0 0 3px rgba(255, 255, 255, 0.4)
-            //             `,
-            //         letterSpacing: "0.5px",
-            //         textShadow: "0 1px 1px rgba(0,0,0,0.1)",
-            //     },
-            //     iconTheme: {
-            //         primary: "#ffffff",
-            //         secondary: "#F44336",
-            //     },
-            //     duration: 3000,
-            // });
+
+        
             toast.success("Batch recreation saved successfully!", {
                 position: "top-center",
                 style: {
@@ -907,10 +887,7 @@ export default function BatchRecreation({ editMode = false }) {
                     "aria-live": "polite",
                 },
             });
-            // toast.success("Batch recreated successfully!");
-
-            // Navigate to the batch recreation list
-            // navigate('/re-created-batch-report');
+            navigate('/re-created-batch-report');
 
             // Reset form
             setSelectedBatchId("");
