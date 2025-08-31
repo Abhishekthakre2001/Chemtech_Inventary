@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback  } from "react";
 import axios from "axios";
 import { FaPlus, FaSearch, FaPrint, FaEye, FaEdit, FaTrash } from "react-icons/fa";
 import Navbar from "./Navbar";
 import { Link } from "react-router-dom";
 import { Pencil, Trash2 } from "lucide-react";
+import toast from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 
 
 const statusStyles = {
@@ -23,7 +25,8 @@ export default function ProductBatch() {
 
   const [batchesData, setBatchesData] = useState([]);
 
-  useEffect(() => {
+
+  const fetchBatches = useCallback(() => {
     setLoading(true);
     axios
       .get("https://inventary.chemtechengineers.in/backend/batch/get_batches.php")
@@ -32,8 +35,6 @@ export default function ProductBatch() {
           const transformed = res.data.data.map((batch) => {
             const batchSizeWithUnit = `${parseFloat(batch.batchSize)} ${batch.batchUnit}`;
             const rawMaterialCount = batch.materials ? batch.materials.length : 0;
-            const batchCost = 0;
-            const status = "Completed";
 
             return {
               id: batch.id,
@@ -41,11 +42,10 @@ export default function ProductBatch() {
               batchDate: batch.batchDate,
               batchSize: batchSizeWithUnit,
               rawMaterialCount,
-              batchCost,
-              status,
+              batchCost: 0,
+              status: "Completed",
             };
           });
-
           setBatchesData(transformed);
         }
       })
@@ -53,9 +53,14 @@ export default function ProductBatch() {
         console.error("Failed to fetch batches", err);
       })
       .finally(() => {
-        setLoading(false); // ✅ stop loader when done
+        setLoading(false);
       });
   }, []);
+
+  useEffect(() => {
+    fetchBatches();
+  }, [fetchBatches]);
+
 
 
   const filteredBatches = batchesData.filter((batch) =>
@@ -164,7 +169,34 @@ export default function ProductBatch() {
       });
 
       if (response.data.success) {
-        alert('Batch deleted successfully!');
+        // alert('Batch deleted successfully!');
+        toast.success("Batch deleted successfully!", {
+          position: "top-center",
+          style: {
+            borderRadius: "12px",
+            background: "#4CAF50",
+            color: "#fff",
+            fontWeight: "500",
+            padding: "14px 20px",
+            border: "2px solid #ffffff",
+            boxShadow: `
+                        0 4px 6px -1px rgba(76, 175, 80, 0.2),
+                        0 2px 4px -1px rgba(76, 175, 80, 0.06),
+                        0 0 0 3px rgba(255, 255, 255, 0.4)
+                    `,
+            letterSpacing: "0.5px",
+            textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+          },
+          iconTheme: {
+            primary: "#ffffff",
+            secondary: "#4CAF50",
+          },
+          duration: 3000,
+          ariaProps: {
+            role: "alert",
+            "aria-live": "polite",
+          },
+        });
         // Refresh batch list after deletion
         fetchBatches(); // your method to reload batch list
       } else {
@@ -179,6 +211,7 @@ export default function ProductBatch() {
 
   return (
     <>
+      <Toaster />
       <Navbar />
       <div className="mt-6 p-6 font-sans bg-gray-50 min-h-screen xl:ml-[17rem]">
         <div className="max-w-7xl mx-auto">
