@@ -15,6 +15,7 @@ export default function StandardBatch() {
   const [loading, setLoading] = useState(false);
 
   const [rawMaterial, setRawMaterial] = useState("");
+  const [materialId, setMaterialId] = useState("");
   const [quantity, setQuantity] = useState("");
   const [percentage, setPercentage] = useState("");
   const [unit, setUnit] = useState("");
@@ -39,7 +40,7 @@ export default function StandardBatch() {
     }
 
 
-    const newMaterial = { rawMaterial, quantity, percentage, unit };
+    const newMaterial = { rawMaterial, quantity, percentage, unit, materialId };
 
     if (editIndex !== null) {
       const updated = [...materials];
@@ -52,6 +53,7 @@ export default function StandardBatch() {
 
     // Reset fields
     setRawMaterial("");
+    setMaterialId("");
     setQuantity("");
     setPercentage("");
     setUnit("");
@@ -60,6 +62,7 @@ export default function StandardBatch() {
   const handleEdit = (index) => {
     const mat = materials[index];
     setRawMaterial(mat.rawMaterial);
+    setMaterialId(mat.id);
     setQuantity(mat.quantity);
     setPercentage(mat.percentage);
     setUnit(mat.unit);
@@ -334,6 +337,7 @@ export default function StandardBatch() {
     setBatchUnit("Liters");
     setMaterials([]);
     setRawMaterial("");
+    setMaterialId("");
     setQuantity("");
     setPercentage("");
     setUnit("");
@@ -357,12 +361,12 @@ export default function StandardBatch() {
   const handleRawMaterialChange = (e) => {
     const selectedName = e.target.value;
     setRawMaterial(selectedName);
-
+    // setMaterialId(selectedItem.id);
     // Find the selected raw material object
     const selectedItem = rawMaterialsList.find(
       (item) => item.raw_material_name === selectedName
     );
-
+    setMaterialId(selectedItem.id);
     if (selectedItem) {
       setUnit(selectedItem.quantity_unit); // auto-set unit
     } else {
@@ -370,7 +374,7 @@ export default function StandardBatch() {
     }
   };
 
-
+console.log("materials",materials)
   return (
     <>
       <Navbar />
@@ -504,9 +508,10 @@ export default function StandardBatch() {
               </select> */}
               <input
                 type="text"
+                disabled
                 value={unit}
                 onChange={(e) => setUnit(e.target.value)}
-                className="no-spinner border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="cursor-not-allowed no-spinner border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
             <div className="flex items-end">

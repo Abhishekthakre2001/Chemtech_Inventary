@@ -257,7 +257,7 @@ export default function ProductBatch() {
                     <tr>
                       <td colSpan="10" className="px-6 py-6 text-center text-gray-600">
                         <div className="flex justify-center items-center space-x-2">
-                         
+
                           <span className="text-sm font-medium">Loading batches...</span>
                         </div>
                       </td>
