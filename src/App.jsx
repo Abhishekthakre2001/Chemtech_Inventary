@@ -12,6 +12,7 @@ import RawMaterialList from "./Component/RawMaterialList";
 import Masters from "./Component/Masters";
 import UpdateRawMaterial from "./Component/UpdateRawMaterial";
 import Login from "./Component/Login";
+import StandardbatchUpdate from './Component/StandardbatchUpdate';
 
 function App() {
   return (
@@ -35,6 +36,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <StandardBatch />
+              </ProtectedRoute>
+            }
+          />
+           <Route
+            path="/standard-batch-update/:id"
+            element={
+              <ProtectedRoute>
+                <StandardbatchUpdate />
               </ProtectedRoute>
             }
           />
