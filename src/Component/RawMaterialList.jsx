@@ -70,24 +70,28 @@ const RawMaterialList = () => {
           position: "top-center",
           style: {
             borderRadius: "12px",
-            background: "#FF4D4F",
+            background: "#4CAF50",
             color: "#fff",
             fontWeight: "500",
             padding: "14px 20px",
             border: "2px solid #ffffff",
             boxShadow: `
-            0 4px 6px -1px rgba(255, 77, 79, 0.2),
-            0 2px 4px -1px rgba(255, 77, 79, 0.06),
-            0 0 0 3px rgba(255, 255, 255, 0.4)
-          `,
+                        0 4px 6px -1px rgba(76, 175, 80, 0.2),
+                        0 2px 4px -1px rgba(76, 175, 80, 0.06),
+                        0 0 0 3px rgba(255, 255, 255, 0.4)
+                    `,
             letterSpacing: "0.5px",
             textShadow: "0 1px 1px rgba(0,0,0,0.1)",
           },
           iconTheme: {
             primary: "#ffffff",
-            secondary: "#FF4D4F",
+            secondary: "#4CAF50",
           },
           duration: 3000,
+          ariaProps: {
+            role: "alert",
+            "aria-live": "polite",
+          },
         });
 
         setInventory((prev) => prev.filter((item) => item.id !== id));

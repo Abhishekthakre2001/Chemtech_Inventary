@@ -215,17 +215,17 @@ const CategoryManagement = () => {
 
             if (data.success) {
                 toast.success("Category deleted successfully!", {
-                    position: "top-center",
+                     position: "top-center",
                     style: {
                         borderRadius: "12px",
-                        background: "#F44336", // Red for delete
+                        background: "#4CAF50",
                         color: "#fff",
                         fontWeight: "500",
                         padding: "14px 20px",
                         border: "2px solid #ffffff",
                         boxShadow: `
-                        0 4px 6px -1px rgba(244, 67, 54, 0.2),
-                        0 2px 4px -1px rgba(244, 67, 54, 0.06),
+                        0 4px 6px -1px rgba(76, 175, 80, 0.2),
+                        0 2px 4px -1px rgba(76, 175, 80, 0.06),
                         0 0 0 3px rgba(255, 255, 255, 0.4)
                     `,
                         letterSpacing: "0.5px",
@@ -233,9 +233,13 @@ const CategoryManagement = () => {
                     },
                     iconTheme: {
                         primary: "#ffffff",
-                        secondary: "#F44336",
+                        secondary: "#4CAF50",
                     },
                     duration: 3000,
+                    ariaProps: {
+                        role: "alert",
+                        "aria-live": "polite",
+                    },
                 });
 
                 setCategories((prev) => prev.filter((cat) => cat.id !== id));

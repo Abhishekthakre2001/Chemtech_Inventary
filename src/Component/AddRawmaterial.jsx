@@ -278,7 +278,7 @@ const AddRawmaterial = () => {
                 onChange={handleChange}
                 onKeyDown={(e) => {
                   // Block e, +, -, .
-                  if (["e", "E", "+", "-", "."].includes(e.key)) {
+                  if (["e", "E", "+", "-"].includes(e.key)) {
                     e.preventDefault();
                   }
                 }}
@@ -384,7 +384,7 @@ const AddRawmaterial = () => {
                 onChange={handleChange}
                 onKeyDown={(e) => {
                   // Block e, +, -, .
-                  if (["e", "E", "+", "-", "."].includes(e.key)) {
+                  if (["e", "E", "+", "-"].includes(e.key)) {
                     e.preventDefault();
                   }
                 }}

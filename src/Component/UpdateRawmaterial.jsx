@@ -291,9 +291,15 @@ const UpdateRawmaterial = () => {
                   type="number"
                   name="rateLanded"
                   placeholder="0.00"
+                  onKeyDown={(e) => {
+                  // Block e, +, -, .
+                  if (["e", "E", "+", "-"].includes(e.key)) {
+                    e.preventDefault();
+                  }
+                }}
                   value={formData.rateLanded}
                   onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="no-spinner w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   step="0.01"
                   required
                 />
@@ -355,8 +361,14 @@ const UpdateRawmaterial = () => {
                   name="quantity"
                   placeholder="0"
                   value={formData.quantity}
+                  onKeyDown={(e) => {
+                  // Block e, +, -, .
+                  if (["e", "E", "+", "-"].includes(e.key)) {
+                    e.preventDefault();
+                  }
+                }}
                   onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="no-spinner w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   step="0.01"
                   required
                 />
@@ -392,8 +404,14 @@ const UpdateRawmaterial = () => {
                   placeholder="0.00"
                   value={formData.purchasePrice}
                   onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="no-spinner w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   step="0.01"
+                  onKeyDown={(e) => {
+                  // Block e, +, -, .
+                  if (["e", "E", "+", "-"].includes(e.key)) {
+                    e.preventDefault();
+                  }
+                }}
                   required
                 />
               </div>
