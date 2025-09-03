@@ -417,7 +417,7 @@ console.log("materials",materials)
                   value={batchSize}
                   onKeyDown={(e) => {
                     // Block e, +, -, .
-                    if (["e", "E", "+", "-", "."].includes(e.key)) {
+                    if (["e", "E", "+", "-"].includes(e.key)) {
                       e.preventDefault();
                     }
                   }}
@@ -467,7 +467,7 @@ console.log("materials",materials)
                 value={quantity}
                 onKeyDown={(e) => {
                   // Block e, +, -, .
-                  if (["e", "E", "+", "-", "."].includes(e.key)) {
+                  if (["e", "E", "+", "-"].includes(e.key)) {
                     e.preventDefault();
                   }
                 }}

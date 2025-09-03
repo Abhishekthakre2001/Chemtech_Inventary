@@ -1056,7 +1056,7 @@ export default function BatchRecreation({ editMode = false }) {
                                     }}
                                     onKeyDown={(e) => {
                                         // Block e, +, -, .
-                                        if (["e", "E", "+", "-", "."].includes(e.key)) {
+                                        if (["e", "E", "+", "-"].includes(e.key)) {
                                             e.preventDefault();
                                         }
                                     }}
