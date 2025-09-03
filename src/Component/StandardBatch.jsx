@@ -483,7 +483,7 @@ console.log("materials",materials)
                 placeholder="%"
                 onKeyDown={(e) => {
                   // Block e, +, -, .
-                  if (["e", "E", "+", "-", "."].includes(e.key)) {
+                  if (["e", "E", "+", "-"].includes(e.key)) {
                     e.preventDefault();
                   }
                 }}

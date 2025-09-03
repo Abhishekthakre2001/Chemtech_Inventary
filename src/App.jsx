@@ -10,7 +10,7 @@ import ReCreatedBatchReport from "./Component/ReCreatedBatchReport";
 import CreateRawMaterial from "./Component/AddRawmaterial";
 import RawMaterialList from "./Component/RawMaterialList";
 import Masters from "./Component/Masters";
-import UpdateRawMaterial from "./Component/UpdateRawMaterial";
+import UpdateRawMaterial from "./Component/UpdateRawmaterial";
 import Login from "./Component/Login";
 import StandardbatchUpdate from './Component/StandardbatchUpdate';
 

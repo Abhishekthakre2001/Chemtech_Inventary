@@ -1228,7 +1228,7 @@ export default function BatchRecreation({ editMode = false }) {
                                     type="number"
                                     onKeyDown={(e) => {
                                         // Block e, +, -, .
-                                        if (["e", "E", "+", "-", "."].includes(e.key)) {
+                                        if (["e", "E", "+", "-"].includes(e.key)) {
                                             e.preventDefault();
                                         }
                                     }}

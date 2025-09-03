@@ -65,7 +65,7 @@ export default function ReCreatedBatchReport() {
       }
     }
   };
-  
+
   useEffect(() => {
     fetchBatches();
   }, []);
@@ -103,10 +103,10 @@ export default function ReCreatedBatchReport() {
                   className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
-              
-                <button onClick={() => navigate('/batch-recreation')} className="py-2 px-4 gap-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center">
-                  <FaPlus />Recreated Batch
-                </button>
+
+              <button onClick={() => navigate('/batch-recreation')} className="py-2 px-4 gap-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center">
+                <FaPlus />Recreated Batch
+              </button>
             </div>
           </div>
 
@@ -175,18 +175,18 @@ export default function ReCreatedBatchReport() {
                             {batch.original_batch_name || 'N/A'}
                           </td> */}
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {new Date(batch.recreated_batch_date).toLocaleDateString()}
+                            {new Date(batch.recreated_batch_date).toLocaleDateString("en-GB")}
                           </td>
+
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {batch.recreated_batch_size} {batch.recreated_batch_unit}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             <span
-                              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                batch.raw_material_count > 0
+                              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${batch.raw_material_count > 0
                                   ? "bg-green-100 text-green-800"
                                   : "bg-gray-100 text-gray-800"
-                              }`}
+                                }`}
                             >
                               {batch.raw_material_count || 0} raw materials
                             </span>

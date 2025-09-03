@@ -186,16 +186,16 @@ const SuppliersManagement = () => {
         if (isSubmitting) return;
 
         // Basic validations before API call
-        if (!/^[0-9]+$/.test(formData.accountNumber)) {
-            toast.error("Account Number must be a positive integer", { position: "top-center",  style: {
-                        borderRadius: "8px",
-                        background: "#ff4d4d",
-                        color: "#fff",
-                        fontWeight: "500",
-                        padding: "12px 16px",
-                    }, });
-            return;
-        }
+        // if (!/^[0-9]+$/.test(formData.accountNumber)) {
+        //     toast.error("Account Number must be a positive integer", { position: "top-center",  style: {
+        //                 borderRadius: "8px",
+        //                 background: "#ff4d4d",
+        //                 color: "#fff",
+        //                 fontWeight: "500",
+        //                 padding: "12px 16px",
+        //             }, });
+        //     return;
+        // }
 
         if (!formData.contactPerson || !/^[a-zA-Z\s]+$/.test(formData.contactPerson)) {
             toast.error("Contact Person must contain letters only", { position: "top-center", style: {
@@ -609,11 +609,11 @@ const SuppliersManagement = () => {
                             ) : (
                                 filteredSuppliers.map((supplier) => (
                                     <tr key={supplier.id} className="hover:bg-gray-50">
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{supplier.name}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{supplier.contactPerson}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{supplier.contactNumber}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{supplier.email}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{supplier.bankName}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{supplier.name ? supplier.name : "N/A" }</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{supplier.contactPerson ? supplier.contactPerson : "N/A"}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{supplier.contactNumber ? supplier.contactNumber : "N/A"}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{supplier.email ? supplier.email : "N/A"}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{supplier.bankName ? supplier.bankName : "N/A"}</td>
                                         {/* Edit Column */}
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                             <button
