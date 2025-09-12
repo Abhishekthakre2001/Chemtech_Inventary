@@ -48,6 +48,10 @@ export default function BatchRecreation({ editMode = false }) {
     const [isLoading, setIsLoading] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
 
+    const [newQuantity, setNewQuantity] = useState("");
+    const [newUnit, setNewUnit] = useState("Kilograms");
+
+
     // Fetch initial data on component mount
     useEffect(() => {
         const fetchInitialData = async () => {
@@ -333,7 +337,7 @@ export default function BatchRecreation({ editMode = false }) {
                 // If data isn't nested in a data property, use the root object
                 batchData = batchResult;
             }
-            
+
             if (!batchData) throw new Error('No batch data found');
             console.log('Processed Batch Data:', batchData);
 
@@ -371,10 +375,10 @@ export default function BatchRecreation({ editMode = false }) {
 
             // Process materials from batch_recreation endpoint, filteredMaterials, or batchData.materials
             let processedMaterials = [];
-            
+
             // Check for filteredMaterials in the response
             const materialsSource = materialsData.filteredMaterials || materialsData;
-            
+
             if (Array.isArray(materialsSource) && materialsSource.length > 0) {
                 processedMaterials = materialsSource.map((item, index) => ({
                     id: item.id || item.raw_material_id || (Date.now() + index),
@@ -397,7 +401,7 @@ export default function BatchRecreation({ editMode = false }) {
                     available: parseFloat(item.available_quantity || item.quantity || 0)
                 }));
             }
-            
+
             console.log('Processed Materials:', processedMaterials);
             setRawMaterials(processedMaterials);
         } catch (error) {
@@ -740,7 +744,7 @@ export default function BatchRecreation({ editMode = false }) {
     const handleSaveBatch = async () => {
         if (!batchName || !batchSize) {
             // toast.warning("Please fill in all required fields");
-            toast.error("Please fill in all required fields", {
+            toast.error("Please Load Standard Batch First", {
                 position: "top-center",
                 style: {
                     borderRadius: "12px",
@@ -859,7 +863,7 @@ export default function BatchRecreation({ editMode = false }) {
                 throw new Error(result.message || 'Failed to save batch recreation');
             }
 
-        
+
             toast.success("Batch recreation saved successfully!", {
                 position: "top-center",
                 style: {
@@ -951,6 +955,16 @@ export default function BatchRecreation({ editMode = false }) {
     //         </div>
     //     );
     // }
+
+    const handleFieldChange = (id, field, value) => {
+        setRawMaterials((prev) =>
+            prev.map((mat) =>
+                mat.id === id ? { ...mat, [field]: field === "percentage" || field === "weight" ? parseFloat(value) || 0 : value } : mat
+            )
+        );
+    };
+
+    console.log("rawMaterials", rawMaterials)
 
     return (
         <>
@@ -1091,9 +1105,9 @@ export default function BatchRecreation({ editMode = false }) {
                             <thead className="bg-blue-200 text-black">
                                 <tr>
                                     <th className="p-3 text-left">Material</th>
-                                    <th className="p-3 text-left">Category</th>
+                                    {/* <th className="p-3 text-left">Category</th> */}
                                     <th className="p-3 text-right">Percentage (%)</th>
-                                    <th className="p-3 text-right">Weight (kg)</th>
+                                    <th className="p-3 text-right">Qunatity</th>
                                     <th className="p-3 text-center">Actions</th>
                                 </tr>
                             </thead>
@@ -1108,11 +1122,13 @@ export default function BatchRecreation({ editMode = false }) {
                                     rawMaterials.map((mat) => (
                                         <tr
                                             key={mat.id}
-                                            className={`${mat.id % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-gray-100`}
+                                            className={`${mat.id % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-gray-100`}
                                         >
+                                            {/* Material Name */}
                                             <td className="p-3 border-b border-gray-200">{mat.materialName}</td>
-                                            <td className="p-3 border-b border-gray-200">{mat.category}</td>
-                                            <td className="p-3 border-b border-gray-200">
+
+                                            {/* Percentage */}
+                                            <td className="p-3 border-b border-gray-200 text-right">
                                                 {editingId === mat.id ? (
                                                     <input
                                                         type="number"
@@ -1121,13 +1137,49 @@ export default function BatchRecreation({ editMode = false }) {
                                                         max={100}
                                                         step={0.01}
                                                         className="border border-gray-300 p-1 rounded w-20 text-right"
-                                                        onChange={(e) => handlePercentageChange(mat.id, e.target.value)}
+                                                        onChange={(e) =>
+                                                            handleFieldChange(mat.id, "percentage", e.target.value)
+                                                        }
                                                     />
                                                 ) : (
-                                                    <div className="text-right">{mat.percentage.toFixed(2)}</div>
+                                                    <div>{mat.percentage.toFixed(2)}</div>
                                                 )}
                                             </td>
-                                            <td className="p-3 border-b border-gray-200 text-right">{mat.weight.toFixed(2)}</td>
+
+                                            {/* Quantity + Unit */}
+                                            <td className="p-3 border-b border-gray-200 text-right">
+                                                {editingId === mat.id ? (
+                                                    <div className="flex items-center justify-end gap-2">
+                                                        <input
+                                                            type="number"
+                                                            value={mat.weight}
+                                                            min={0}
+                                                            step={0.01}
+                                                            className="border border-gray-300 p-1 rounded w-24 text-right"
+                                                            onChange={(e) =>
+                                                                handleFieldChange(mat.id, "weight", e.target.value)
+                                                            }
+                                                        />
+                                                        <select
+                                                            value={mat.unit}
+                                                            onChange={(e) =>
+                                                                handleFieldChange(mat.id, "unit", e.target.value)
+                                                            }
+                                                            className="border border-gray-300 p-1 rounded"
+                                                        >
+                                                            <option value="Liters">Liters</option>
+                                                            <option value="Kilograms">Kilograms</option>
+                                                            <option value="Grams">Grams</option>
+                                                        </select>
+                                                    </div>
+                                                ) : (
+                                                    <div>
+                                                        {mat.weight.toFixed(2)} {mat.unit}
+                                                    </div>
+                                                )}
+                                            </td>
+
+                                            {/* Actions */}
                                             <td className="p-3 border-b border-gray-200">
                                                 <div className="flex justify-center gap-2">
                                                     {editingId === mat.id ? (
@@ -1169,15 +1221,16 @@ export default function BatchRecreation({ editMode = false }) {
                                     ))
                                 )}
                             </tbody>
+
                             {rawMaterials.length > 0 && (
                                 <tfoot className="bg-gray-100 font-semibold">
                                     <tr>
-                                        <td className="p-3" colSpan={2}>Total</td>
+                                        <td className="p-3" colSpan={1}>Total</td>
                                         <td className="p-3 text-right">
                                             {rawMaterials.reduce((sum, mat) => sum + mat.percentage, 0).toFixed(2)}%
                                         </td>
                                         <td className="p-3 text-right">
-                                            {rawMaterials.reduce((sum, mat) => sum + mat.weight, 0).toFixed(2)} kg
+                                            {/* {rawMaterials.reduce((sum, mat) => sum + mat.weight, 0).toFixed(2)} kg */}
                                         </td>
                                         <td className="p-3"></td>
                                     </tr>
@@ -1242,6 +1295,34 @@ export default function BatchRecreation({ editMode = false }) {
                                     onChange={(e) => setNewPercentage(e.target.value)}
                                 />
                             </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Quantity *</label>
+                                <div className="flex">
+                                    <input
+                                        type="number"
+                                        placeholder="Enter quantity"
+                                        value={newQuantity}
+                                        onChange={(e) => setNewQuantity(e.target.value)}
+                                        onKeyDown={(e) => {
+                                            if (["e", "E", "+", "-"].includes(e.key)) {
+                                                e.preventDefault();
+                                            }
+                                        }}
+                                        onWheel={(e) => e.target.blur()}
+                                        className="no-spinner border border-gray-300 p-2 rounded-l w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    />
+                                    <select
+                                        value={newUnit}
+                                        onChange={(e) => setNewUnit(e.target.value)}
+                                        className="border border-gray-300 border-l-0 p-2 rounded-r bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    >
+                                        <option value="Liters">Liters</option>
+                                        <option value="Kilograms">Kilograms</option>
+                                        <option value="Grams">Grams</option>
+                                    </select>
+                                </div>
+                            </div>
+
                             <div className="flex items-end">
                                 <button
                                     onClick={handleAddMaterial}

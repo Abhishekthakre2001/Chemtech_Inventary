@@ -30,13 +30,13 @@ export default function StandardBatch() {
       return;
     }
 
-    if (percentage < 1 || percentage > 100) {
-      alert("Percentage must be between 1 and 100");
+    if (percentage < 0 || percentage > 100) {
+      alert("Percentage must be between 0 and 100");
       return;
     }
 
-    if (quantity < 1) {
-      alert("Quantity must be at least 1");
+    if (quantity < 0) {
+      alert("Quantity must be at least 0");
       return;
     }
 
@@ -174,8 +174,8 @@ export default function StandardBatch() {
         return;
       }
 
-      if (quantity < 1) {
-        toast.error(`Material ${i + 1}: Quantity must be at least 1`, {
+      if (quantity < 0) {
+        toast.error(`Material ${i + 1}: Quantity must be at least 0`, {
           position: "top-center",
           style: {
             borderRadius: "12px",

@@ -339,13 +339,17 @@ const AddRawmaterial = () => {
                 placeholder="0"
                 value={formData.quantity}
                 onChange={(e) => {
-                  // Ensure only digits
-                  let value = e.target.value.replace(/\D/g, "");
-                  setFormData({ ...formData, quantity: value });
+                  let value = e.target.value;
+
+                  // Allow only digits and one decimal point
+                  if (/^\d*\.?\d*$/.test(value)) {
+                    setFormData({ ...formData, quantity: value });
+                  }
                 }}
+
                 onKeyDown={(e) => {
                   // Block e, +, -, .
-                  if (["e", "E", "+", "-", "."].includes(e.key)) {
+                  if (["e", "E", "+", "-"].includes(e.key)) {
                     e.preventDefault();
                   }
                 }}
