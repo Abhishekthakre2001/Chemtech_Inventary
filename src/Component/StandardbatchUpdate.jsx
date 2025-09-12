@@ -4,8 +4,7 @@ import { Pencil, Trash2 } from "lucide-react";
 import Navbar from "./Navbar";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import toast from "react-hot-toast";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function StandardbatchUpdate() {
   const { id } = useParams();
@@ -20,10 +19,11 @@ export default function StandardbatchUpdate() {
     materials: [],
   });
   const [rawMaterialsList, setRawMaterialsList] = useState([]);
+  const [selectedrawmaterialqunatity, setselectedrawmaterialqunatity] = useState(null);
 
   // State for Raw Material Form
   const [materialForm, setMaterialForm] = useState({
-    formId: null,            // local unique id for React rendering/editing
+    formId: null,            // local unique id for UI
     rawMaterialId: "",        // actual raw material id from DB
     name: "",
     quantity: "",
@@ -33,7 +33,7 @@ export default function StandardbatchUpdate() {
 
   const [isEditing, setIsEditing] = useState(false);
 
-  // Fetch data from API
+  // Fetch batch data
   useEffect(() => {
     const fetchBatchData = async () => {
       try {
@@ -41,7 +41,13 @@ export default function StandardbatchUpdate() {
           `https://inventary.chemtechengineers.in/backend/batch/get_batch_byid.php?id=${id}`
         );
         if (response.data.success) {
-          setBatch(response.data.data);
+          // Ensure each material has a formId
+          const data = response.data.data;
+          data.materials = data.materials.map((m) => ({
+            ...m,
+            formId: m.formId || Date.now() + Math.random(),
+          }));
+          setBatch(data);
         } else {
           console.error("Failed to fetch batch data");
         }
@@ -49,28 +55,28 @@ export default function StandardbatchUpdate() {
         console.error("Error fetching batch data:", error);
       }
     };
-
     if (id) fetchBatchData();
   }, [id]);
 
+  // Fetch raw materials list
   useEffect(() => {
     fetch("https://inventary.chemtechengineers.in/backend/raw_material/list_raw_material.php")
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         if (data.success && Array.isArray(data.data)) {
           setRawMaterialsList(data.data);
         }
       })
-      .catch(err => console.error("Error fetching raw materials:", err));
+      .catch((err) => console.error("Error fetching raw materials:", err));
   }, []);
 
-  // Handle input changes for batch info
+  // Handle batch info change
   const handleBatchChange = (e) => {
     const { name, value } = e.target;
     setBatch((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Handle raw material form change
+  // Handle material form change
   const handleMaterialFormChange = (e) => {
     const { name, value } = e.target;
     setMaterialForm((prev) => ({ ...prev, [name]: value }));
@@ -78,77 +84,22 @@ export default function StandardbatchUpdate() {
 
   // Add or Update material
   const handleAddOrUpdateMaterial = () => {
-    // Validation
-    if (!materialForm.name.trim()) {
-      // alert("Please select a material.");
-      toast.error("Please select a material.", {
-        position: "top-center",
-        style: {
-          borderRadius: "12px",
-          background: "#F44336",
-          color: "#fff",
-          fontWeight: "500",
-          padding: "14px 20px",
-        },
-        iconTheme: {
-          primary: "#fff",
-          secondary: "#F44336",
-        },
-      });
+    if (!materialForm.rawMaterialId) {
+      toast.error("Please select a material.", { position: "top-center" });
       return;
     }
     if (!materialForm.quantity || Number(materialForm.quantity) < 1) {
-      // alert("Quantity must be at least 1.");
-      toast.error("Quantity must be at least 1.", {
+      toast.error("Quantity must be at least 1.", { position: "top-center" });
+      return;
+    }
+    if (selectedrawmaterialqunatity && parseFloat(materialForm.quantity) > parseFloat(selectedrawmaterialqunatity)) {
+      toast.error(`Quantity cannot be greater than available stock. Available: ${selectedrawmaterialqunatity}`, {
         position: "top-center",
-        style: {
-          borderRadius: "12px",
-          background: "#F44336",
-          color: "#fff",
-          fontWeight: "500",
-          padding: "14px 20px",
-        },
-        iconTheme: {
-          primary: "#fff",
-          secondary: "#F44336",
-        },
       });
       return;
     }
     if (!materialForm.percentage || Number(materialForm.percentage) < 1 || Number(materialForm.percentage) > 100) {
-      // alert("Percentage must be between 1 and 100.");
-      toast.error("Percentage must be between 1 and 100.", {
-        position: "top-center",
-        style: {
-          borderRadius: "12px",
-          background: "#F44336",
-          color: "#fff",
-          fontWeight: "500",
-          padding: "14px 20px",
-        },
-        iconTheme: {
-          primary: "#fff",
-          secondary: "#F44336",
-        },
-      });
-      return;
-    }
-    if (!materialForm.unit.trim()) {
-      alert("Unit is required.");
-      toast.error("Unit is required.", {
-        position: "top-center",
-        style: {
-          borderRadius: "12px",
-          background: "#F44336",
-          color: "#fff",
-          fontWeight: "500",
-          padding: "14px 20px",
-        },
-        iconTheme: {
-          primary: "#fff",
-          secondary: "#F44336",
-        },
-      });
+      toast.error("Percentage must be between 1 and 100.", { position: "top-center" });
       return;
     }
 
@@ -165,7 +116,7 @@ export default function StandardbatchUpdate() {
         ...prev,
         materials: [
           ...prev.materials,
-          { ...materialForm, id: Date.now() }, // ✅ unique UI id
+          { ...materialForm, formId: Date.now() }, // ✅ includes rawMaterialId + name
         ],
       }));
     }
@@ -182,63 +133,64 @@ export default function StandardbatchUpdate() {
   };
 
 
-  // Delete material from table
-  const handleDeleteMaterial = (materialId) => {
+  // Delete material
+  const handleDeleteMaterial = (formId) => {
     setBatch((prev) => ({
       ...prev,
-      materials: prev.materials.filter((m) => m.id !== materialId),
+      materials: prev.materials.filter((m) => m.formId !== formId),
     }));
   };
 
   // Edit material (load into form)
-  const handleEditMaterial = (materialId) => {
-    const material = batch.materials.find((m) => m.id === materialId);
+  const handleEditMaterial = (formId) => {
+    const material = batch.materials.find((m) => m.formId === formId);
     if (material) {
-      setMaterialForm(material);
+      setMaterialForm({
+        formId: material.formId,
+        rawMaterialId: material.rawMaterialId, // ✅ ensures dropdown matches
+        name: material.name,
+        quantity: material.quantity,
+        percentage: material.percentage,
+        unit: material.unit,
+      });
+      setselectedrawmaterialqunatity(
+        rawMaterialsList.find((item) => item.id == material.rawMaterialId)?.quantity || null
+      );
       setIsEditing(true);
     }
   };
 
   // Submit batch
   const handleSubmit = async () => {
-    // Validation for required batch fields
     if (!batch.id) {
       toast.error("Batch ID is required", { position: "top-center" });
       return;
     }
-
     if (!batch.batchName.trim()) {
       toast.error("Batch Name is required", { position: "top-center" });
       return;
     }
-
     if (!batch.batchDate) {
       toast.error("Batch Date is required", { position: "top-center" });
       return;
     }
-
     if (!batch.batchSize || Number(batch.batchSize) <= 0) {
       toast.error("Batch Size must be greater than 0", { position: "top-center" });
       return;
     }
-
     if (!batch.batchUnit.trim()) {
       toast.error("Batch Unit is required", { position: "top-center" });
       return;
     }
-
-    // Validation for materials
     if (!batch.materials || batch.materials.length === 0) {
       toast.error("At least one material is required", { position: "top-center" });
       return;
     }
 
-    // Ensure total percentage = 100
     const totalPercentage = batch.materials.reduce(
       (sum, mat) => sum + Number(mat.percentage || 0),
       0
     );
-
     if (totalPercentage !== 100) {
       toast.error("Total material percentage must be exactly 100%", {
         position: "top-center",
@@ -246,7 +198,6 @@ export default function StandardbatchUpdate() {
       return;
     }
 
-    // If all good → submit payload
     const formattedData = {
       id: batch.id,
       batchDate: batch.batchDate,
@@ -266,21 +217,7 @@ export default function StandardbatchUpdate() {
       );
 
       if (response.data.success) {
-        toast.success("Batch updated successfully!", {
-          position: "top-center",
-          style: {
-            borderRadius: "12px",
-            background: "#4CAF50",
-            color: "#fff",
-            fontWeight: "500",
-            padding: "14px 20px",
-          },
-          iconTheme: {
-            primary: "#fff",
-            secondary: "#4CAF50",
-          },
-        });
-        console.log("API Response:", response.data);
+        toast.success("Batch updated successfully!", { position: "top-center" });
       } else {
         toast.error(response.data.message || "Failed to update batch", {
           position: "top-center",
@@ -372,26 +309,28 @@ export default function StandardbatchUpdate() {
                 Material *
               </label>
               <select
-                value={materialForm.rawMaterialId}
+                value={materialForm.rawMaterialId} // ✅ now always matches
                 onChange={(e) => {
                   const selectedId = e.target.value;
                   const selectedItem = rawMaterialsList.find(item => item.id == selectedId);
 
                   setMaterialForm((prev) => ({
                     ...prev,
-                    rawMaterialId: selectedId,   // ✅ store real id
-                    name: selectedItem ? selectedItem.raw_material_name : ""
+                    rawMaterialId: selectedId,
+                    name: selectedItem ? selectedItem.raw_material_name : "",
                   }));
+                  setselectedrawmaterialqunatity(selectedItem?.quantity || null);
                 }}
                 className="border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
-                <option value="">Select Material</option>
+                <option value=""></option>
                 {rawMaterialsList.map((item) => (
                   <option key={item.id} value={item.id}>
                     {item.raw_material_name}
                   </option>
                 ))}
               </select>
+
 
 
             </div>
@@ -475,7 +414,7 @@ export default function StandardbatchUpdate() {
               {batch.materials && batch.materials.length > 0 ? (
                 batch.materials.map((material) => (
                   <tr
-                    key={material.id}
+                    key={material.formId}
                     className="hover:bg-gray-100 even:bg-white odd:bg-gray-50"
                   >
                     <td className="p-3 border-b border-gray-200">
@@ -492,7 +431,7 @@ export default function StandardbatchUpdate() {
                     </td>
                     <td className="px-6 py-4 text-center">
                       <button
-                        onClick={() => handleEditMaterial(material.id)}
+                        onClick={() => handleEditMaterial(material.formId)}
                         className="p-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-800 shadow-sm transition-all duration-200"
                       >
                         <Pencil className="w-5 h-5" />
@@ -500,7 +439,7 @@ export default function StandardbatchUpdate() {
                     </td>
                     <td className="px-6 py-4 text-center">
                       <button
-                        onClick={() => handleDeleteMaterial(material.id)}
+                        onClick={() => handleDeleteMaterial(material.formId)}
                         className="p-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-800 shadow-sm transition-all duration-200"
                       >
                         <Trash2 className="w-5 h-5" />
@@ -510,10 +449,7 @@ export default function StandardbatchUpdate() {
                 ))
               ) : (
                 <tr>
-                  <td
-                    colSpan="6"
-                    className="p-4 text-center text-gray-500"
-                  >
+                  <td colSpan="6" className="p-4 text-center text-gray-500">
                     No materials added yet
                   </td>
                 </tr>

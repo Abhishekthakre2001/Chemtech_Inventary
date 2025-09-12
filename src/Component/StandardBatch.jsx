@@ -7,6 +7,7 @@ import { Toaster } from "react-hot-toast";
 
 export default function StandardBatch() {
   const [rawMaterialsList, setRawMaterialsList] = useState([]);
+  const [selectedRawMaterialQuantity, setSelectedRawMaterialQuantity] = useState(null);
 
   const [batchName, setBatchName] = useState("");
   const [batchDate, setBatchDate] = useState("");
@@ -39,6 +40,12 @@ export default function StandardBatch() {
       return;
     }
 
+    if (selectedRawMaterialQuantity && parseFloat(quantity) > parseFloat(selectedRawMaterialQuantity)) {
+      alert(
+        `Quantity cannot be greater than available stock. Available: ${selectedRawMaterialQuantity}`
+      );
+      return;
+    }
 
     const newMaterial = { rawMaterial, quantity, percentage, unit, materialId };
 
@@ -75,6 +82,7 @@ export default function StandardBatch() {
 
   const handleSubmit = async () => {
     console.log("materials", materials);
+
     setLoading(true);
 
     // 1️⃣ Batch-level validation
@@ -350,6 +358,7 @@ export default function StandardBatch() {
       .then(data => {
         if (data.success && Array.isArray(data.data)) {
           setRawMaterialsList(data.data);
+          console.log("category", data.data)
         }
       })
       .catch(err => console.error("Error fetching raw materials:", err));
@@ -368,13 +377,15 @@ export default function StandardBatch() {
     );
     setMaterialId(selectedItem.id);
     if (selectedItem) {
+      console.log("first", selectedItem.quantity);
+      setSelectedRawMaterialQuantity(selectedItem?.quantity);
       setUnit(selectedItem.quantity_unit); // auto-set unit
     } else {
       setUnit(""); // reset if none
     }
   };
 
-console.log("materials",materials)
+  console.log("selectedRawMaterialQuantity", selectedRawMaterialQuantity)
   return (
     <>
       <Navbar />
