@@ -145,7 +145,13 @@ export default function ReCreatedBatchReport() {
                         Materials
                       </th>
                       <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">
-                        Actions
+                        Print
+                      </th>
+                      <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">
+                        Update
+                      </th>
+                      <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">
+                        Delete
                       </th>
                     </tr>
                   </thead>
@@ -184,47 +190,49 @@ export default function ReCreatedBatchReport() {
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             <span
                               className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${batch.raw_material_count > 0
-                                  ? "bg-green-100 text-green-800"
-                                  : "bg-gray-100 text-gray-800"
+                                ? "bg-green-100 text-green-800"
+                                : "bg-gray-100 text-gray-800"
                                 }`}
                             >
                               {batch.raw_material_count || 0} raw materials
                             </span>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <div className="flex justify-center space-x-3">
-                              <button
-                                title="Print"
-                                className="text-gray-500 hover:text-blue-600 transition-colors"
-                                onClick={() => handlePrint(batch.id)}
-                              >
-                                <FaPrint className="h-4 w-4" />
-                              </button>
-                              {/* <Link to={`/batch-recreation/${batch.id}`}>
-                                <button
-                                  title="View"
-                                  className="text-gray-500 hover:text-green-600 transition-colors"
-                                >
-                                  <FaEye className="h-4 w-4" />
-                                </button>
-                              </Link> */}
-                              <Link to={`/batch-recreation/edit/${batch.id}`}>
-                                <button
-                                  title="Edit"
-                                  className="text-gray-500 hover:text-yellow-600 transition-colors"
-                                >
-                                  <FaEdit className="h-4 w-4" />
-                                </button>
-                              </Link>
-                              <button
-                                title="Delete"
-                                className="text-gray-500 hover:text-red-600 transition-colors"
-                                onClick={() => handleDelete(batch.id)}
-                              >
-                                <FaTrash className="h-4 w-4" />
-                              </button>
-                            </div>
+
+                          {/* Print Column */}
+                          <td className="p-3 border-b border-gray-200 text-center">
+                            <button
+                              onClick={() => handlePrint(batch.id)}
+                              title="Print"
+                              className="p-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-800 shadow-sm transition-all duration-200"
+                            >
+                              <FaPrint className="h-4 w-4" />
+                            </button>
                           </td>
+
+                          {/* Edit Column */}
+                          <td className="p-3 border-b border-gray-200 text-center">
+                            <button
+                              onClick={() => navigate(`/batch-recreation/edit/${batch.id}`)}
+                              title="Edit"
+                              className="p-2 rounded-lg bg-orange-50 text-orange-600 hover:bg-orange-100 hover:text-orange-800 shadow-sm transition-all duration-200"
+                            >
+                              <FaEdit className="h-4 w-4" />
+                            </button>
+                          </td>
+
+  {/* Delete Column */}
+                        <td className="p-3 border-b border-gray-200 text-center">
+                          <button
+                           onClick={() => handleDelete(batch.id)}
+                            title="Delete"
+                            className="p-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-800 shadow-sm transition-all duration-200"
+                          >
+                            <FaTrash className="h-4 w-4" />
+                          </button>
+                        </td>
+
+
+                        
                         </tr>
                       ))
                     )}
