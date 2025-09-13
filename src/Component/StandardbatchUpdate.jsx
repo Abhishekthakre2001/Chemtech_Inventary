@@ -92,12 +92,30 @@ export default function StandardbatchUpdate() {
       toast.error("Quantity must be at least 1.", { position: "top-center" });
       return;
     }
-    if (selectedrawmaterialqunatity && parseFloat(materialForm.quantity) > parseFloat(selectedrawmaterialqunatity)) {
-      toast.error(`Quantity cannot be greater than available stock. Available: ${selectedrawmaterialqunatity}`, {
-        position: "top-center",
-      });
-      return;
-    }
+
+    const editQty = parseFloat(localStorage.getItem("editmaterialquantity")) || 0;
+    const inputQty = parseFloat(materialForm.quantity) || 0;
+    const selectedQty = parseFloat(selectedrawmaterialqunatity) || 0;
+
+    // // First condition
+    // if (editQty <= inputQty) {
+    //   console.log("editQty",editQty);
+    //   console.log("inputQty",inputQty);
+    //   console.log("editQty <= inputQty",editQty <= inputQty)
+    //   toast.error(`Quantity cannot be greater than available stock. Available: ${selectedQty}`, {
+    //     position: "top-center",
+    //   });
+    //   return;
+    // }
+
+    // // Second condition (only checked if first is false)
+    // if (selectedQty && inputQty > selectedQty) {
+    //   toast.error(`Quantity cannot be greater than available stock. Available: ${selectedQty}`, {
+    //     position: "top-center",
+    //   });
+    //   return;
+    // }
+
     if (!materialForm.percentage || Number(materialForm.percentage) < 1 || Number(materialForm.percentage) > 100) {
       toast.error("Percentage must be between 1 and 100.", { position: "top-center" });
       return;
@@ -153,6 +171,7 @@ export default function StandardbatchUpdate() {
         percentage: material.percentage,
         unit: material.unit,
       });
+      localStorage.setItem("editmaterialquantity", material.quantity);
       setselectedrawmaterialqunatity(
         rawMaterialsList.find((item) => item.id == material.rawMaterialId)?.quantity || null
       );

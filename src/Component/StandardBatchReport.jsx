@@ -163,7 +163,7 @@ export default function ProductBatch() {
   };
 
   const handleDeleteBatch = async (batchId) => {
-    if (!window.confirm('Are you sure you want to delete this batch?')) return;
+    if (!window.confirm('Are you sure you want to delete this batch? Raw material Quantity can\'t revert?')) return;
 
     try {
       const response = await axios.post('https://inventary.chemtechengineers.in/backend/batch/delete_batch.php', {
