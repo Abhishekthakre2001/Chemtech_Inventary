@@ -20,7 +20,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("https://inventary.chemtechengineers.in/backend/login/login.php", {
+      const response = await fetch(`${API_BASE_URL}login/login.php`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

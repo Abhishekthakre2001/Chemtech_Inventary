@@ -5,7 +5,7 @@ import Navbar from "./Navbar";
 import { Link, useNavigate } from "react-router-dom";
 import { Pencil, Trash2 } from "lucide-react";
 
-const API_URL = import.meta.env.VITE_API_URL || "https://inventary.chemtechengineers.in/backend/";
+const API_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL}`;
 
 const statusStyles = {
   "Completed": "bg-green-100 text-green-800",

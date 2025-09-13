@@ -15,11 +15,11 @@ const RawMaterialList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [inventory, setInventory] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const API_BASE_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     setLoading(true); // start loading before fetch
-    fetch("https://inventary.chemtechengineers.in/backend/raw_material/list_raw_material.php")
+    fetch(`${API_BASE_URL}raw_material/list_raw_material.php`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success && Array.isArray(data.data)) {
@@ -53,7 +53,7 @@ const RawMaterialList = () => {
 
     try {
       const response = await fetch(
-        "https://inventary.chemtechengineers.in/backend/raw_material/delete_raw_material.php",
+        `${API_BASE_URL}raw_material/delete_raw_material.php`,
         {
           method: "POST",
           headers: {

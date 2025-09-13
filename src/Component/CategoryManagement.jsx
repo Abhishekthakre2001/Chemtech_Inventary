@@ -8,6 +8,7 @@ import { Toaster } from "react-hot-toast";
 const CategoryManagement = () => {
     // Sample initial categories
     const [categories, setCategories] = useState([]);
+    const API_BASE_URL = import.meta.env.VITE_API_URL;
 
     // Fetch categories from API
 
@@ -42,7 +43,7 @@ const CategoryManagement = () => {
 
         try {
             const { data } = await axios.post(
-                "https://inventary.chemtechengineers.in/backend/category/add_category.php",
+                `${API_BASE_URL}category/add_category.php`,
                 {
                     name: currentCategory.name,
                 },
@@ -124,8 +125,7 @@ const CategoryManagement = () => {
         e.preventDefault();
 
         try {
-            const { data } = await axios.post(
-                "https://inventary.chemtechengineers.in/backend/category/edit_category.php",
+            const { data } = await axios.post( `${API_BASE_URL}category/edit_category.php`,
                 {
                     id: currentCategory.id,
                     name: currentCategory.name,
@@ -204,7 +204,7 @@ const CategoryManagement = () => {
     const deleteCategory = async (id) => {
         try {
             const { data } = await axios.post(
-                "https://inventary.chemtechengineers.in/backend/category/delete_category.php",
+                `${API_BASE_URL}category/delete_category.php`,
                 { id },
                 {
                     headers: {
@@ -281,7 +281,7 @@ const CategoryManagement = () => {
     const fetchCategories = async () => {
         try {
             const { data } = await axios.get(
-                "https://inventary.chemtechengineers.in/backend/category/list_categories.php"
+                `${API_BASE_URL}category/list_categories.php`
             );
 
             if (data.success && Array.isArray(data.data)) {

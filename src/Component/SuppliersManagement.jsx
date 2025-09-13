@@ -112,7 +112,7 @@ const SuppliersManagement = () => {
     //     // setSuccess("");
 
     //     try {
-    //         const res = await axios.post("https://inventary.chemtechengineers.in/backend/supplier/add_supplier.php", formData, {
+    //         const res = await axios.post(`${API_BASE_URL}supplier/add_supplier.php`, formData, {
     //             headers: { "Content-Type": "application/json" }
     //         });
 
@@ -235,7 +235,7 @@ const SuppliersManagement = () => {
 
         try {
             const res = await axios.post(
-                "https://inventary.chemtechengineers.in/backend/supplier/add_supplier.php",
+                `${API_BASE_URL}supplier/add_supplier.php`,
                 formData,
                 { headers: { "Content-Type": "application/json" } }
             );
@@ -328,7 +328,7 @@ const SuppliersManagement = () => {
             };
 
             const res = await axios.post(
-                "https://inventary.chemtechengineers.in/backend/supplier/edit_supplier.php",
+                `${API_BASE_URL}supplier/edit_supplier.php`,
                 payload
             );
 
@@ -431,7 +431,7 @@ const SuppliersManagement = () => {
 
         try {
             const res = await axios.post(
-                "https://inventary.chemtechengineers.in/backend/supplier/delete_supplier.php",
+                `${API_BASE_URL}supplier/delete_supplier.php`,
                 { id }
             );
 
@@ -524,7 +524,7 @@ const SuppliersManagement = () => {
         const fetchSuppliers = async () => {
             try {
                 const res = await axios.get(
-                    "https://inventary.chemtechengineers.in/backend/supplier/list_suppliers.php"
+                    `${API_BASE_URL}supplier/list_suppliers.php`
                 );
 
                 if (res.data.success && Array.isArray(res.data.data)) {

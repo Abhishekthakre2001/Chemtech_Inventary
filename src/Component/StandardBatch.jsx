@@ -247,7 +247,7 @@ export default function StandardBatch() {
 
     try {
       const response = await fetch(
-        "https://inventary.chemtechengineers.in/backend/batch/add_batch.php",
+        `${API_BASE_URL}batch/add_batch.php`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -353,7 +353,7 @@ export default function StandardBatch() {
   };
 
   useEffect(() => {
-    fetch("https://inventary.chemtechengineers.in/backend/raw_material/list_raw_material.php")
+    fetch(`${API_BASE_URL}raw_material/list_raw_material.php`)
       .then(res => res.json())
       .then(data => {
         if (data.success && Array.isArray(data.data)) {

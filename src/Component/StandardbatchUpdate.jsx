@@ -60,7 +60,7 @@ export default function StandardbatchUpdate() {
 
   // Fetch raw materials list
   useEffect(() => {
-    fetch("https://inventary.chemtechengineers.in/backend/raw_material/list_raw_material.php")
+    fetch(`${API_BASE_URL}raw_material/list_raw_material.php`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success && Array.isArray(data.data)) {
@@ -230,7 +230,7 @@ export default function StandardbatchUpdate() {
 
     try {
       const response = await axios.post(
-        "https://inventary.chemtechengineers.in/backend/batch/update_batch.php",
+        `${API_BASE_URL}batch/update_batch.php`,
         formattedData,
         { headers: { "Content-Type": "application/json" } }
       );

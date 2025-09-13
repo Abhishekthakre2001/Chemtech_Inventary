@@ -31,7 +31,7 @@ export default function ProductBatch() {
   const fetchBatches = useCallback(() => {
     setLoading(true);
     axios
-      .get("https://inventary.chemtechengineers.in/backend/batch/get_batches.php")
+      .get(`${API_BASE_URL}batch/get_batches.php`)
       .then((res) => {
         if (res.data.success && Array.isArray(res.data.data)) {
           const transformed = res.data.data.map((batch) => {

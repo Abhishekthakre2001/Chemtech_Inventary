@@ -30,7 +30,7 @@ const UpdateRawmaterial = () => {
   useEffect(() => {
     // Fetch categories
     axios
-      .get("https://inventary.chemtechengineers.in/backend/category/list_categories.php")
+      .get(`${API_BASE_URL}category/list_categories.php`)
       .then((res) => {
         if (res.data.success) {
           setCategories(res.data.data);
@@ -42,7 +42,7 @@ const UpdateRawmaterial = () => {
 
     // Fetch suppliers
     axios
-      .get("https://inventary.chemtechengineers.in/backend/supplier/list_suppliers.php")
+      .get(`${API_BASE_URL}supplier/list_suppliers.php`)
       .then((res) => {
         if (res.data.success) {
           setSuppliers(res.data.data);
@@ -136,7 +136,7 @@ const UpdateRawmaterial = () => {
 
     try {
       const response = await axios.post(
-        "https://inventary.chemtechengineers.in/backend/raw_material/edit_raw_material.php",
+        `${API_BASE_URL}raw_material/edit_raw_material.php`,
         formData
       );
 

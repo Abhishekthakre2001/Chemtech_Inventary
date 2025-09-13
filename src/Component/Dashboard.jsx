@@ -28,11 +28,13 @@ const Dashboard = () => {
       String(item.quantity).toLowerCase().includes(query)
     );
   });
+  const API_BASE_URL = import.meta.env.VITE_API_URL;
+
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("https://inventary.chemtechengineers.in/backend/dashboard/summary.php");
+        const res = await fetch(`${API_BASE_URL}dashboard/summary.php`);
         const data = await res.json();
 
         if (data.status === "success") {

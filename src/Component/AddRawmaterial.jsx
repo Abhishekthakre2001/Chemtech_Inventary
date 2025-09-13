@@ -26,9 +26,11 @@ const AddRawmaterial = () => {
     supplier: "",
   });
 
+  const API_BASE_URL = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
     axios
-      .get("https://inventary.chemtechengineers.in/backend/category/list_categories.php")
+      .get(`${API_BASE_URL}category/list_categories.php`)
       .then((res) => {
         if (res.data.success) {
           setCategories(res.data.data);
@@ -41,7 +43,7 @@ const AddRawmaterial = () => {
 
   useEffect(() => {
     axios
-      .get("https://inventary.chemtechengineers.in/backend/supplier/list_suppliers.php")
+      .get(`${API_BASE_URL}supplier/list_suppliers.php`)
       .then((res) => {
         if (res.data.success) {
           setSuppliers(res.data.data);

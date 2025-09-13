@@ -780,9 +780,43 @@ export default function BatchRecreation({ editMode = false }) {
             return;
         }
 
-        if (rawMaterials.length === 0) {
+        // Attempt to auto-map materials by name if their ID is not found in the dropdown
+        const normalize = (s) => (s || '').toString().trim().toLowerCase();
+        const materialsById = new Map(materials.map((m) => [parseInt(m.id), m]));
+        const materialsByName = new Map(
+            materials.map((m) => [normalize(m.raw_material_name || m.name), m])
+        );
+
+        const remappedMaterials = rawMaterials.map((mat) => {
+            const idNum = parseInt(mat.materialId);
+            const idExists = materialsById.has(idNum);
+            if (idExists) return mat;
+
+            const match = materialsByName.get(normalize(mat.materialName));
+            if (match) {
+                return {
+                    ...mat,
+                    materialId: match.id,
+                    materialName: match.raw_material_name || match.name,
+                    unit: match.quantity_unit || mat.unit,
+                    available: typeof match.quantity === 'number' ? match.quantity : (parseFloat(match.quantity) || mat.available)
+                };
+            }
+            return mat;
+        });
+
+        // Filter out materials that don't exist in the current materials list (after remap)
+        const validMaterials = remappedMaterials.filter((material) => {
+            const exists = materials.some((m) => parseInt(m.id) === parseInt(material.materialId));
+            if (!exists) {
+                console.warn(`Filtering out non-existent material ID: ${material.materialId} (${material.materialName})`);
+            }
+            return exists;
+        });
+
+        if (validMaterials.length === 0) {
             // toast.warning("Please add at least one material");
-            toast.error("Please add at least one material", {
+            toast.error("Please add at least one valid material", {
                 position: "top-center",
                 style: {
                     borderRadius: "12px",
@@ -799,7 +833,27 @@ export default function BatchRecreation({ editMode = false }) {
             return;
         }
 
-        const totalPercentage = calculateTotalPercentage(rawMaterials);
+        if (validMaterials.length !== rawMaterials.length) {
+            toast.error("Some materials have been removed because they no longer exist in the system. Please review and save again.", {
+                position: "top-center",
+                style: {
+                    borderRadius: "12px",
+                    background: "#F44336",
+                    color: "#fff",
+                    fontWeight: "500",
+                    padding: "14px 20px",
+                },
+                iconTheme: {
+                    primary: "#fff",
+                    secondary: "#F44336",
+                },
+            });
+            // Update the materials list to only include valid ones (after attempted remap)
+            setRawMaterials(validMaterials);
+            return;
+        }
+
+        const totalPercentage = calculateTotalPercentage(validMaterials);
         if (Math.abs(totalPercentage - 100) > 0.01) {
             // toast.warning("Total percentage must be exactly 100%");
             toast.error("Total percentage must be exactly 100%", {
@@ -825,7 +879,7 @@ export default function BatchRecreation({ editMode = false }) {
             recreated_batch_date: batchDate || new Date().toISOString().split('T')[0],
             recreated_batch_size: parseFloat(batchSize),
             recreated_batch_unit: batchUnit,
-            materials: rawMaterials.map((mat, index) => ({
+            materials: validMaterials.map((mat, index) => ({
                 id: mat.id || (index + 1), // Use existing ID if in edit mode
                 raw_material_id: mat.materialId,
                 quantity_used: mat.weight,
@@ -984,7 +1038,15 @@ export default function BatchRecreation({ editMode = false }) {
                             <select
                                 className="border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 value={selectedBatchId}
-                                onChange={(e) => setSelectedBatchId(e.target.value)}
+                                onChange={(e) => {
+                                    setSelectedBatchId(e.target.value);
+                                    // Clear existing materials when changing batch selection
+                                    setRawMaterials([]);
+                                    setBatchName("");
+                                    setBatchDate("");
+                                    setBatchSize("");
+                                    setBatchUnit("L");
+                                }}
                                 disabled={isLoading}
                             >
                                 <option value="">Select a batch...</option>
@@ -1058,15 +1120,7 @@ export default function BatchRecreation({ editMode = false }) {
                                     className="no-spinner border border-gray-300 p-2 rounded-l w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                     value={batchSize}
                                     onChange={(e) => {
-                                        const newSize = e.target.value;
-                                        setBatchSize(newSize);
-                                        // Update all weights when batch size changes
-                                        setRawMaterials(materials =>
-                                            materials.map(mat => ({
-                                                ...mat,
-                                                weight: (parseFloat(newSize || 0) * mat.percentage) / 100
-                                            }))
-                                        );
+                                        setBatchSize(e.target.value);
                                     }}
                                     onKeyDown={(e) => {
                                         // Block e, +, -, .
