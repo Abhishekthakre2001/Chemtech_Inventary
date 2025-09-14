@@ -27,11 +27,11 @@ export default function ProductBatch() {
 
   const [batchesData, setBatchesData] = useState([]);
 
-
+const API_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL}`;
   const fetchBatches = useCallback(() => {
     setLoading(true);
     axios
-      .get(`${API_BASE_URL}batch/get_batches.php`)
+      .get(`${API_URL}batch/get_batches.php`)
       .then((res) => {
         if (res.data.success && Array.isArray(res.data.data)) {
           const transformed = res.data.data.map((batch) => {

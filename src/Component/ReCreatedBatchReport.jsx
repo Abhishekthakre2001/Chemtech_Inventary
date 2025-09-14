@@ -52,7 +52,7 @@ export default function ReCreatedBatchReport() {
     if (window.confirm('Are you sure you want to delete this batch recreation?')) {
       try {
         setLoading(true);
-        await axios.delete(`${API_URL}batch_recreation/delete_batch_recreation.php?id=${batchId}`);
+        await axios.post(`${API_URL}batch_recreation/delete_batch_recreation.php`,{id:batchId});
         // Refresh the list after deletion
         setBatches(batches.filter(batch => batch.id !== batchId));
       } catch (err) {

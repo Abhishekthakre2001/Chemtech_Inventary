@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { Toaster } from "react-hot-toast";
 
 const UpdateRawmaterial = () => {
+  const API_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL}`;
   const { id } = useParams();
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
@@ -30,7 +31,7 @@ const UpdateRawmaterial = () => {
   useEffect(() => {
     // Fetch categories
     axios
-      .get(`${API_BASE_URL}category/list_categories.php`)
+      .get(`${API_URL}category/list_categories.php`)
       .then((res) => {
         if (res.data.success) {
           setCategories(res.data.data);
@@ -42,7 +43,7 @@ const UpdateRawmaterial = () => {
 
     // Fetch suppliers
     axios
-      .get(`${API_BASE_URL}supplier/list_suppliers.php`)
+      .get(`${API_URL}supplier/list_suppliers.php`)
       .then((res) => {
         if (res.data.success) {
           setSuppliers(res.data.data);
@@ -136,7 +137,7 @@ const UpdateRawmaterial = () => {
 
     try {
       const response = await axios.post(
-        `${API_BASE_URL}raw_material/edit_raw_material.php`,
+        `${API_URL}raw_material/edit_raw_material.php`,
         formData
       );
 
