@@ -1,6 +1,13 @@
-import React, { useEffect, useState, useCallback  } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
-import { FaPlus, FaSearch, FaPrint, FaEye, FaEdit, FaTrash } from "react-icons/fa";
+import {
+  FaPlus,
+  FaSearch,
+  FaPrint,
+  FaEye,
+  FaEdit,
+  FaTrash,
+} from "react-icons/fa";
 import Navbar from "./Navbar";
 import { Link } from "react-router-dom";
 import { Pencil, Trash2 } from "lucide-react";
@@ -8,12 +15,11 @@ import toast from "react-hot-toast";
 import { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
-
 const statusStyles = {
-  "Completed": "bg-green-100 text-green-800",
+  Completed: "bg-green-100 text-green-800",
   "In Progress": "bg-blue-100 text-blue-800",
-  "Pending": "bg-yellow-100 text-yellow-800",
-  "Draft": "bg-gray-100 text-gray-800"
+  Pending: "bg-yellow-100 text-yellow-800",
+  Draft: "bg-gray-100 text-gray-800",
 };
 
 export default function ProductBatch() {
@@ -35,8 +41,12 @@ const API_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL}`;
       .then((res) => {
         if (res.data.success && Array.isArray(res.data.data)) {
           const transformed = res.data.data.map((batch) => {
-            const batchSizeWithUnit = `${parseFloat(batch.batchSize)} ${batch.batchUnit}`;
-            const rawMaterialCount = batch.materials ? batch.materials.length : 0;
+            const batchSizeWithUnit = `${parseFloat(batch.batchSize)} ${
+              batch.batchUnit
+            }`;
+            const rawMaterialCount = batch.materials
+              ? batch.materials.length
+              : 0;
 
             return {
               id: batch.id,
@@ -63,15 +73,15 @@ const API_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL}`;
     fetchBatches();
   }, [fetchBatches]);
 
-
-
   const filteredBatches = batchesData.filter((batch) =>
     batch.batchName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handlePrint = async (batchId) => {
     try {
-      const res = await axios.get(`https://inventary.chemtechengineers.in/backend/batch/get_batch_byid.php?id=${batchId}`);
+      const res = await axios.get(
+        `https://inventary.chemtechengineers.in/backend/batch/get_batch_byid.php?id=${batchId}`
+      );
       if (res.data.success) {
         const batch = res.data.data;
 
@@ -93,7 +103,7 @@ const API_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL}`;
           <p><strong>Name:</strong> ${batch.batchName}</p>
           <p><strong>Date:</strong> ${batch.batchDate}</p>
           <p><strong>Size:</strong> ${batch.batchSize} ${batch.batchUnit}</p>
-          <p><strong>Status:</strong> ${batch.status || 'N/A'}</p>
+          <p><strong>Status:</strong> ${batch.status || "N/A"}</p>
 
           <h2>Materials</h2>
           <table>
@@ -106,36 +116,40 @@ const API_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL}`;
               </tr>
             </thead>
             <tbody>
-              ${batch.materials && batch.materials.length > 0
-            ? batch.materials.map(mat => `
+              ${
+                batch.materials && batch.materials.length > 0
+                  ? batch.materials
+                      .map(
+                        (mat) => `
                       <tr>
-                        <td>${mat.name || 'N/A'}</td>
+                        <td>${mat.name || "N/A"}</td>
                         <td>${mat.quantity}</td>
                         <td>${mat.unit}</td>
                         <td>${mat.percentage}</td>
                       </tr>
-                    `).join('')
-            : `<tr><td colspan="4" style="text-align:center;">No materials available</td></tr>`
-          }
+                    `
+                      )
+                      .join("")
+                  : `<tr><td colspan="4" style="text-align:center;">No materials available</td></tr>`
+              }
             </tbody>
           </table>
         </body>
         </html>
       `;
 
-        const printWindow = window.open('', '_blank');
+        const printWindow = window.open("", "_blank");
         printWindow.document.write(content);
         printWindow.document.close();
         printWindow.focus();
         printWindow.print();
         printWindow.close();
-
       } else {
-        alert('Failed to fetch batch data for printing');
+        alert("Failed to fetch batch data for printing");
       }
     } catch (err) {
       console.error("Error fetching batch for print:", err);
-      alert('Error occurred while fetching batch data');
+      alert("Error occurred while fetching batch data");
     }
   };
 
@@ -163,12 +177,20 @@ const API_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL}`;
   };
 
   const handleDeleteBatch = async (batchId) => {
-    if (!window.confirm('Are you sure you want to delete this batch? Raw material Quantity can\'t revert?')) return;
+    if (
+      !window.confirm(
+        "Are you sure you want to delete this batch? Raw material Quantity can't revert?"
+      )
+    )
+      return;
 
     try {
-      const response = await axios.post('https://inventary.chemtechengineers.in/backend/batch/delete_batch.php', {
-        data: { id: batchId } // sending id in body
-      });
+      const response = await axios.post(
+        "https://inventary.chemtechengineers.in/backend/batch/delete_batch.php",
+        {
+          data: { id: batchId }, // sending id in body
+        }
+      );
 
       if (response.data.success) {
         // alert('Batch deleted successfully!');
@@ -202,14 +224,12 @@ const API_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL}`;
         // Refresh batch list after deletion
         fetchBatches(); // your method to reload batch list
       } else {
-        alert('Delete failed: ' + (response.data.message || 'Unknown error'));
+        alert("Delete failed: " + (response.data.message || "Unknown error"));
       }
     } catch (error) {
-      alert('Error deleting batch: ' + error.message);
+      alert("Error deleting batch: " + error.message);
     }
   };
-
-
 
   return (
     <>
@@ -220,7 +240,9 @@ const API_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL}`;
           {/* Header Section */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
             <div className="mb-4 md:mb-0">
-              <h2 className="text-2xl font-bold text-gray-800">Standard Batch</h2>
+              <h2 className="text-2xl font-bold text-gray-800">
+                Standard Batch
+              </h2>
               <p className="text-gray-600 mt-1">
                 View, manage, and track all your standard product batches
               </p>
@@ -290,22 +312,32 @@ const API_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL}`;
                 <tbody className="bg-white divide-y divide-gray-200">
                   {loading ? (
                     <tr>
-                      <td colSpan="10" className="px-6 py-6 text-center text-gray-600">
+                      <td
+                        colSpan="10"
+                        className="px-6 py-6 text-center text-gray-600"
+                      >
                         <div className="flex justify-center items-center space-x-2">
-
-                          <span className="text-sm font-medium">Loading batches...</span>
+                          <span className="text-sm font-medium">
+                            Loading batches...
+                          </span>
                         </div>
                       </td>
                     </tr>
                   ) : filteredBatches.length === 0 ? (
                     <tr>
-                      <td colSpan="10" className="px-6 py-4 text-center text-gray-500">
+                      <td
+                        colSpan="10"
+                        className="px-6 py-4 text-center text-gray-500"
+                      >
                         No batches found matching your search criteria
                       </td>
                     </tr>
                   ) : (
                     filteredBatches.map((batch) => (
-                      <tr key={batch.id} className="hover:bg-gray-50 transition-colors">
+                      <tr
+                        key={batch.id}
+                        className="hover:bg-gray-50 transition-colors"
+                      >
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                           #{batch.id}
                         </td>
@@ -319,8 +351,13 @@ const API_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL}`;
                           {batch.batchSize}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${batch.rawMaterialCount > 0 ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                            }`}>
+                          <span
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                              batch.rawMaterialCount > 0
+                                ? "bg-green-100 text-green-800"
+                                : "bg-gray-100 text-gray-800"
+                            }`}
+                          >
                             {batch.rawMaterialCount} materials
                           </span>
                         </td>
@@ -358,7 +395,9 @@ const API_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL}`;
                         {/* Edit Column */}
                         <td className="p-3 border-b border-gray-200 text-center">
                           <button
-                            onClick={() => navigate(`/standard-batch-update/${batch.id}`)}
+                            onClick={() =>
+                              navigate(`/standard-batch-update/${batch.id}`)
+                            }
                             title="Edit"
                             className="p-2 rounded-lg bg-orange-50 text-orange-600 hover:bg-orange-100 hover:text-orange-800 shadow-sm transition-all duration-200"
                           >
@@ -376,8 +415,6 @@ const API_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL}`;
                             <FaTrash className="h-4 w-4" />
                           </button>
                         </td>
-
-
                       </tr>
                     ))
                   )}
@@ -385,7 +422,6 @@ const API_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL}`;
               </table>
             </div>
           </div>
-
         </div>
       </div>
 
@@ -397,10 +433,7 @@ const API_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL}`;
           error={errorBatch}
         />
       )}
-
-
     </>
-
   );
 }
 
@@ -435,7 +468,9 @@ function BatchModal({ batch, onClose, loading, error }) {
     <div className="fixed inset-0 bg-black/70 bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white rounded-lg shadow-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">Batch Report - {batch.batchName}</h2>
+          <h2 className="text-xl font-semibold">
+            Batch Report - {batch.batchName}
+          </h2>
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700 font-bold text-xl"
@@ -444,30 +479,56 @@ function BatchModal({ batch, onClose, loading, error }) {
           </button>
         </div>
 
-        <p><strong>Batch ID:</strong> {batch.id}</p>
-        <p><strong>Name:</strong> {batch.batchName}</p>
-        <p><strong>Date:</strong> {batch.batchDate}</p>
-        <p><strong>Size:</strong> {batch.batchSize} {batch.batchUnit}</p>
-        <p><strong>Status:</strong> {batch.status || "N/A"}</p>
+        <p>
+          <strong>Batch ID:</strong> {batch.id}
+        </p>
+        <p>
+          <strong>Name:</strong> {batch.batchName}
+        </p>
+        <p>
+          <strong>Date:</strong> {batch.batchDate}
+        </p>
+        <p>
+          <strong>Size:</strong> {batch.batchSize} {batch.batchUnit}
+        </p>
+        <p>
+          <strong>Status:</strong> {batch.status || "N/A"}
+        </p>
 
         <h3 className="mt-4 mb-2 font-semibold">Materials</h3>
         <table className="w-full border-collapse border border-gray-300">
           <thead>
             <tr className="bg-gray-200">
-              <th className="border border-gray-300 px-2 py-1 text-left">Name</th>
-              <th className="border border-gray-300 px-2 py-1 text-left">Quantity</th>
-              <th className="border border-gray-300 px-2 py-1 text-left">Unit</th>
-              <th className="border border-gray-300 px-2 py-1 text-left">Percentage</th>
+              <th className="border border-gray-300 px-2 py-1 text-left">
+                Name
+              </th>
+              <th className="border border-gray-300 px-2 py-1 text-left">
+                Quantity
+              </th>
+              <th className="border border-gray-300 px-2 py-1 text-left">
+                Unit
+              </th>
+              <th className="border border-gray-300 px-2 py-1 text-left">
+                Percentage
+              </th>
             </tr>
           </thead>
           <tbody>
             {batch.materials && batch.materials.length > 0 ? (
               batch.materials.map((mat) => (
                 <tr key={mat.id}>
-                  <td className="border border-gray-300 px-2 py-1">{mat.name || "N/A"}</td>
-                  <td className="border border-gray-300 px-2 py-1">{mat.quantity}</td>
-                  <td className="border border-gray-300 px-2 py-1">{mat.unit}</td>
-                  <td className="border border-gray-300 px-2 py-1">{mat.percentage}</td>
+                  <td className="border border-gray-300 px-2 py-1">
+                    {mat.name || "N/A"}
+                  </td>
+                  <td className="border border-gray-300 px-2 py-1">
+                    {mat.quantity}
+                  </td>
+                  <td className="border border-gray-300 px-2 py-1">
+                    {mat.unit}
+                  </td>
+                  <td className="border border-gray-300 px-2 py-1">
+                    {mat.percentage}
+                  </td>
                 </tr>
               ))
             ) : (

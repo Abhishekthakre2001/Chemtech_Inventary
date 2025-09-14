@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { FaEdit, FaTrash, FaPlus, FaTimes, FaCheck, FaSpinner } from "react-icons/fa";
+import {
+  FaEdit,
+  FaTrash,
+  FaPlus,
+  FaTimes,
+  FaCheck,
+  FaSpinner,
+} from "react-icons/fa";
 import Navbar from "./Navbar";
 import { Pencil, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
@@ -7,7 +14,8 @@ import { Toaster } from "react-hot-toast";
 
 export default function StandardBatch() {
   const [rawMaterialsList, setRawMaterialsList] = useState([]);
-  const [selectedRawMaterialQuantity, setSelectedRawMaterialQuantity] = useState(null);
+  const [selectedRawMaterialQuantity, setSelectedRawMaterialQuantity] =
+    useState(null);
 
   const [batchName, setBatchName] = useState("");
   const [batchDate, setBatchDate] = useState("");
@@ -23,7 +31,7 @@ export default function StandardBatch() {
 
   const [materials, setMaterials] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
-
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   const handleAddMaterial = () => {
     if (!rawMaterial || !quantity || !percentage || !unit) {
       alert("Please fill all material fields");
@@ -40,7 +48,10 @@ export default function StandardBatch() {
       return;
     }
 
-    if (selectedRawMaterialQuantity && parseFloat(quantity) > parseFloat(selectedRawMaterialQuantity)) {
+    if (
+      selectedRawMaterialQuantity &&
+      parseFloat(quantity) > parseFloat(selectedRawMaterialQuantity)
+    ) {
       alert(
         `Quantity cannot be greater than available stock. Available: ${selectedRawMaterialQuantity}`
       );
@@ -87,29 +98,32 @@ export default function StandardBatch() {
 
     // 1️⃣ Batch-level validation
     if (!batchName || !batchDate || !batchSize || materials.length === 0) {
-      toast.error("Please fill all required batch information and add at least one material", {
-        position: "top-center",
-        style: {
-          borderRadius: "12px",
-          background: "#FF4D4F",
-          color: "#fff",
-          fontWeight: "500",
-          padding: "14px 20px",
-          border: "2px solid #ffffff",
-          boxShadow: `
+      toast.error(
+        "Please fill all required batch information and add at least one material",
+        {
+          position: "top-center",
+          style: {
+            borderRadius: "12px",
+            background: "#FF4D4F",
+            color: "#fff",
+            fontWeight: "500",
+            padding: "14px 20px",
+            border: "2px solid #ffffff",
+            boxShadow: `
         0 4px 6px -1px rgba(255, 77, 79, 0.2),
         0 2px 4px -1px rgba(255, 77, 79, 0.06),
         0 0 0 3px rgba(255, 255, 255, 0.4)
       `,
-          letterSpacing: "0.5px",
-          textShadow: "0 1px 1px rgba(0,0,0,0.1)",
-        },
-        iconTheme: {
-          primary: "#ffffff",
-          secondary: "#FF4D4F",
-        },
-        duration: 3000,
-      });
+            letterSpacing: "0.5px",
+            textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+          },
+          iconTheme: {
+            primary: "#ffffff",
+            secondary: "#FF4D4F",
+          },
+          duration: 3000,
+        }
+      );
       setLoading(false);
       return;
     }
@@ -210,29 +224,32 @@ export default function StandardBatch() {
     );
 
     if (totalPercentage !== 100) {
-      toast.error(`Total percentage must be exactly 100 (currently ${totalPercentage})`, {
-        position: "top-center",
-        style: {
-          borderRadius: "12px",
-          background: "#FF4D4F",
-          color: "#fff",
-          fontWeight: "500",
-          padding: "14px 20px",
-          border: "2px solid #ffffff",
-          boxShadow: `
+      toast.error(
+        `Total percentage must be exactly 100 (currently ${totalPercentage})`,
+        {
+          position: "top-center",
+          style: {
+            borderRadius: "12px",
+            background: "#FF4D4F",
+            color: "#fff",
+            fontWeight: "500",
+            padding: "14px 20px",
+            border: "2px solid #ffffff",
+            boxShadow: `
         0 4px 6px -1px rgba(255, 77, 79, 0.2),
         0 2px 4px -1px rgba(255, 77, 79, 0.06),
         0 0 0 3px rgba(255, 255, 255, 0.4)
       `,
-          letterSpacing: "0.5px",
-          textShadow: "0 1px 1px rgba(0,0,0,0.1)",
-        },
-        iconTheme: {
-          primary: "#ffffff",
-          secondary: "#FF4D4F",
-        },
-        duration: 3000,
-      });
+            letterSpacing: "0.5px",
+            textShadow: "0 1px 1px rgba(0,0,0,0.1)",
+          },
+          iconTheme: {
+            primary: "#ffffff",
+            secondary: "#FF4D4F",
+          },
+          duration: 3000,
+        }
+      );
       setLoading(false);
       return;
     }
@@ -246,14 +263,11 @@ export default function StandardBatch() {
     };
 
     try {
-      const response = await fetch(
-        `${API_BASE_URL}batch/add_batch.php`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(batchData),
-        }
-      );
+      const response = await fetch(`${API_BASE_URL}batch/add_batch.php`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(batchData),
+      });
 
       const data = await response.json();
       setLoading(false);
@@ -337,7 +351,6 @@ export default function StandardBatch() {
     }
   };
 
-
   const handleCancel = () => {
     setBatchName("");
     setBatchDate("");
@@ -354,16 +367,15 @@ export default function StandardBatch() {
 
   useEffect(() => {
     fetch(`${API_BASE_URL}raw_material/list_raw_material.php`)
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         if (data.success && Array.isArray(data.data)) {
           setRawMaterialsList(data.data);
-          console.log("category", data.data)
+          console.log("category", data.data);
         }
       })
-      .catch(err => console.error("Error fetching raw materials:", err));
+      .catch((err) => console.error("Error fetching raw materials:", err));
   }, []);
-
 
   console.log("unit", unit);
   // Handle raw material change
@@ -385,7 +397,7 @@ export default function StandardBatch() {
     }
   };
 
-  console.log("selectedRawMaterialQuantity", selectedRawMaterialQuantity)
+  console.log("selectedRawMaterialQuantity", selectedRawMaterialQuantity);
   return (
     <>
       <Navbar />
@@ -397,10 +409,14 @@ export default function StandardBatch() {
 
         {/* Batch Info */}
         <div className="mb-8">
-          <h3 className="text-lg font-semibold mb-4 text-gray-700">Batch Information</h3>
+          <h3 className="text-lg font-semibold mb-4 text-gray-700">
+            Batch Information
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Batch Name *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Batch Name *
+              </label>
               <input
                 type="text"
                 placeholder="Enter batch name"
@@ -410,7 +426,9 @@ export default function StandardBatch() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Batch Date *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Batch Date *
+              </label>
               <input
                 type="date"
                 value={batchDate}
@@ -420,7 +438,9 @@ export default function StandardBatch() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Batch Size *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Batch Size *
+              </label>
               <div className="flex">
                 <input
                   type="number"
@@ -452,10 +472,14 @@ export default function StandardBatch() {
 
         {/* Raw Materials */}
         <div className="mb-8">
-          <h3 className="text-lg font-semibold mb-4 text-gray-700">Raw Materials</h3>
+          <h3 className="text-lg font-semibold mb-4 text-gray-700">
+            Raw Materials
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-2">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Material *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Material *
+              </label>
               <select
                 value={rawMaterial}
                 onChange={handleRawMaterialChange}
@@ -471,7 +495,9 @@ export default function StandardBatch() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Quantity *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Quantity *
+              </label>
               <input
                 type="number"
                 placeholder="Qty"
@@ -488,7 +514,9 @@ export default function StandardBatch() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Percentage *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Percentage *
+              </label>
               <input
                 type="number"
                 placeholder="%"
@@ -505,7 +533,9 @@ export default function StandardBatch() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Unit *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Unit *
+              </label>
               {/* <select
                 value={unit}
                 onChange={(e) => setUnit(e.target.value)}
@@ -528,10 +558,11 @@ export default function StandardBatch() {
             <div className="flex items-end">
               <button
                 onClick={handleAddMaterial}
-                className={`flex items-center justify-center w-full py-2 px-4 rounded ${editIndex !== null
-                  ? " py-2.5 bg-gradient-to-r from-yellow-600 to-yellow-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
-                  : " py-2.5 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
-                  }`}
+                className={`flex items-center justify-center w-full py-2 px-4 rounded ${
+                  editIndex !== null
+                    ? " py-2.5 bg-gradient-to-r from-yellow-600 to-yellow-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
+                    : " py-2.5 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
+                }`}
               >
                 {editIndex !== null ? (
                   <>
@@ -564,11 +595,19 @@ export default function StandardBatch() {
               {materials.map((mat, index) => (
                 <tr
                   key={index}
-                  className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-gray-100`}
+                  className={`${
+                    index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                  } hover:bg-gray-100`}
                 >
-                  <td className="p-3 border-b border-gray-200">{mat.rawMaterial}</td>
-                  <td className="p-3 border-b border-gray-200 text-right">{mat.quantity}</td>
-                  <td className="p-3 border-b border-gray-200 text-right">{mat.percentage}%</td>
+                  <td className="p-3 border-b border-gray-200">
+                    {mat.rawMaterial}
+                  </td>
+                  <td className="p-3 border-b border-gray-200 text-right">
+                    {mat.quantity}
+                  </td>
+                  <td className="p-3 border-b border-gray-200 text-right">
+                    {mat.percentage}%
+                  </td>
                   <td className="p-3 border-b border-gray-200">{mat.unit}</td>
 
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
@@ -591,7 +630,6 @@ export default function StandardBatch() {
                       <Trash2 className="w-5 h-5" />
                     </button>
                   </td>
-
                 </tr>
               ))}
               {materials.length === 0 && (
@@ -632,6 +670,5 @@ export default function StandardBatch() {
         </div>
       </div>
     </>
-
   );
 }
