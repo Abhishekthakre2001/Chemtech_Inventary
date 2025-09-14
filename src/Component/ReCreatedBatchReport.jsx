@@ -22,11 +22,83 @@ export default function ReCreatedBatchReport() {
   const [error, setError] = useState(null);
 
   // Handle print functionality
-  const handlePrint = (batchId) => {
-    // Implement print functionality
-    console.log('Print batch:', batchId);
-    // You can open a print dialog or navigate to a print view
-  };
+ const handlePrint = async (batchId) => {
+  try {
+    // Fetch batch details
+    const response = await fetch(
+      `https://inventary.chemtechengineers.in/backend/batch_recreation/get_batch_recreation_by_id.php?id=${batchId}`
+    );
+    const result = await response.json();
+
+    if (!result.success) {
+      alert("Failed to fetch batch data");
+      return;
+    }
+
+    const data = result.data;
+
+    // Create a print window
+    const printWindow = window.open("", "_blank");
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Batch Print - ${data.recreated_batch_name}</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 20px; }
+            h2 { text-align: center; }
+            .batch-details { margin-bottom: 20px; }
+            .batch-details p { margin: 4px 0; }
+            table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+            th, td { border: 1px solid #333; padding: 8px; text-align: center; }
+            th { background-color: #f2f2f2; }
+          </style>
+        </head>
+        <body>
+          <h2>Batch Recreation Details</h2>
+          <div class="batch-details">
+            <p><strong>Batch Name:</strong> ${data.recreated_batch_name}</p>
+            <p><strong>Date:</strong> ${data.recreated_batch_date}</p>
+            <p><strong>Size:</strong> ${data.recreated_batch_size} ${data.recreated_batch_unit}</p>
+          </div>
+          <h3>Materials Used</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Material Name</th>
+                <th>Quantity Used</th>
+                <th>Unit</th>
+                <th>Percentage</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${data.materials
+                .map(
+                  (mat, index) => `
+                <tr>
+                  <td>${index + 1}</td>
+                  <td>${mat.name}</td>
+                  <td>${mat.quantity_used}</td>
+                  <td>${mat.unit_used}</td>
+                  <td>${mat.percentage}</td>
+                </tr>
+              `
+                )
+                .join("")}
+            </tbody>
+          </table>
+        </body>
+      </html>
+    `);
+
+    printWindow.document.close();
+    printWindow.print();
+  } catch (error) {
+    console.error("Print error:", error);
+    alert("Error while printing batch details");
+  }
+};
+
 
   const fetchBatches = async () => {
     try {

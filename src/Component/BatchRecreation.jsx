@@ -1296,7 +1296,7 @@ export default function BatchRecreation({ editMode = false }) {
                     {/* Add Material Form */}
                     <div className="bg-white p-4 rounded-lg border border-gray-200">
                         <h3 className="text-md font-medium mb-3 text-gray-700">Add New Material</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-3">
+                        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-3">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Search Material</label>
                                 <div className="relative">

@@ -11,7 +11,7 @@ const SuppliersManagement = () => {
     const [loading, setLoading] = useState(true); // ✅ declared at top
 
 
-
+const API_BASE_URL = import.meta.env.VITE_API_URL ;
 
 
     // State for form and modal

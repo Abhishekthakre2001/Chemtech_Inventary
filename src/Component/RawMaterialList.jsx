@@ -193,11 +193,12 @@ const RawMaterialList = () => {
                 <tr>
 
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Sr. No.</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-nowrap">Name</th>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-nowrap">Purchase Code</th>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-nowrap">Raw Material Code</th>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-nowrap">Rate Landed</th>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-nowrap">Date In</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-nowrap">Name</th>
+                  
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-nowrap">Category</th>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-nowrap">Stock</th>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-nowrap">Purchase Price</th>
@@ -223,13 +224,14 @@ const RawMaterialList = () => {
                   filteredInventory.map((item, index) => (
                     <tr key={item.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{index + 1}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-bold">{item.name}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{item.purchaseCode}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.rawMaterialCode}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">₹{item.rateLanded.toFixed(2)}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.dateIn}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.name}</td>
+                      
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.category}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.stock}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-bold">{item.stock}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">₹{item.purchasePrice.toFixed(2)}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.supplier}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
