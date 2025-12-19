@@ -1,0 +1,99 @@
+[10-Aug-2025 13:36:59 UTC] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/add_raw_material.php:87
+Stack trace:
+#0 /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/add_raw_material.php(87): mysqli_stmt->bind_param()
+#1 {main}
+  thrown in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/add_raw_material.php on line 87
+[10-Aug-2025 13:37:50 UTC] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/add_raw_material.php:87
+Stack trace:
+#0 /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/add_raw_material.php(87): mysqli_stmt->bind_param()
+#1 {main}
+  thrown in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/add_raw_material.php on line 87
+[10-Aug-2025 16:55:15 UTC] PHP Warning:  Undefined array key "expiryDate" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/list_raw_material.php on line 46
+[10-Aug-2025 16:55:15 UTC] PHP Warning:  Undefined array key "expiryDate" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/list_raw_material.php on line 46
+[10-Aug-2025 16:55:15 UTC] PHP Warning:  Undefined array key "expiryDate" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/list_raw_material.php on line 46
+[10-Aug-2025 16:55:15 UTC] PHP Warning:  Undefined array key "expiryDate" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/list_raw_material.php on line 46
+[10-Aug-2025 16:55:15 UTC] PHP Warning:  Undefined array key "expiryDate" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/list_raw_material.php on line 46
+[10-Aug-2025 16:55:16 UTC] PHP Warning:  Undefined array key "expiryDate" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/list_raw_material.php on line 46
+[10-Aug-2025 16:55:16 UTC] PHP Warning:  Undefined array key "expiryDate" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/list_raw_material.php on line 46
+[10-Aug-2025 16:55:16 UTC] PHP Warning:  Undefined array key "expiryDate" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/list_raw_material.php on line 46
+[10-Aug-2025 16:55:16 UTC] PHP Warning:  Undefined array key "expiryDate" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/list_raw_material.php on line 46
+[10-Aug-2025 16:55:16 UTC] PHP Warning:  Undefined array key "expiryDate" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/list_raw_material.php on line 46
+[29-Aug-2025 17:11:13 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:13 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:13 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:13 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:13 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:13 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:13 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:13 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:13 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:13 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:19 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:19 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:19 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:19 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:19 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:19 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:19 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:19 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:19 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:19 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:20 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:20 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:20 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:20 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:20 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:20 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:20 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:20 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:20 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:20 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:20 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:20 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:20 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:20 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:20 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:20 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:20 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:20 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:20 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:11:20 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_materials_dropdown.php on line 28
+[29-Aug-2025 17:15:17 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_material_byid.php on line 28
+[29-Aug-2025 17:15:17 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_material_byid.php on line 28
+[29-Aug-2025 17:15:17 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_material_byid.php on line 28
+[29-Aug-2025 17:15:17 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_material_byid.php on line 28
+[29-Aug-2025 17:15:17 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_material_byid.php on line 28
+[29-Aug-2025 17:15:17 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_material_byid.php on line 28
+[29-Aug-2025 17:15:17 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_material_byid.php on line 28
+[29-Aug-2025 17:15:17 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_material_byid.php on line 28
+[29-Aug-2025 17:15:17 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_material_byid.php on line 28
+[29-Aug-2025 17:15:17 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_material_byid.php on line 28
+[29-Aug-2025 17:15:17 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_material_byid.php on line 28
+[29-Aug-2025 17:15:23 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_material_byid.php on line 28
+[29-Aug-2025 17:15:23 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_material_byid.php on line 28
+[29-Aug-2025 17:15:23 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_material_byid.php on line 28
+[29-Aug-2025 17:15:23 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_material_byid.php on line 28
+[29-Aug-2025 17:15:23 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_material_byid.php on line 28
+[29-Aug-2025 17:15:23 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_material_byid.php on line 28
+[29-Aug-2025 17:15:23 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_material_byid.php on line 28
+[29-Aug-2025 17:15:23 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_material_byid.php on line 28
+[29-Aug-2025 17:15:23 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_material_byid.php on line 28
+[29-Aug-2025 17:15:23 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_material_byid.php on line 28
+[29-Aug-2025 17:15:23 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_material_byid.php on line 28
+[29-Aug-2025 17:15:40 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_material_byid.php on line 28
+[29-Aug-2025 17:15:40 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_material_byid.php on line 28
+[29-Aug-2025 17:15:40 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_material_byid.php on line 28
+[29-Aug-2025 17:15:40 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_material_byid.php on line 28
+[29-Aug-2025 17:15:40 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_material_byid.php on line 28
+[29-Aug-2025 17:15:40 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_material_byid.php on line 28
+[29-Aug-2025 17:15:40 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_material_byid.php on line 28
+[29-Aug-2025 17:15:40 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_material_byid.php on line 28
+[29-Aug-2025 17:15:40 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_material_byid.php on line 28
+[29-Aug-2025 17:15:40 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_material_byid.php on line 28
+[29-Aug-2025 17:15:40 UTC] PHP Warning:  Undefined array key "name" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/get_raw_material_byid.php on line 28
+[30-Aug-2025 20:36:59 UTC] PHP Warning:  Undefined variable $item in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/add_raw_material.php on line 16
+[30-Aug-2025 20:36:59 UTC] PHP Warning:  Trying to access array offset on null in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/add_raw_material.php on line 16
+[30-Aug-2025 20:55:57 UTC] PHP Warning:  Undefined array key "category" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/edit_raw_material.php on line 62
+[30-Aug-2025 20:55:57 UTC] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/edit_raw_material.php on line 27
+[30-Aug-2025 20:55:57 UTC] PHP Warning:  Undefined array key "supplier" in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/edit_raw_material.php on line 66
+[30-Aug-2025 20:55:57 UTC] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/raw_material/edit_raw_material.php on line 27

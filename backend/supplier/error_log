@@ -1,0 +1,510 @@
+[10-Aug-2025 15:06:55 UTC] Received data for update: Array
+(
+    [id] => 18
+    [supplierName] => Abhishek Thakre
+    [contactPerson] => 12
+    [contactNumber] => 2121
+    [email] => info@radicalglobal.net
+    [address] => dsdsdsd
+    [bankAccount] => 2121
+    [bankName] => State Bank of India
+    [ifscCode] => sbin0061581
+    [provideproduct] => 21
+)
+
+[10-Aug-2025 15:06:55 UTC] Bound parameters: Array
+(
+    [supplierName] => Abhishek Thakre
+    [contactPerson] => 12
+    [contactNumber] => 2121
+    [email] => info@radicalglobal.net
+    [address] => dsdsdsd
+    [provideproduct] => 21
+    [bankName] => State Bank of India
+    [bankBranch] => 
+    [bankCity] => 
+    [bankAccount] => 2121
+    [ifscCode] => sbin0061581
+    [id] => 18
+)
+
+[10-Aug-2025 15:07:18 UTC] Received data for update: Array
+(
+    [id] => 18
+    [supplierName] => Abhishek Thakre
+    [contactPerson] => 12
+    [contactNumber] => 2121
+    [email] => info@radicalglobal.net
+    [address] => dsdsdsd
+    [bankAccount] => 2121
+    [bankName] => State Bank of India
+    [ifscCode] => sbin0061581
+    [provideproduct] => 21
+)
+
+[10-Aug-2025 15:07:18 UTC] Bound parameters: Array
+(
+    [supplierName] => Abhishek Thakre
+    [contactPerson] => 12
+    [contactNumber] => 2121
+    [email] => info@radicalglobal.net
+    [address] => dsdsdsd
+    [provideproduct] => 21
+    [bankName] => State Bank of India
+    [bankBranch] => 
+    [bankCity] => 
+    [bankAccount] => 2121
+    [ifscCode] => sbin0061581
+    [id] => 18
+)
+
+[10-Aug-2025 15:44:20 UTC] Received data for update: Array
+(
+    [id] => 17
+    [supplierName] => Abhishek Thakre
+    [contactPerson] => 12
+    [contactNumber] => 2121
+    [email] => info@radicalglobal.net
+    [address] => dsdsdsd
+    [bankAccount] => 2121
+    [bankName] => State Bank of India
+    [ifscCode] => sbin0061581
+    [provideproduct] => 21
+)
+
+[10-Aug-2025 15:44:20 UTC] Bound parameters: Array
+(
+    [supplierName] => Abhishek Thakre
+    [contactPerson] => 12
+    [contactNumber] => 2121
+    [email] => info@radicalglobal.net
+    [address] => dsdsdsd
+    [provideproduct] => 21
+    [bankName] => State Bank of India
+    [bankBranch] => 
+    [bankCity] => 
+    [bankAccount] => 2121
+    [ifscCode] => sbin0061581
+    [id] => 17
+)
+
+[10-Aug-2025 15:44:41 UTC] Received data for update: Array
+(
+    [id] => 17
+    [supplierName] => Abhishek Thakre
+    [contactPerson] => 12
+    [contactNumber] => 2121
+    [email] => info@radicalglobal.netwithskydemo
+    [address] => dsdsdsd
+    [bankAccount] => 2121
+    [bankName] => State Bank of India
+    [ifscCode] => sbin0061581
+    [provideproduct] => 21
+)
+
+[10-Aug-2025 15:44:41 UTC] Bound parameters: Array
+(
+    [supplierName] => Abhishek Thakre
+    [contactPerson] => 12
+    [contactNumber] => 2121
+    [email] => info@radicalglobal.netwithskydemo
+    [address] => dsdsdsd
+    [provideproduct] => 21
+    [bankName] => State Bank of India
+    [bankBranch] => 
+    [bankCity] => 
+    [bankAccount] => 2121
+    [ifscCode] => sbin0061581
+    [id] => 17
+)
+
+[11-Aug-2025 06:27:56 UTC] Received data for update: Array
+(
+    [id] => 21
+    [supplierName] => Nayan Karemore
+    [contactPerson] => Pranay Bobade
+    [contactNumber] => 1234567890
+    [email] => lovonak207@bsidesmn.com
+    [address] => nagpur
+    [bankAccount] => 11111111111
+    [bankName] => State Bank of India
+    [ifscCode] => sbin0061581
+    [provideproduct] => test
+)
+
+[11-Aug-2025 06:27:56 UTC] Bound parameters: Array
+(
+    [supplierName] => Nayan Karemore
+    [contactPerson] => Pranay Bobade
+    [contactNumber] => 1234567890
+    [email] => lovonak207@bsidesmn.com
+    [address] => nagpur
+    [provideproduct] => test
+    [bankName] => State Bank of India
+    [bankBranch] => 
+    [bankCity] => 
+    [bankAccount] => 11111111111
+    [ifscCode] => sbin0061581
+    [id] => 21
+)
+
+[11-Aug-2025 11:44:43 UTC] Received data for update: Array
+(
+    [id] => 24
+    [supplierName] => Dhiraj Hatwar update
+    [contactPerson] => Dhiraj Hatwar
+    [contactNumber] => 1234567890
+    [email] => dhiraj2000hatwar@gmail.com
+    [address] => Bramhapuri
+    [bankAccount] => 11111111111
+    [bankName] => State Bank of India
+    [ifscCode] => sbin0061581
+    [provideproduct] => test
+)
+
+[11-Aug-2025 11:44:43 UTC] Bound parameters: Array
+(
+    [supplierName] => Dhiraj Hatwar update
+    [contactPerson] => Dhiraj Hatwar
+    [contactNumber] => 1234567890
+    [email] => dhiraj2000hatwar@gmail.com
+    [address] => Bramhapuri
+    [provideproduct] => test
+    [bankName] => State Bank of India
+    [bankBranch] => 
+    [bankCity] => 
+    [bankAccount] => 11111111111
+    [ifscCode] => sbin0061581
+    [id] => 24
+)
+
+[17-Aug-2025 14:59:21 UTC] Received data for update: Array
+(
+    [id] => 25
+    [supplierName] => Arish
+    [contactPerson] => Ritika Malve
+    [contactNumber] => 9503864429
+    [email] => ritika@gmail.com
+    [address] => Kharbi
+    [bankAccount] => 9968001500001803
+    [bankName] => Punjab National Bank
+    [ifscCode] => PUNB002800
+    [provideproduct] => Nag
+)
+
+[17-Aug-2025 14:59:21 UTC] Bound parameters: Array
+(
+    [supplierName] => Arish
+    [contactPerson] => Ritika Malve
+    [contactNumber] => 9503864429
+    [email] => ritika@gmail.com
+    [address] => Kharbi
+    [provideproduct] => Nag
+    [bankName] => Punjab National Bank
+    [bankBranch] => 
+    [bankCity] => 
+    [bankAccount] => 9968001500001803
+    [ifscCode] => PUNB002800
+    [id] => 25
+)
+
+[17-Aug-2025 14:59:40 UTC] Received data for update: Array
+(
+    [id] => 25
+    [supplierName] => Arish s
+    [contactPerson] => Ritika Malve
+    [contactNumber] => 9503864429
+    [email] => ritika@gmail.com
+    [address] => Kharbi
+    [bankAccount] => 9968001500001803
+    [bankName] => Punjab National Bank
+    [ifscCode] => PUNB0028000
+    [provideproduct] => Nag
+)
+
+[17-Aug-2025 14:59:40 UTC] Bound parameters: Array
+(
+    [supplierName] => Arish s
+    [contactPerson] => Ritika Malve
+    [contactNumber] => 9503864429
+    [email] => ritika@gmail.com
+    [address] => Kharbi
+    [provideproduct] => Nag
+    [bankName] => Punjab National Bank
+    [bankBranch] => 
+    [bankCity] => 
+    [bankAccount] => 9968001500001803
+    [ifscCode] => PUNB0028000
+    [id] => 25
+)
+
+[26-Aug-2025 18:46:10 UTC] Received data for update: Array
+(
+    [id] => 22
+    [supplierName] => Pranay Bobade
+    [contactPerson] => Pranay Bobade
+    [contactNumber] => 1234567890
+    [email] => lovonak207@bsidesmn.com
+    [address] => nagpur
+    [bankAccount] => 11111111111
+    [bankName] => Punjab National Bank
+    [ifscCode] => PUNB002800
+    [provideproduct] => test
+)
+
+[26-Aug-2025 18:46:10 UTC] Bound parameters: Array
+(
+    [supplierName] => Pranay Bobade
+    [contactPerson] => Pranay Bobade
+    [contactNumber] => 1234567890
+    [email] => lovonak207@bsidesmn.com
+    [address] => nagpur
+    [provideproduct] => test
+    [bankName] => Punjab National Bank
+    [bankBranch] => 
+    [bankCity] => 
+    [bankAccount] => 11111111111
+    [ifscCode] => PUNB002800
+    [id] => 22
+)
+
+[27-Aug-2025 07:54:43 UTC] Received data for update: Array
+(
+    [id] => 27
+    [supplierName] => Lavi
+    [contactPerson] => 9888999999
+    [contactNumber] => 9503864420
+    [email] => ritikamalve112@gmail.com
+    [address] => nagpur
+    [bankAccount] => 9968001500001803
+    [bankName] => Punjab National Bank
+    [ifscCode] => PUNB0028000
+    [provideproduct] => 
+)
+
+[27-Aug-2025 07:54:43 UTC] Bound parameters: Array
+(
+    [supplierName] => Lavi
+    [contactPerson] => 9888999999
+    [contactNumber] => 9503864420
+    [email] => ritikamalve112@gmail.com
+    [address] => nagpur
+    [provideproduct] => 
+    [bankName] => Punjab National Bank
+    [bankBranch] => 
+    [bankCity] => 
+    [bankAccount] => 9968001500001803
+    [ifscCode] => PUNB0028000
+    [id] => 27
+)
+
+[27-Aug-2025 07:55:31 UTC] Received data for update: Array
+(
+    [id] => 27
+    [supplierName] => Lavi
+    [contactPerson] => 9888999999
+    [contactNumber] => 9503864420
+    [email] => ritikamalve112@gmail.com
+    [address] => nagpur
+    [bankAccount] => 9968001500001803
+    [bankName] => Punjab National Bank
+    [ifscCode] => PUNB0028000
+    [provideproduct] => 22
+)
+
+[27-Aug-2025 07:55:31 UTC] Bound parameters: Array
+(
+    [supplierName] => Lavi
+    [contactPerson] => 9888999999
+    [contactNumber] => 9503864420
+    [email] => ritikamalve112@gmail.com
+    [address] => nagpur
+    [provideproduct] => 22
+    [bankName] => Punjab National Bank
+    [bankBranch] => 
+    [bankCity] => 
+    [bankAccount] => 9968001500001803
+    [ifscCode] => PUNB0028000
+    [id] => 27
+)
+
+[29-Aug-2025 16:53:54 UTC] Received data for update: Array
+(
+    [id] => 37
+    [supplierName] => test
+    [contactPerson] => test
+    [contactNumber] => 7410258963
+    [email] => 
+    [address] => 656hg
+    [bankAccount] => 11111111111
+    [bankName] => ddd
+    [ifscCode] => sbin0061581
+    [provideproduct] => 565
+)
+
+[29-Aug-2025 16:53:54 UTC] Bound parameters: Array
+(
+    [supplierName] => test
+    [contactPerson] => test
+    [contactNumber] => 7410258963
+    [email] => 
+    [address] => 656hg
+    [provideproduct] => 565
+    [bankName] => ddd
+    [bankBranch] => 
+    [bankCity] => 
+    [bankAccount] => 11111111111
+    [ifscCode] => sbin0061581
+    [id] => 37
+)
+
+[30-Aug-2025 15:58:13 UTC] Received data for update: Array
+(
+    [id] => 41
+    [supplierName] => tsst cokker
+    [contactPerson] => test
+    [contactNumber] => 7894561230
+    [email] => gg@gmail.com
+    [address] => kk
+    [bankAccount] => 1234567890
+    [bankName] => State Bank of India
+    [ifscCode] => sbin0061581
+    [provideproduct] => 565
+)
+
+[30-Aug-2025 15:58:13 UTC] Bound parameters: Array
+(
+    [supplierName] => tsst cokker
+    [contactPerson] => test
+    [contactNumber] => 7894561230
+    [email] => gg@gmail.com
+    [address] => kk
+    [provideproduct] => 565
+    [bankName] => State Bank of India
+    [bankBranch] => 
+    [bankCity] => 
+    [bankAccount] => 1234567890
+    [ifscCode] => sbin0061581
+    [id] => 41
+)
+
+[01-Sep-2025 17:45:56 UTC] Received data for update: Array
+(
+    [id] => 43
+    [supplierName] => SH Abhi
+    [contactPerson] => Abhi SH
+    [contactNumber] => 3444423456
+    [email] => 
+    [address] => Kharbi
+    [bankAccount] => 9968001500001803
+    [bankName] => Punjab National Bank
+    [ifscCode] => 
+    [provideproduct] => 
+)
+
+[01-Sep-2025 17:45:56 UTC] Bound parameters: Array
+(
+    [supplierName] => SH Abhi
+    [contactPerson] => Abhi SH
+    [contactNumber] => 3444423456
+    [email] => 
+    [address] => Kharbi
+    [provideproduct] => 
+    [bankName] => Punjab National Bank
+    [bankBranch] => 
+    [bankCity] => 
+    [bankAccount] => 9968001500001803
+    [ifscCode] => 
+    [id] => 43
+)
+
+[03-Sep-2025 19:46:08 UTC] Received data for update: Array
+(
+    [id] => 48
+    [supplierName] => Pranay Bobade
+    [contactPerson] => Pranay Bobade
+    [contactNumber] => 1234567890
+    [email] => lovonak207@bsidesmn.com
+    [address] => nagpur
+    [bankAccount] => 
+    [bankName] => 
+    [ifscCode] => 
+    [provideproduct] => 
+)
+
+[03-Sep-2025 19:46:08 UTC] Bound parameters: Array
+(
+    [supplierName] => Pranay Bobade
+    [contactPerson] => Pranay Bobade
+    [contactNumber] => 1234567890
+    [email] => lovonak207@bsidesmn.com
+    [address] => nagpur
+    [provideproduct] => 
+    [bankName] => 
+    [bankBranch] => 
+    [bankCity] => 
+    [bankAccount] => 
+    [ifscCode] => 
+    [id] => 48
+)
+
+[03-Sep-2025 19:49:01 UTC] Received data for update: Array
+(
+    [id] => 48
+    [supplierName] => Pranay Bobade
+    [contactPerson] => Pranay Bobade
+    [contactNumber] => 1234567890
+    [email] => 
+    [address] => nagpur
+    [bankAccount] => 
+    [bankName] => 
+    [ifscCode] => 
+    [provideproduct] => 
+)
+
+[03-Sep-2025 19:49:01 UTC] Bound parameters: Array
+(
+    [supplierName] => Pranay Bobade
+    [contactPerson] => Pranay Bobade
+    [contactNumber] => 1234567890
+    [email] => 
+    [address] => nagpur
+    [provideproduct] => 
+    [bankName] => 
+    [bankBranch] => 
+    [bankCity] => 
+    [bankAccount] => 
+    [ifscCode] => 
+    [id] => 48
+)
+
+[06-Sep-2025 11:39:19 UTC] Received data for update: Array
+(
+    [id] => 49
+    [supplierName] => AKSH CHEMICALS LLP
+    [contactPerson] => Kewal
+    [contactNumber] => 9833053392
+    [email] => keval@akshchem.com
+    [address] => 323/B BHAWESHWAR ARCADE, OPPOSITE SHREYAS CINEMA, LBS MARG, GHATKOPAR WEST MUMBAI - 400086
+    [bankAccount] => 007884600002286
+    [bankName] => Yes Bank
+    [ifscCode] => YESB0000078
+    [provideproduct] => Lapox Atul, silane RESIL
+)
+
+[06-Sep-2025 11:39:19 UTC] Bound parameters: Array
+(
+    [supplierName] => AKSH CHEMICALS LLP
+    [contactPerson] => Kewal
+    [contactNumber] => 9833053392
+    [email] => keval@akshchem.com
+    [address] => 323/B BHAWESHWAR ARCADE, OPPOSITE SHREYAS CINEMA, LBS MARG, GHATKOPAR WEST MUMBAI - 400086
+    [provideproduct] => Lapox Atul, silane RESIL
+    [bankName] => Yes Bank
+    [bankBranch] => 
+    [bankCity] => 
+    [bankAccount] => 007884600002286
+    [ifscCode] => YESB0000078
+    [id] => 49
+)
+

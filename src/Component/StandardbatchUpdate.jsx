@@ -8,6 +8,7 @@ import toast, { Toaster } from "react-hot-toast";
 
 export default function StandardbatchUpdate() {
   const { id } = useParams();
+ const API_BASE_URL = import.meta.env.VITE_API_URL;
 
   // State for batch data
   const [batch, setBatch] = useState({

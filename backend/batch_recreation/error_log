@@ -1,0 +1,62 @@
+[13-Aug-2025 17:05:01 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/batch_recreation/get_batch_recreations.php on line 72
+[13-Aug-2025 17:05:01 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/batch_recreation/get_batch_recreations.php on line 72
+[13-Aug-2025 17:05:01 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/batch_recreation/get_batch_recreations.php on line 72
+[13-Aug-2025 17:05:01 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/batch_recreation/get_batch_recreations.php on line 72
+[13-Aug-2025 17:05:01 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/batch_recreation/get_batch_recreations.php on line 72
+[13-Aug-2025 17:05:01 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/batch_recreation/get_batch_recreations.php on line 72
+[13-Aug-2025 17:05:01 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/batch_recreation/get_batch_recreations.php on line 72
+[13-Aug-2025 17:05:01 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/batch_recreation/get_batch_recreations.php on line 72
+[13-Aug-2025 17:05:01 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/batch_recreation/get_batch_recreations.php on line 72
+[13-Aug-2025 17:05:01 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/batch_recreation/get_batch_recreations.php on line 72
+[13-Aug-2025 17:05:01 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/batch_recreation/get_batch_recreations.php on line 72
+[13-Aug-2025 17:05:01 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/batch_recreation/get_batch_recreations.php on line 72
+[13-Aug-2025 17:05:01 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/batch_recreation/get_batch_recreations.php on line 72
+[13-Aug-2025 17:05:01 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/chemtech/public_html/inventary.chemtechengineers.in/backend/batch_recreation/get_batch_recreations.php on line 72
+[30-Aug-2025 10:05:26 UTC] Executing query: SELECT br.id, br.original_batch_id, br.recreated_batch_name, 
+                     br.recreated_batch_date, br.recreated_batch_size, 
+                     br.recreated_batch_unit, br.created_at, br.updated_at,
+                     b.batch_name as original_batch_name, 
+                     b.batch_date as original_batch_date,
+                     b.batch_size as original_batch_size, 
+                     b.batch_unit as original_batch_unit
+              FROM batch_recreation br
+              JOIN batch b ON br.original_batch_id = b.id
+              WHERE br.id = ?
+[30-Aug-2025 10:05:26 UTC] Executing query: SELECT br.id, br.original_batch_id, br.recreated_batch_name, 
+                     br.recreated_batch_date, br.recreated_batch_size, 
+                     br.recreated_batch_unit, br.created_at, br.updated_at,
+                     b.batch_name as original_batch_name, 
+                     b.batch_date as original_batch_date,
+                     b.batch_size as original_batch_size, 
+                     b.batch_unit as original_batch_unit
+              FROM batch_recreation br
+              JOIN batch b ON br.original_batch_id = b.id
+              WHERE br.id = ?
+[30-Aug-2025 10:05:26 UTC] Error in get_batch_recreation.php: Batch recreation not found
+[30-Aug-2025 10:05:26 UTC] Error in get_batch_recreation.php: Batch recreation not found
+[30-Aug-2025 10:05:26 UTC] Stack trace: #0 {main}
+[30-Aug-2025 10:05:26 UTC] Stack trace: #0 {main}
+[30-Aug-2025 10:07:13 UTC] Executing query: SELECT br.id, br.original_batch_id, br.recreated_batch_name, 
+                     br.recreated_batch_date, br.recreated_batch_size, 
+                     br.recreated_batch_unit, br.created_at, br.updated_at,
+                     b.batch_name as original_batch_name, 
+                     b.batch_date as original_batch_date,
+                     b.batch_size as original_batch_size, 
+                     b.batch_unit as original_batch_unit
+              FROM batch_recreation br
+              JOIN batch b ON br.original_batch_id = b.id
+              WHERE br.id = ?
+[30-Aug-2025 10:07:13 UTC] Executing query: SELECT br.id, br.original_batch_id, br.recreated_batch_name, 
+                     br.recreated_batch_date, br.recreated_batch_size, 
+                     br.recreated_batch_unit, br.created_at, br.updated_at,
+                     b.batch_name as original_batch_name, 
+                     b.batch_date as original_batch_date,
+                     b.batch_size as original_batch_size, 
+                     b.batch_unit as original_batch_unit
+              FROM batch_recreation br
+              JOIN batch b ON br.original_batch_id = b.id
+              WHERE br.id = ?
+[30-Aug-2025 10:07:13 UTC] Error in get_batch_recreation.php: Batch recreation not found
+[30-Aug-2025 10:07:13 UTC] Error in get_batch_recreation.php: Batch recreation not found
+[30-Aug-2025 10:07:13 UTC] Stack trace: #0 {main}
+[30-Aug-2025 10:07:13 UTC] Stack trace: #0 {main}

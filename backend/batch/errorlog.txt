@@ -1,0 +1,19 @@
+[2025-09-13 06:49:30] Insufficient stock for 'test decimal'. Available: 0.00, Required extra: 5
+Payload: {
+    "id": 56,
+    "batchDate": "2025-09-13",
+    "batchName": "TEST RECREATION",
+    "batchSize": "10.00",
+    "batchUnit": "Liters",
+    "materials": [
+        {
+            "formId": 1757746147801.8906,
+            "rawMaterialId": "4",
+            "name": "test decimal",
+            "quantity": "5.00",
+            "percentage": "100.00",
+            "unit": "kg"
+        }
+    ]
+}
+

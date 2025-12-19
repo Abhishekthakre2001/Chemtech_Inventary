@@ -1,0 +1,8 @@
+<Limit GET POST OPTIONS DELETE>
+  Allow from all
+</Limit>
+
+# If using mod_rewrite
+RewriteEngine On
+RewriteCond %{REQUEST_METHOD} ^DELETE$
+RewriteRule ^(.*)$ $1 [L]
