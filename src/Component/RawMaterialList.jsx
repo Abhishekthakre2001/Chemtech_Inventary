@@ -180,16 +180,16 @@ const RawMaterialList = () => {
           </div>
           <Link to="/create-raw-material">
             <button className="w-full py-2.5 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center p-4">
-              <FaPlus /> Add New
+              <FaPlus />  Add New
             </button>
           </Link>
         </div>
 
         {/* Table */}
-        <div className="bg-white rounded-xl shadow overflow-hidden">
+        {/* <div className="bg-white rounded-xl shadow max-h-[70vh] overflow-auto">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-blue-200 text-black">
+              <thead className="bg-blue-200 text-black sticky top-0 z-20">
                 <tr>
 
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Sr. No.</th>
@@ -198,7 +198,7 @@ const RawMaterialList = () => {
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-nowrap">Raw Material Code</th>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-nowrap">Rate Landed</th>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-nowrap">Date In</th>
-                  
+
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-nowrap">Category</th>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-nowrap">Stock</th>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-nowrap">Purchase Price</th>
@@ -229,7 +229,7 @@ const RawMaterialList = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.rawMaterialCode}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">₹{item.rateLanded.toFixed(2)}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.dateIn}</td>
-                      
+
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.category}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-bold">{item.stock}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">₹{item.purchasePrice.toFixed(2)}</td>
@@ -259,7 +259,110 @@ const RawMaterialList = () => {
 
             </table>
           </div>
+        </div> */}
+        {/* Table */}
+        <div className="bg-white rounded-xl shadow max-h-[70vh] overflow-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+
+            {/* Sticky Header */}
+            <thead className="bg-blue-200 sticky top-0 z-30">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                  Sr. No.
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-nowrap">
+                  Name
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-nowrap">
+                  Purchase Code
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-nowrap">
+                  Raw Material Code
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-nowrap">
+                  Rate Landed
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-nowrap">
+                  Date In
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-nowrap">
+                  Category
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-nowrap">
+                  Stock
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-nowrap">
+                  Purchase Price
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-nowrap">
+                  Supplier
+                </th>
+                <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">
+                  Update
+                </th>
+                <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">
+                  Delete
+                </th>
+              </tr>
+            </thead>
+
+            <tbody className="bg-white divide-y divide-gray-200">
+              {loading ? (
+                <tr>
+                  <td colSpan="12" className="px-6 py-4 text-center text-gray-500">
+                    Loading...
+                  </td>
+                </tr>
+              ) : filteredInventory.length === 0 ? (
+                <tr>
+                  <td colSpan="12" className="px-6 py-4 text-center text-gray-500">
+                    No inventory items found
+                  </td>
+                </tr>
+              ) : (
+                filteredInventory.map((item, index) => (
+                  <tr key={item.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 text-sm text-gray-500">{index + 1}</td>
+                    <td className="px-6 py-4 text-sm font-bold text-nowrap text-gray-900">{item.name}</td>
+                    <td className="px-6 py-4 text-sm text-nowrap">{item.purchaseCode}</td>
+                    <td className="px-6 py-4 text-sm text-nowrap">{item.rawMaterialCode}</td>
+                    <td className="px-6 py-4 text-sm text-nowrap">₹{item.rateLanded.toFixed(2)}</td>
+                    <td className="px-6 py-4 text-sm text-nowrap">
+                      {item.dateIn
+                        ? new Date(item.dateIn).toLocaleDateString("en-GB")
+                        : "N/A"}
+                    </td>
+
+                    <td className="px-6 py-4 text-sm text-nowrap">{item.category}</td>
+                    <td className="px-6 py-4 text-sm font-bold text-nowrap">{item.stock}</td>
+                    <td className="px-6 py-4 text-sm text-nowrap">₹{item.purchasePrice.toFixed(2)}</td>
+                    <td className="px-6 py-4 text-sm text-nowrap">{item.supplier}</td>
+
+                    <td className="px-6 py-4 text-center">
+                      <button
+                        onClick={() => handleEdit(item.id)}
+                        className="p-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100"
+                      >
+                        <Pencil className="w-5 h-5" />
+                      </button>
+                    </td>
+
+                    <td className="px-6 py-4 text-center">
+                      <button
+                        onClick={() => handleDelete(item.id)}
+                        className="p-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100"
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+
+          </table>
         </div>
+
 
         {/* Pagination would go here */}
       </div>

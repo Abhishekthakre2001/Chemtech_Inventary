@@ -33,7 +33,7 @@ export default function ProductBatch() {
 
   const [batchesData, setBatchesData] = useState([]);
 
-const API_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL}`;
+  const API_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL}`;
   const fetchBatches = useCallback(() => {
     setLoading(true);
     axios
@@ -41,9 +41,8 @@ const API_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL}`;
       .then((res) => {
         if (res.data.success && Array.isArray(res.data.data)) {
           const transformed = res.data.data.map((batch) => {
-            const batchSizeWithUnit = `${parseFloat(batch.batchSize)} ${
-              batch.batchUnit
-            }`;
+            const batchSizeWithUnit = `${parseFloat(batch.batchSize)} ${batch.batchUnit
+              }`;
             const rawMaterialCount = batch.materials
               ? batch.materials.length
               : 0;
@@ -91,19 +90,24 @@ const API_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL}`;
           <title>Batch Report - ${batch.batchName}</title>
           <style>
             body { font-family: Arial, sans-serif; padding: 20px; }
-            h1 { text-align: center; }
+            h1, h3 { text-align: center; }
             table { width: 100%; border-collapse: collapse; margin-top: 20px; }
             th, td { border: 1px solid #333; padding: 8px; text-align: left; }
             th { background-color: #eee; }
           </style>
         </head>
         <body>
-          <h1>Batch Report</h1>
+          <h1>Chemtech Engineers</h1>
+          <hr/>
+          <h3>Batch Report</h3>
           <p><strong>Batch ID:</strong> ${batch.id}</p>
           <p><strong>Name:</strong> ${batch.batchName}</p>
-          <p><strong>Date:</strong> ${batch.batchDate}</p>
+         <p><strong>Date:</strong> ${batch.batchDate
+            ? new Date(batch.batchDate).toLocaleDateString("en-GB")
+            : "N/A"
+          }</p>
+
           <p><strong>Size:</strong> ${batch.batchSize} ${batch.batchUnit}</p>
-          <p><strong>Status:</strong> ${batch.status || "N/A"}</p>
 
           <h2>Materials</h2>
           <table>
@@ -116,11 +120,10 @@ const API_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL}`;
               </tr>
             </thead>
             <tbody>
-              ${
-                batch.materials && batch.materials.length > 0
-                  ? batch.materials
-                      .map(
-                        (mat) => `
+              ${batch.materials && batch.materials.length > 0
+            ? batch.materials
+              .map(
+                (mat) => `
                       <tr>
                         <td>${mat.name || "N/A"}</td>
                         <td>${mat.quantity}</td>
@@ -128,10 +131,10 @@ const API_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL}`;
                         <td>${mat.percentage}</td>
                       </tr>
                     `
-                      )
-                      .join("")
-                  : `<tr><td colspan="4" style="text-align:center;">No materials available</td></tr>`
-              }
+              )
+              .join("")
+            : `<tr><td colspan="4" style="text-align:center;">No materials available</td></tr>`
+          }
             </tbody>
           </table>
         </body>
@@ -235,7 +238,7 @@ const API_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL}`;
     <>
       <Toaster />
       <Navbar />
-      <div className="mt-6 p-6 font-sans bg-gray-50 min-h-screen xl:ml-[17rem]">
+      <div className="mt-6 p-6 font-sans xl:ml-[17rem]">
         <div className="max-w-7xl mx-auto">
           {/* Header Section */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
@@ -339,24 +342,26 @@ const API_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL}`;
                         className="hover:bg-gray-50 transition-colors"
                       >
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                          #{batch.id}
+                          {batch.id}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 font-medium">
                           {batch.batchName}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {batch.batchDate}
+                          {batch.batchDate
+                            ? new Date(batch.batchDate).toLocaleDateString("en-GB")
+                            : "N/A"}
                         </td>
+
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {batch.batchSize}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           <span
-                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                              batch.rawMaterialCount > 0
-                                ? "bg-green-100 text-green-800"
-                                : "bg-gray-100 text-gray-800"
-                            }`}
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${batch.rawMaterialCount > 0
+                              ? "bg-green-100 text-green-800"
+                              : "bg-gray-100 text-gray-800"
+                              }`}
                           >
                             {batch.rawMaterialCount} materials
                           </span>
@@ -491,9 +496,9 @@ function BatchModal({ batch, onClose, loading, error }) {
         <p>
           <strong>Size:</strong> {batch.batchSize} {batch.batchUnit}
         </p>
-        <p>
+        {/* <p>
           <strong>Status:</strong> {batch.status || "N/A"}
-        </p>
+        </p> */}
 
         <h3 className="mt-4 mb-2 font-semibold">Materials</h3>
         <table className="w-full border-collapse border border-gray-300">

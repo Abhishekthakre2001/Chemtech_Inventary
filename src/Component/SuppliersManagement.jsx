@@ -11,7 +11,7 @@ const SuppliersManagement = () => {
     const [loading, setLoading] = useState(true); // ✅ declared at top
 
 
-const API_BASE_URL = import.meta.env.VITE_API_URL ;
+    const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 
     // State for form and modal
@@ -198,35 +198,41 @@ const API_BASE_URL = import.meta.env.VITE_API_URL ;
         // }
 
         if (!formData.contactPerson || !/^[a-zA-Z\s]+$/.test(formData.contactPerson)) {
-            toast.error("Contact Person must contain letters only", { position: "top-center", style: {
-                        borderRadius: "8px",
-                        background: "#ff4d4d",
-                        color: "#fff",
-                        fontWeight: "500",
-                        padding: "12px 16px",
-                    }, });
+            toast.error("Contact Person must contain letters only", {
+                position: "top-center", style: {
+                    borderRadius: "8px",
+                    background: "#ff4d4d",
+                    color: "#fff",
+                    fontWeight: "500",
+                    padding: "12px 16px",
+                },
+            });
             return;
         }
 
         if (formData.bankName && !/^[a-zA-Z\s]+$/.test(formData.bankName)) {
-            toast.error("Bank Name must contain letters only", { position: "top-center", style: {
-                        borderRadius: "8px",
-                        background: "#ff4d4d",
-                        color: "#fff",
-                        fontWeight: "500",
-                        padding: "12px 16px",
-                    }, });
+            toast.error("Bank Name must contain letters only", {
+                position: "top-center", style: {
+                    borderRadius: "8px",
+                    background: "#ff4d4d",
+                    color: "#fff",
+                    fontWeight: "500",
+                    padding: "12px 16px",
+                },
+            });
             return;
         }
 
         if (!/^[0-9]{10}$/.test(formData.contactNumber)) {
-            toast.error("Contact Number must be a 10-digit positive number", { position: "top-center", style: {
-                        borderRadius: "8px",
-                        background: "#ff4d4d",
-                        color: "#fff",
-                        fontWeight: "500",
-                        padding: "12px 16px",
-                    }, });
+            toast.error("Contact Number must be a 10-digit positive number", {
+                position: "top-center", style: {
+                    borderRadius: "8px",
+                    background: "#ff4d4d",
+                    color: "#fff",
+                    fontWeight: "500",
+                    padding: "12px 16px",
+                },
+            });
             return;
         }
 
@@ -558,9 +564,9 @@ const API_BASE_URL = import.meta.env.VITE_API_URL ;
     return (
         <div className="p-6 max-w-7xl mx-auto ">
             <Toaster />
-            <div className="flex flex-col lg:flex-row justify-between items-center mb-6">
+            <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 ">
                 <h1 className="text-2xl font-bold text-gray-800 text-nowrap mr-4">Suppliers Management</h1>
-                <div className="flex flex-col md:flex-row md:items-center gap-4 mt-4 md:mt-0 w-full">
+                <div className="flex items-center gap-4 w-full md:w-auto">
                     {/* Search Box */}
                     <div className="relative w-full md:w-auto flex-1">
                         <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -585,63 +591,87 @@ const API_BASE_URL = import.meta.env.VITE_API_URL ;
             </div>
 
             {/* Suppliers Table */}
-            <div className="bg-white rounded-lg shadow overflow-hidden ">
-                <div className="overflow-x-auto ">
-                    <table className="min-w-full divide-y divide-gray-200 ">
-                        <thead className="bg-gray-50">
+            {/* Suppliers Table */}
+            <div className="bg-white rounded-lg shadow max-h-[60vh] overflow-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+
+                    {/* Sticky Header */}
+                    <thead className="sticky top-0 z-20 bg-blue-200">
+                        <tr>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-black-500 uppercase">
+                                Name
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-black-500 uppercase">
+                                Contact Person
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-black-500 uppercase">
+                                Contact Number
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-black-500 uppercase">
+                                Email
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-black-500 uppercase">
+                                Bank
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-black-500 uppercase">
+                                Update
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-black-500 uppercase">
+                                Delete
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody className="bg-white divide-y divide-gray-200">
+                        {filteredSuppliers.length === 0 ? (
                             <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact Person</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact Number</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bank</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Update</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Delete</th>
+                                <td colSpan="7" className="px-6 py-4 text-center text-gray-500">
+                                    No suppliers found
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
-                            {filteredSuppliers.length === 0 ? (
-                                <tr>
-                                    <td colSpan="6" className="px-6 py-4 text-center text-gray-500">
-                                        No suppliers found
+                        ) : (
+                            filteredSuppliers.map((supplier) => (
+                                <tr key={supplier.id} className="hover:bg-gray-50">
+                                    <td className="px-6 py-4 text-sm font-medium">
+                                        {supplier.name || "N/A"}
+                                    </td>
+                                    <td className="px-6 py-4 text-sm">
+                                        {supplier.contactPerson || "N/A"}
+                                    </td>
+                                    <td className="px-6 py-4 text-sm">
+                                        {supplier.contactNumber || "N/A"}
+                                    </td>
+                                    <td className="px-6 py-4 text-sm">
+                                        {supplier.email || "N/A"}
+                                    </td>
+                                    <td className="px-6 py-4 text-sm">
+                                        {supplier.bankName || "N/A"}
+                                    </td>
+
+                                    <td className="px-6 py-4">
+                                        <button
+                                            onClick={() => openEditModal(supplier)}
+                                            className="p-2 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white"
+                                        >
+                                            <Pencil size={18} />
+                                        </button>
+                                    </td>
+
+                                    <td className="px-6 py-4">
+                                        <button
+                                            onClick={() => deleteSupplier(supplier.id)}
+                                            className="p-2 rounded-full bg-red-100 text-red-600 hover:bg-red-600 hover:text-white"
+                                        >
+                                            <Trash2 size={18} />
+                                        </button>
                                     </td>
                                 </tr>
-                            ) : (
-                                filteredSuppliers.map((supplier) => (
-                                    <tr key={supplier.id} className="hover:bg-gray-50">
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{supplier.name ? supplier.name : "N/A" }</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{supplier.contactPerson ? supplier.contactPerson : "N/A"}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{supplier.contactNumber ? supplier.contactNumber : "N/A"}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{supplier.email ? supplier.email : "N/A"}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{supplier.bankName ? supplier.bankName : "N/A"}</td>
-                                        {/* Edit Column */}
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                            <button
-                                                onClick={() => openEditModal(supplier)}
-                                                className="flex items-center justify-center p-2 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white transition duration-200 shadow-sm"
-                                                title="Edit"
-                                            >
-                                                <Pencil size={18} />
-                                            </button>
-                                        </td>
-
-                                        {/* Delete Column */}
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                            <button
-                                                onClick={() => deleteSupplier(supplier.id)}
-                                                className="flex items-center justify-center p-2 rounded-full bg-red-100 text-red-600 hover:bg-red-600 hover:text-white transition duration-200 shadow-sm"
-                                                title="Delete"
-                                            >
-                                                <Trash2 size={18} />
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))
-                            )}
-                        </tbody>
-                    </table>
-                </div>
+                            ))
+                        )}
+                    </tbody>
+                </table>
             </div>
+
 
             {/* Add/Edit Supplier Modal */}
             {isModalOpen && (

@@ -32,7 +32,7 @@ const CategoryManagement = () => {
 
     // Open modal for editing category
     const openEditModal = (category) => {
-        console.log("category",category)
+        console.log("category", category)
         setCurrentCategory(category);
         setIsModalOpen(true);
     };
@@ -125,7 +125,7 @@ const CategoryManagement = () => {
         e.preventDefault();
 
         try {
-            const { data } = await axios.post( `${API_BASE_URL}category/edit_category.php`,
+            const { data } = await axios.post(`${API_BASE_URL}category/edit_category.php`,
                 {
                     id: currentCategory.id,
                     name: currentCategory.name,
@@ -215,7 +215,7 @@ const CategoryManagement = () => {
 
             if (data.success) {
                 toast.success("Category deleted successfully!", {
-                     position: "top-center",
+                    position: "top-center",
                     style: {
                         borderRadius: "12px",
                         background: "#4CAF50",
@@ -301,7 +301,7 @@ const CategoryManagement = () => {
     }, [isModalOpen]);
 
 
-    console.log("currentCategory",currentCategory)
+    console.log("currentCategory", currentCategory)
 
     return (
         <div className="p-6 w-full mx-auto ">
@@ -330,14 +330,14 @@ const CategoryManagement = () => {
             </div>
 
             {/* Categories Table */}
-            <div className="bg-white rounded-lg shadow overflow-hidden">
+            <div className="bg-white rounded-lg shadow max-h-[60vh] overflow-auto">
                 <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+                    <thead className="bg-blue-200 sticky top-0 z-20">
                         <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SR. NO.</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CATEGORY NAME</th>
-                            <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">UPDATE</th>
-                            <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">DELETE</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-black-500 uppercase tracking-wider">SR. NO.</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-black-500 uppercase tracking-wider">CATEGORY NAME</th>
+                            <th className="px-6 py-3 text-center text-xs font-medium text-black-500 uppercase tracking-wider">UPDATE</th>
+                            <th className="px-6 py-3 text-center text-xs font-medium text-black-500 uppercase tracking-wider">DELETE</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">

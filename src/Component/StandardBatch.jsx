@@ -402,9 +402,9 @@ export default function StandardBatch() {
     <>
       <Navbar />
       <Toaster />
-      <div className="mt-5 max-w-full mx-auto p-6 bg-white rounded-lg shadow-lg xl:ml-[17rem]">
+      <div className="mt-5 max-w-full mx-auto p-6 bg-white rounded-lg xl:ml-[17rem]">
         <h2 className="text-2xl font-bold mb-6 text-gray-800 border-b pb-2">
-          Create New Product Batch
+          Create New Standard Batch
         </h2>
 
         {/* Batch Info */}

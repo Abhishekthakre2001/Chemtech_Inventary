@@ -22,24 +22,24 @@ export default function ReCreatedBatchReport() {
   const [error, setError] = useState(null);
 
   // Handle print functionality
- const handlePrint = async (batchId) => {
-  try {
-    // Fetch batch details
-    const response = await fetch(
-      `https://inventary.chemtechengineers.in/backend/batch_recreation/get_batch_recreation_by_id.php?id=${batchId}`
-    );
-    const result = await response.json();
+  const handlePrint = async (batchId) => {
+    try {
+      // Fetch batch details
+      const response = await fetch(
+        `https://inventary.chemtechengineers.in/backend/batch_recreation/get_batch_recreation_by_id.php?id=${batchId}`
+      );
+      const result = await response.json();
 
-    if (!result.success) {
-      alert("Failed to fetch batch data");
-      return;
-    }
+      if (!result.success) {
+        alert("Failed to fetch batch data");
+        return;
+      }
 
-    const data = result.data;
+      const data = result.data;
 
-    // Create a print window
-    const printWindow = window.open("", "_blank");
-    printWindow.document.write(`
+      // Create a print window
+      const printWindow = window.open("", "_blank");
+      printWindow.document.write(`
       <html>
         <head>
           <title>Batch Print - ${data.recreated_batch_name}</title>
@@ -73,8 +73,8 @@ export default function ReCreatedBatchReport() {
             </thead>
             <tbody>
               ${data.materials
-                .map(
-                  (mat, index) => `
+          .map(
+            (mat, index) => `
                 <tr>
                   <td>${index + 1}</td>
                   <td>${mat.name}</td>
@@ -83,21 +83,21 @@ export default function ReCreatedBatchReport() {
                   <td>${mat.percentage}</td>
                 </tr>
               `
-                )
-                .join("")}
+          )
+          .join("")}
             </tbody>
           </table>
         </body>
       </html>
     `);
 
-    printWindow.document.close();
-    printWindow.print();
-  } catch (error) {
-    console.error("Print error:", error);
-    alert("Error while printing batch details");
-  }
-};
+      printWindow.document.close();
+      printWindow.print();
+    } catch (error) {
+      console.error("Print error:", error);
+      alert("Error while printing batch details");
+    }
+  };
 
 
   const fetchBatches = async () => {
@@ -124,7 +124,7 @@ export default function ReCreatedBatchReport() {
     if (window.confirm('Are you sure you want to delete this batch recreation?')) {
       try {
         setLoading(true);
-        await axios.post(`${API_URL}batch_recreation/delete_batch_recreation.php`,{id:batchId});
+        await axios.post(`${API_URL}batch_recreation/delete_batch_recreation.php`, { id: batchId });
         // Refresh the list after deletion
         setBatches(batches.filter(batch => batch.id !== batchId));
       } catch (err) {
@@ -150,7 +150,7 @@ export default function ReCreatedBatchReport() {
   return (
     <>
       <Navbar />
-      <div className="p-6 font-sans bg-gray-50 min-h-screen mt-10 xl:ml-[17rem]">
+      <div className="p-6 font-sans  min-h-screen mt-10 xl:ml-[17rem]">
         <div className="max-w-7xl mx-auto">
           {/* Header Section */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
@@ -194,9 +194,12 @@ export default function ReCreatedBatchReport() {
             </div>
           ) : (
             <div className="bg-white rounded-xl shadow overflow-hidden">
-              <div className="overflow-x-auto">
+              {/* Table */}
+              <div className="bg-white rounded-xl shadow max-h-[70vh] overflow-auto">
                 <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-blue-200 text-black">
+
+                  {/* Sticky Header */}
+                  <thead className="bg-blue-200 text-black sticky top-0 z-40">
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                         Batch ID
@@ -204,9 +207,6 @@ export default function ReCreatedBatchReport() {
                       <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                         Recreated Batch
                       </th>
-                      {/* <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                        Original Batch
-                      </th> */}
                       <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                         Date
                       </th>
@@ -227,90 +227,68 @@ export default function ReCreatedBatchReport() {
                       </th>
                     </tr>
                   </thead>
+
                   <tbody className="bg-white divide-y divide-gray-200">
                     {filteredBatches.length === 0 ? (
                       <tr>
-                        <td
-                          colSpan="7"
-                          className="px-6 py-4 text-center text-gray-500"
-                        >
-                          {searchTerm ? 'No matching batch recreations found' : 'No batch recreations available'}
+                        <td colSpan="8" className="px-6 py-4 text-center text-gray-500">
+                          {searchTerm
+                            ? "No matching batch recreations found"
+                            : "No batch recreations available"}
                         </td>
                       </tr>
                     ) : (
                       filteredBatches.map((batch) => (
-                        <tr
-                          key={batch.id}
-                          className="hover:bg-gray-50 transition-colors"
-                        >
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                            #{batch.id}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 font-medium">
+                        <tr key={batch.id} className="hover:bg-gray-50">
+                          <td className="px-6 py-4 text-sm font-medium">{batch.id}</td>
+                          <td className="px-6 py-4 text-sm font-medium">
                             {batch.recreated_batch_name}
                           </td>
-                          {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {batch.original_batch_name || 'N/A'}
-                          </td> */}
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <td className="px-6 py-4 text-sm text-gray-500">
                             {new Date(batch.recreated_batch_date).toLocaleDateString("en-GB")}
                           </td>
-
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <td className="px-6 py-4 text-sm text-gray-500">
                             {batch.recreated_batch_size} {batch.recreated_batch_unit}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <span
-                              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${batch.raw_material_count > 0
-                                ? "bg-green-100 text-green-800"
-                                : "bg-gray-100 text-gray-800"
-                                }`}
-                            >
+                          <td className="px-6 py-4 text-sm">
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                               {batch.raw_material_count || 0} raw materials
                             </span>
                           </td>
 
-                          {/* Print Column */}
-                          <td className="p-3 border-b border-gray-200 text-center">
+                          <td className="px-6 py-4 text-center">
                             <button
                               onClick={() => handlePrint(batch.id)}
-                              title="Print"
-                              className="p-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-800 shadow-sm transition-all duration-200"
+                              className="p-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100"
                             >
                               <FaPrint className="h-4 w-4" />
                             </button>
                           </td>
 
-                          {/* Edit Column */}
-                          <td className="p-3 border-b border-gray-200 text-center">
+                          <td className="px-6 py-4 text-center">
                             <button
                               onClick={() => navigate(`/batch-recreation/edit/${batch.id}`)}
-                              title="Edit"
-                              className="p-2 rounded-lg bg-orange-50 text-orange-600 hover:bg-orange-100 hover:text-orange-800 shadow-sm transition-all duration-200"
+                              className="p-2 rounded-lg bg-orange-50 text-orange-600 hover:bg-orange-100"
                             >
                               <FaEdit className="h-4 w-4" />
                             </button>
                           </td>
 
-  {/* Delete Column */}
-                        <td className="p-3 border-b border-gray-200 text-center">
-                          <button
-                           onClick={() => handleDelete(batch.id)}
-                            title="Delete"
-                            className="p-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-800 shadow-sm transition-all duration-200"
-                          >
-                            <FaTrash className="h-4 w-4" />
-                          </button>
-                        </td>
-
-
-                        
+                          <td className="px-6 py-4 text-center">
+                            <button
+                              onClick={() => handleDelete(batch.id)}
+                              className="p-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100"
+                            >
+                              <FaTrash className="h-4 w-4" />
+                            </button>
+                          </td>
                         </tr>
                       ))
                     )}
                   </tbody>
                 </table>
               </div>
+
             </div>
           )}
 
